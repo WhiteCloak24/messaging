@@ -2,5 +2,10 @@
   "name": "messaging",
   "version": "1.0.0",
   "author": "Yash Jain",
-  "license": "ISC"
+  "license": "ISC",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
 }
