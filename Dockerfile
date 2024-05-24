@@ -1,7 +1,7 @@
 FROM node:latest
 
 # Set working directory
-WORKDIR /app
+WORKDIR /projects/messaging
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -12,8 +12,11 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Expose port 3000 (assuming your React app runs on this port)
-EXPOSE 3000
 
 # Start the React app
 CMD ["npm", "start"]
+
+RUN node -v
+
+# Expose port 3000 (assuming your React app runs on this port)
+EXPOSE 3000
