@@ -8,7 +8,7 @@ export const router = createBrowserRouter([
     element: <UnauthorizedLayout />,
     children: [
       {
-        path: "login",
+        index: true,
         element: <Login />,
       },
     ],
