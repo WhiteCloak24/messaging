@@ -7,5 +7,11 @@
   "workspaces": [
     "backend",
     "frontend"
-  ]
+  ],
+  "scripts": {
+    "start": "concurrently \"yarn workspace frontend start\" \"yarn workspace backend start\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
 }
