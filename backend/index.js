@@ -12,10 +12,7 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", async (socket) => {
-  console.log("Someone connected", socket.id);
-  socket.on("heeey", (data) => {
-    console.log(data);
-  });
+  
 });
 
 httpServer.listen(4000, "localhost", () => {
