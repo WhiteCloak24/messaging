@@ -1,5 +1,6 @@
 FROM node:latest
 
+RUN mkdir /app
 WORKDIR /app
 
 # Install dependencies
