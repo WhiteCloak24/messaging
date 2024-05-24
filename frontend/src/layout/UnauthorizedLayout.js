@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 const UnauthorizedLayout = () => {
   return (
-    <div>
+    <div className="unauthorized-layout">
       <Outlet />
     </div>
   );

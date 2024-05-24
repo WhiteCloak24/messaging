@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+html {
+  height: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+body {
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+.unauthorized-layout {
+    @apply h-full bg-slate-500 bg-opacity-25
+}
+
