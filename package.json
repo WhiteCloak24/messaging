@@ -2,9 +2,5 @@
   "name": "messaging",
   "version": "1.0.0",
   "author": "Yash Jain",
-  "license": "ISC",
-  "description": "messaging-app",
-  "workspaces": [
-    "packages/*"
-  ]
+  "license": "ISC"
 }
