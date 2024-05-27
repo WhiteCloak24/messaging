@@ -5,13 +5,29 @@ import customParser from "socket.io-msgpack-parser";
 import { bodyParserMiddleWare, corsMiddleWare } from "./middlewares.js";
 import cassandra from "cassandra-driver";
 
-console.log(process.env["API_ENDPOINT"]);
-const cloud = { secureConnectBundle: process.env["API_ENDPOINT"] };
-const authProvider = new cassandra.auth.PlainTextAuthProvider("token", process.env["APPLICATION_TOKEN"]);
-const client = new cassandra.Client({ cloud, authProvider });
-
 async function connectDatabase() {
+  const authProvider = new cassandra.auth.PlainTextAuthProvider("token", process.env["APPLICATION_TOKEN"]);
+  const client = new cassandra.Client({
+    cloud: {
+      secureConnectBundle: "secure-connect-messaging.zip",
+    },
+    authProvider,
+  });
+  console.time("connection");
   await client.connect();
+  console.timeEnd("connection");
+  const keyspace = "test";
+
+  await client.execute(`
+  CREATE TABLE ${keyspace}.users (
+    firstname text,
+    lastname text,
+    email text,
+    "favorite color" text,
+    PRIMARY KEY (firstname, lastname)
+  )
+    WITH CLUSTERING ORDER BY (lastname ASC);
+`);
 }
 
 async function startApolloServer() {
@@ -23,13 +39,15 @@ async function startApolloServer() {
   // await apolloServer.start();
   // app.use("/graphql", expressMiddleware(apolloServer));
   app.get("/", (req, res) => {
-    connectDatabase();
     res.send("Hello");
   });
   app.listen(4000, () => {
     console.log("Server is running on PORT 4000");
+
+    connectDatabase();
   });
 }
+
 async function startSocketServer() {
   const app = express();
   const httpServer = createServer(app);
