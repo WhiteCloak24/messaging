@@ -2,28 +2,30 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import customParser from "socket.io-msgpack-parser";
-import bodyParser from "body-parser";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServer } from "@apollo/server";
+import { bodyParserMiddleWare, corsMiddleWare } from "./middlewares.js";
 
-const app = express();
-const httpServer = createServer(app);
-app.use(bodyParser);
+async function startApolloServer() {
+  const app = express();
+  const apolloServer = new ApolloServer({});
+  bodyParserMiddleWare(app);
+  corsMiddleWare(app);
 
-const io = new Server(httpServer, {
-  cors: { origin: "*" },
-  parser: customParser,
-});
+  await apolloServer.start();
+  app.use("/graphql", expressMiddleware(apolloServer));
+  app.listen(4000, () => {
+    console.log("Server is running on PORT 4000");
+  });
+}
+async function startSocketServer() {
+  const app = express();
+  const httpServer = createServer(app);
 
-io.on("connection", async (socket) => {});
+  const io = new Server(httpServer, {
+    cors: { origin: "*" },
+    parser: customParser,
+  });
+}
 
-httpServer.listen(4000, "localhost", () => {
-  console.log("Socket Server is listening to", 4000);
-});
-
-app.post("/login", (req, res) => {
-  const { email } = req.body;
-  console.log(email);
-});
-
-app.listen(6000, () => {
-  console.log(`API Server is running on port 6000`);
-});
+startApolloServer();
