@@ -5,7 +5,8 @@ import customParser from "socket.io-msgpack-parser";
 import { bodyParserMiddleWare, corsMiddleWare } from "./middlewares.js";
 import cassandra from "cassandra-driver";
 
-const cloud = { secureConnectBundle: process.env["DATACENTER_ID"] };
+console.log(process.env["API_ENDPOINT"]);
+const cloud = { secureConnectBundle: process.env["API_ENDPOINT"] };
 const authProvider = new cassandra.auth.PlainTextAuthProvider("token", process.env["APPLICATION_TOKEN"]);
 const client = new cassandra.Client({ cloud, authProvider });
 
