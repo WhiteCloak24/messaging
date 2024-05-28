@@ -1,4 +1,4 @@
-import { client } from "../resources/database";
+import { client } from "../resources/database.js";
 
 export const filterUserByEmailQuery = async ({ email = "" }) => {
   if (email) {

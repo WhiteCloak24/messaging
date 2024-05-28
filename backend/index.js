@@ -3,7 +3,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import customParser from "socket.io-msgpack-parser";
 import { bodyParserMiddleWare, corsMiddleWare } from "./middlewares.js";
-import { client, connectDatabase } from "./resources/database.js";
+import { connectDatabase } from "./resources/database.js";
 import { filterUserByEmailQuery } from "./queries/AuthQueries.js";
 
 async function startApolloServer() {
@@ -21,8 +21,8 @@ async function startApolloServer() {
     const { email = "" } = req.body;
     const queryResult = await filterUserByEmailQuery({ email: email });
     if (queryResult?.length > 0) {
-      const userData = queryResult?.[0]
-      res.json(userData)
+      const userData = queryResult?.[0];
+      res.json(userData);
     } else {
       res.send("User not found");
     }
