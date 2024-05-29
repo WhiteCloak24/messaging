@@ -17,8 +17,7 @@ export const addUserQuery = async ({ email = "", username = "" }) => {
     const resp = await client.execute(
       `INSERT INTO users (user_id, created_at, username, email) VALUES ( ${newUserId}, ${getCurrentUTCTimestamp()} , '${username}' ,'${email}');`
     );
-    console.log(resp);
-    // return resp.rows || null;
+    return resp || null;
   } else {
     return null;
   }
