@@ -12,8 +12,8 @@ async function startApiServer() {
   corsMiddleWare(app);
   cookieParserMiddleWare(app);
 
-  app.set('trust proxy', true);
-  
+  app.set("trust proxy", true);
+
   app.get("/", (req, res) => {
     res.send("Dashboard");
   });
@@ -33,6 +33,14 @@ async function startSocketServer() {
     cors: { origin: "*" },
     parser: customParser,
   });
+
+  io.listen(5000, async () => {
+    console.log("Socket Server is running on PORT 5000");
+    io.on("connection", (socket) => {
+      console.log("Socket connected", socket?.id);
+    });
+  });
 }
 
-startApiServer();
+await startSocketServer();
+await startApiServer();
