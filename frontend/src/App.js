@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { router } from "./router";
 import { RouterProvider } from "react-router-dom";
-import { useEffect } from "react";
+import { AuthorizationProvider } from "./hooks/useAuthorization";
 
 function App() {
   const queryClient = new QueryClient({
@@ -15,7 +15,9 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />;
+      <AuthorizationProvider>
+        <RouterProvider router={router} />;
+      </AuthorizationProvider>
     </QueryClientProvider>
   );
 }
