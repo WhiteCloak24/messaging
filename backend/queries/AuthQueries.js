@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 export const checkEmailExist = async ({ email = "" }) => {
   if (email) {
     const resp = await client.execute(`SELECT * FROM users WHERE email = '${email}' ALLOW FILTERING;`);
-
     return resp.rows || null;
   } else {
     return null;

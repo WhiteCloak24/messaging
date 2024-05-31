@@ -1,6 +1,6 @@
 export const routes = {
   LOGIN: {
-    PATH: "login",
+    PATH: "auth/login",
     METHOD: "POST",
   },
 };
