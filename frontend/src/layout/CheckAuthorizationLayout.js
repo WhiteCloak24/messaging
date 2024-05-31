@@ -3,6 +3,7 @@ import { useAuthorization } from "../hooks/useAuthorization";
 import { AuthorizationEVENTS, AuthorizationStates } from "../resources/constants";
 import { Outlet } from "react-router-dom";
 import { useApplicationSocket } from "../hooks/useApplicationSocket";
+import FullPageLoader from "../components/FullPageLoader";
 
 const CheckAuthorizationLayout = () => {
   const { user_id, authorizationState, setUserId, setAuthorizationState } = useAuthorization();
@@ -32,9 +33,12 @@ const CheckAuthorizationLayout = () => {
   }
   function handleLogout(e) {
     localStorage.clear();
-    // setUserId({ user_id: e?.detail?.user_id });
+    setUserId({ user_id: "" });
+    setAuthorizationState({ state: AuthorizationStates.LOGGED_OUT });
   }
-  console.log({ user_id, authorizationState });
+  if (authorizationState === AuthorizationStates.LOGGING_IN) {
+    return <FullPageLoader />;
+  }
   return <Outlet />;
 };
 

@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
-import Login from "../pages/Login";
 import CheckAuthorizationLayout from "../layout/CheckAuthorizationLayout";
+import AuthorizedLayout from "../layout/AuthorizedLayout";
+import UnauthorizedLayout from "../layout/UnauthorizedLayout";
+import Login from "../pages/Login";
 
 export const router = createBrowserRouter([
   {
@@ -8,8 +10,18 @@ export const router = createBrowserRouter([
     element: <CheckAuthorizationLayout />,
     children: [
       {
-        index: true,
-        element: <Login />,
+        path: "/home",
+        element: <AuthorizedLayout />,
+      },
+      {
+        path: "/",
+        element: <UnauthorizedLayout />,
+        children: [
+          {
+            index: true,
+            element: <Login />,
+          },
+        ],
       },
     ],
   },

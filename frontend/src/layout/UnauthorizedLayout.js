@@ -1,12 +1,19 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuthorization } from "../hooks/useAuthorization";
+import { AuthorizationStates } from "../resources/constants";
 
 const UnauthorizedLayout = () => {
-  return (
-    <div className="unauthorized-layout">
-      <Outlet />
-    </div>
-  );
+  const { authorizationState } = useAuthorization();
+  if (authorizationState === AuthorizationStates.LOGGED_OUT) {
+    return (
+      <div className="unauthorized-layout">
+        <Outlet />
+      </div>
+    );
+  } else {
+    return <Navigate to={"/home"} />;
+  }
 };
 
 export default UnauthorizedLayout;
