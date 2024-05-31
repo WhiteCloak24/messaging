@@ -4,22 +4,18 @@ import { Server } from "socket.io";
 import customParser from "socket.io-msgpack-parser";
 import { bodyParserMiddleWare, corsMiddleWare } from "./middlewares.js";
 import { connectDatabase } from "./resources/database.js";
-import { loginController } from "./controller/AuthController.js";
+import { authRouter } from "./router/index.js";
 
-async function startApolloServer() {
+async function startApiServer() {
   const app = express();
-  // const apolloServer = new ApolloServer({});
   bodyParserMiddleWare(app);
   corsMiddleWare(app);
 
-  // await apolloServer.start();
-  // app.use("/graphql", expressMiddleware(apolloServer));
   app.get("/", (req, res) => {
-    res.send("Hello");
+    res.send("Dashboard");
   });
-  app.post("/login", async (req, res) => {
-    loginController(req, res);
-  });
+
+  app.use("/auth", authRouter);
   app.listen(4000, async () => {
     console.log("Server is running on PORT 4000");
     await connectDatabase();
@@ -36,4 +32,4 @@ async function startSocketServer() {
   });
 }
 
-startApolloServer();
+startApiServer();
