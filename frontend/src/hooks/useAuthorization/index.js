@@ -8,7 +8,7 @@ const AuthContext = createContext({
 });
 
 export const AuthorizationProvider = ({ children }) => {
-  const [authState, setAuthState] = useState({ user_id: "", AuthToken: "", authorizationState: AuthorizationStates.LOGGED_OUT });
+  const [authState, setAuthState] = useState({ user_id: localStorage.user_id || "", AuthToken: "", authorizationState: AuthorizationStates.LOGGED_OUT });
 
   const setUserId = useCallback(({ user_id }) => {
     setAuthState((prev) => ({ ...prev, user_id }));

@@ -5,6 +5,8 @@ import { login } from "../../api-service";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuthorization } from "../../hooks/useAuthorization";
+import { dispatchCustomEventFn } from "../../resources/functions";
+import { AuthorizationEVENTS } from "../../resources/constants";
 
 const validationSchema = yup.object().shape({
   email: yup.string().email("Must be a valid email").required("Email is required"),
@@ -12,7 +14,6 @@ const validationSchema = yup.object().shape({
 });
 
 const Login = () => {
-  const { setUserId } = useAuthorization();
   const { handleSubmit, control } = useForm({
     mode: "onSubmit",
     resolver: yupResolver(validationSchema),
@@ -25,8 +26,8 @@ const Login = () => {
     mutationKey: "login",
     mutationFn: login,
     onSuccess: (data) => {
-      if (data?.data?.success) {
-        setUserId({ user_id: data?.data?.userData?.user_id });
+      if (data?.data?.status?.success) {
+        dispatchCustomEventFn({ eventName: AuthorizationEVENTS.SET_USER_ID, eventData: { user_id: data?.data?.userData?.user_id } });
       }
     },
   });

@@ -4,9 +4,7 @@ import { AuthorizationEVENTS } from "../resources/constants";
 import { Outlet } from "react-router-dom";
 
 const CheckAuthorizationLayout = () => {
-  const { user_id } = useAuthorization();
-  console.log({ user_id });
-
+  const { user_id, setUserId } = useAuthorization();
   useEffect(() => {
     window.addEventListener(AuthorizationEVENTS.SET_USER_ID, handleSetUser);
     return () => {
@@ -14,9 +12,13 @@ const CheckAuthorizationLayout = () => {
     };
   }, []);
 
-  function handleSetUser(data) {
-    console.log({ data });
+  function handleSetUser(e) {
+    if (e?.detail?.user_id) {
+      localStorage.user_id = e?.detail?.user_id;
+      setUserId({ user_id: e?.detail?.user_id });
+    }
   }
+  console.log({ user_id });
   return <Outlet />;
 };
 
