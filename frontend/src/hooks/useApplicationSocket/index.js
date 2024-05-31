@@ -26,11 +26,11 @@ export const SocketProvider = ({ children }) => {
     }
   }, [state.isSocketConnected]);
 
-  const subscribeSocket = useCallback(({ socket_url = "", session_id = "", user_id = "" }) => {
+  const subscribeSocket = useCallback(({ socket_url = "", user_id = "" }) => {
     const socketInstance = io(socket_url, {
       transports: ["websocket"],
       auth: {
-        token: session_id,
+        token: user_id,
       },
       reconnection: true,
       reconnectionDelay: 1000,

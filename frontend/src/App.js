@@ -3,6 +3,7 @@ import { router } from "./router";
 import { RouterProvider } from "react-router-dom";
 import { AuthorizationProvider } from "./hooks/useAuthorization";
 import { SocketProvider } from "./hooks/useApplicationSocket";
+import React from "react";
 
 function App() {
   const queryClient = new QueryClient({
