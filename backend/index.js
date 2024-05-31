@@ -2,7 +2,7 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import customParser from "socket.io-msgpack-parser";
-import { bodyParserMiddleWare, corsMiddleWare } from "./middlewares.js";
+import { bodyParserMiddleWare, cookieParserMiddleWare, corsMiddleWare } from "./middlewares.js";
 import { connectDatabase } from "./resources/database.js";
 import { authRouter } from "./router/index.js";
 
@@ -10,6 +10,7 @@ async function startApiServer() {
   const app = express();
   bodyParserMiddleWare(app);
   corsMiddleWare(app);
+  cookieParserMiddleWare(app);
 
   app.get("/", (req, res) => {
     res.send("Dashboard");
