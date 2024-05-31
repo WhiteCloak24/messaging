@@ -8,7 +8,8 @@ export const loginController = async (req, res) => {
   if (queryResult?.length > 0) {
     const userData = queryResult?.[0];
     const userAgent = req.headers["user-agent"];
-    const clientIP = req.ip;
+    const clientIP = req.headers["x-forwarded-for"] || req.ip;
+    console.log(clientIP);
     const user_id = userData?.user_id;
     const created_at = getCurrentUTCTimestamp();
     const session_id = generateSessionId();
