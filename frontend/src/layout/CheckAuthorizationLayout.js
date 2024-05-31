@@ -19,7 +19,7 @@ const CheckAuthorizationLayout = () => {
 
   useEffect(() => {
     if (authorizationState === AuthorizationStates.LOGGING_IN) {
-      // subscribeSocket()
+      subscribeSocket({});
     }
   }, [authorizationState]);
 
@@ -34,7 +34,7 @@ const CheckAuthorizationLayout = () => {
     localStorage.clear();
     // setUserId({ user_id: e?.detail?.user_id });
   }
-  console.log({ user_id });
+  console.log({ user_id, authorizationState });
   return <Outlet />;
 };
 

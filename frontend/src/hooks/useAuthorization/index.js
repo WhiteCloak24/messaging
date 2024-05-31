@@ -2,8 +2,8 @@ import { createContext, useCallback, useContext, useMemo, useState } from "react
 import { AuthorizationStates } from "../../resources/constants";
 
 const AuthContext = createContext({
-  user_id: "",
-  authorizationState: AuthorizationStates.LOGGED_OUT,
+  user_id: localStorage.user_id || "",
+  authorizationState: localStorage.user_id ? AuthorizationStates.LOGGING_IN : AuthorizationStates.LOGGED_OUT,
   AuthToken: "",
   setUserId: ({ user_id }) => null,
   setXAuthToken: ({ token }) => null,
@@ -14,7 +14,7 @@ export const AuthorizationProvider = ({ children }) => {
   const [authState, setAuthState] = useState({
     user_id: localStorage.user_id || "",
     AuthToken: "",
-    authorizationState: AuthorizationStates.LOGGED_OUT,
+    authorizationState: localStorage.user_id ? AuthorizationStates.LOGGING_IN : AuthorizationStates.LOGGED_OUT,
   });
 
   const setUserId = useCallback(({ user_id }) => {
