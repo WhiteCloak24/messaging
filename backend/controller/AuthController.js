@@ -7,7 +7,7 @@ const session = new Map();
 
 export const loginController = async (req, res) => {
   const { email = "", username = "" } = req.body;
-  const cookies = req.cookies;
+  const cookies = req.cookies.sessionId;
   console.log({ cookies });
   const queryResult = await checkEmailExist({ email: email });
   if (queryResult?.length > 0) {
