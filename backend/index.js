@@ -6,6 +6,7 @@ import { bodyParserMiddleWare, cookieParserMiddleWare, corsMiddleWare } from "./
 import { connectDatabase } from "./resources/database.js";
 import { authRouter } from "./router/index.js";
 import { parseCookies } from "./commons/index.js";
+import { getSessionQuery } from "./queries/AuthQueries.js";
 
 async function startApiServer() {
   const app = express();
@@ -25,15 +26,20 @@ async function startApiServer() {
   });
   app.use("/auth", authRouter);
 
-  io.on("connection", (socket) => {
+  io.on("connection", async (socket) => {
     console.log("New client connected", socket?.id);
     const user_id = socket.handshake.auth.token ?? "";
     const cookies = socket.handshake.headers.cookie;
     const parsedCookies = parseCookies({ cookies });
     const session_id = parsedCookies?.session_id || "";
     if (user_id && session_id) {
-      console.log({ user_id, session_id });
+      const response = await getSessionQuery({ user_id, session_id });
+      const data = response?.rows
+      if(data?.length > 0){
+        
+      }
     }
+
     // Handle client disconnect
     socket.on("disconnect", () => {
       console.log("Client disconnected");

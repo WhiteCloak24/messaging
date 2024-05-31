@@ -9,11 +9,11 @@ export const loginController = async (req, res) => {
     const userData = queryResult?.[0];
     const userAgent = req.headers["user-agent"];
     const clientIP = req.headers["x-forwarded-for"] || req.ip;
-    console.log(clientIP);
     const user_id = userData?.user_id;
     const created_at = getCurrentUTCTimestamp();
     const session_id = generateSessionId();
     const jwtToken = generateJWT({ created_at, sessionId: session_id, email });
+    console.log(session_id);
     const sessionCreationResp = await createSessionQuery({ created_at, session_id, user_id, token: jwtToken });
     if (!sessionCreationResp || sessionCreationResp.info.queriedHost === null) {
       res.json({
