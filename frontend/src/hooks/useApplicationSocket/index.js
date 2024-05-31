@@ -5,7 +5,7 @@ import customParser from "socket.io-msgpack-parser";
 const initialState = {
   socketInstance: null,
   isSocketConnected: false,
-  subscribeSocket: ({ socket_url = "", session_id = "", user_id = "" }) => null,
+  subscribeSocket: ({ socket_url = "", session_id = "", user_id = "", port = "" }) => null,
   unsubscribeChat: () => null,
 };
 
@@ -28,7 +28,6 @@ export const SocketProvider = ({ children }) => {
 
   const subscribeSocket = useCallback(({ socket_url = "", session_id = "", user_id = "" }) => {
     const socketInstance = io(socket_url, {
-      port: 4000,
       transports: ["websocket"],
       auth: {
         token: session_id,

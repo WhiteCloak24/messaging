@@ -19,7 +19,7 @@ const CheckAuthorizationLayout = () => {
 
   useEffect(() => {
     if (authorizationState === AuthorizationStates.LOGGING_IN) {
-      subscribeSocket({});
+      subscribeSocket({ socket_url: process.env.REACT_APP_SOCKET_URL, user_id: user_id });
     }
   }, [authorizationState]);
 
