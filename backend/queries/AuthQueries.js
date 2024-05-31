@@ -21,3 +21,13 @@ export const addUserQuery = async ({ email = "", username = "" }) => {
     return null;
   }
 };
+export const createSessionQuery = async ({ user_id = "", created_at = "", session_id = "", token = "" }) => {
+  if (user_id && created_at && session_id && token) {
+    const query = `INSERT INTO sessions (user_id, created_at, session_id, token_id) VALUES ( ?,?,?,?);`;
+    const params = [user_id, created_at, session_id, token];
+    const resp = await client.execute(query, params);
+    return resp || null;
+  } else {
+    return null;
+  }
+};
