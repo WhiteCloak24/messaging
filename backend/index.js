@@ -12,6 +12,8 @@ async function startApiServer() {
   corsMiddleWare(app);
   cookieParserMiddleWare(app);
 
+  app.set('trust proxy', true);
+  
   app.get("/", (req, res) => {
     res.send("Dashboard");
   });
