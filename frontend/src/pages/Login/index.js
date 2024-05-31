@@ -2,10 +2,18 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { login } from "../../api-service";
-const Login = () => {
+import * as yup from "yup";
+import { yupResolver } from '@hookform/resolvers/yup';
 
+const validationSchema = yup.object().shape({
+  email: yup.string().email("Must be a valid email").required("Email is required"),
+  username: yup.string().required("Password is required"),
+});
+
+const Login = () => {
   const { handleSubmit, control } = useForm({
     mode: "onSubmit",
+    resolver: yupResolver(validationSchema),
     defaultValues: {
       email: "",
       username: "",
