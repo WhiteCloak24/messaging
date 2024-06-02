@@ -2,7 +2,11 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import customParser from "socket.io-msgpack-parser";
-import { bodyParserMiddleWare, cookieParserMiddleWare, corsMiddleWare } from "./middlewares/index.js";
+import {
+  bodyParserMiddleWare,
+  cookieParserMiddleWare,
+  corsMiddleWare,
+} from "./middlewares/index.js";
 import { connectDatabase } from "./resources/database.js";
 import { authRouter } from "./router/index.js";
 import { parseCookies } from "./commons/index.js";
@@ -34,13 +38,10 @@ async function startApiServer() {
     const session_id = parsedCookies?.session_id || "";
     if (user_id && session_id) {
       const response = await getSessionQuery({ user_id, session_id });
-      const data = response?.rows
-      if(data?.length > 0){
-        
+      const data = response?.rows;
+      if (data?.length > 0) {
       }
     }
-
-    // Handle client disconnect
     socket.on("disconnect", () => {
       console.log("Client disconnected");
     });
