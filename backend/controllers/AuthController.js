@@ -1,4 +1,4 @@
-import { createUser } from "../models/User.js";
+import { createUser } from "../models/user.js";
 import { validateUser } from "../utils/validation.js";
 import expressAsyncHandler from "express-async-handler";
 
