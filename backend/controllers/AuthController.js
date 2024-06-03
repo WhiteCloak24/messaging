@@ -1,10 +1,13 @@
 import { createUser } from "../models/User.js";
+import { validateUser } from "../utils/validation.js";
+import expressAsyncHandler from "express-async-handler";
 
-export const signupController = async (req, res) => {
+export const signupController = expressAsyncHandler(async (req, res) => {
   const { email = "", user_name = "", password = "" } = req.body;
-  await createUser(user_name, email, password);
+  await validateUser(req.body);
+  await createUser({ email: email, user_name: user_name, password: password });
   res.status(201).json({ success: true, message: "User created successfully" });
-};
+});
 
 // export const loginController = async (req, res) => {
 //   const { email = "" } = req.body;

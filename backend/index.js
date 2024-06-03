@@ -2,15 +2,10 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import customParser from "socket.io-msgpack-parser";
-import {
-  bodyParserMiddleWare,
-  cookieParserMiddleWare,
-  corsMiddleWare,
-} from "./middlewares/index.js";
+import { bodyParserMiddleWare, cookieParserMiddleWare, corsMiddleWare } from "./middlewares/appMiddleware.js";
 import { authRouter } from "./routes/index.js";
 import { connectDatabase } from "./config/database.js";
-import { getSessionQuery } from "./models/index.js";
-import { parseCookies } from "./utils/index.js";
+import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js";
 
 async function startApiServer() {
   const app = express();
@@ -30,22 +25,23 @@ async function startApiServer() {
   });
   app.use("/auth", authRouter);
 
-  io.on("connection", async (socket) => {
-    console.log("New client connected", socket?.id);
-    const user_id = socket.handshake.auth.token ?? "";
-    const cookies = socket.handshake.headers.cookie;
-    const parsedCookies = parseCookies({ cookies });
-    const session_id = parsedCookies?.session_id || "";
-    if (user_id && session_id) {
-      const response = await getSessionQuery({ user_id, session_id });
-      const data = response?.rows;
-      if (data?.length > 0) {
-      }
-    }
-    socket.on("disconnect", () => {
-      console.log("Client disconnected");
-    });
-  });
+  // io.on("connection", async (socket) => {
+  //   console.log("New client connected", socket?.id);
+  //   const user_id = socket.handshake.auth.token ?? "";
+  //   const cookies = socket.handshake.headers.cookie;
+  //   const parsedCookies = parseCookies({ cookies });
+  //   const session_id = parsedCookies?.session_id || "";
+  //   if (user_id && session_id) {
+  //     const response = await getSessionQuery({ user_id, session_id });
+  //     const data = response?.rows;
+  //     if (data?.length > 0) {
+  //     }
+  //   }
+  //   socket.on("disconnect", () => {
+  //     console.log("Client disconnected");
+  //   });
+  // });
+  errorHandlerMiddleware(app);
 
   httpServer.listen(4000, async () => {
     console.log("Server is running on PORT 4000");
