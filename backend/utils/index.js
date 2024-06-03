@@ -1,5 +1,13 @@
-import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
+import cookie from "cookie";
 
+export function getCurrentUTCTimestamp() {
+  return Date.now();
+}
+export function parseCookies({ cookies = null }) {
+  if (!cookies) return null;
+  return cookieParser.JSONCookies(cookie.parse(cookies));
+}
 export function generateSessionId(length = 16) {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;

@@ -8,7 +8,7 @@ import {
   corsMiddleWare,
 } from "./middlewares/index.js";
 import { connectDatabase } from "./resources/database.js";
-import { authRouter } from "./router/index.js";
+import { authRouter } from "./routes/index.js";
 import { parseCookies } from "./commons/index.js";
 import { getSessionQuery } from "./queries/AuthQueries.js";
 
