@@ -1,4 +1,4 @@
-import { client } from "../config/database";
+import { client } from "../config/database.js";
 
 export const checkEmailExist = async ({ email = "" }) => {
   if (email) {
