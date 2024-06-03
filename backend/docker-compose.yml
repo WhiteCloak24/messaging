@@ -9,8 +9,6 @@ services:
       NODE_ENV: development
     env_file:
       - ./.env
-    volumes:
-      - .:/app/messaging
 
   # frontend:
   #   build: ./frontend
