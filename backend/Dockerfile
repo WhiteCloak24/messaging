@@ -5,13 +5,12 @@ FROM node:20.13.1
 WORKDIR /app/messaging
 
 # Copy the backend code
-COPY . .
+COPY package*.json ./
 
 # Install dependencies
 RUN npm install
 
-RUN npm build
-
+COPY . .
 # Make port 3000 available to the world outside this container
 EXPOSE 4000
 
