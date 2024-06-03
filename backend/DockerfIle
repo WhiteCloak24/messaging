@@ -2,7 +2,7 @@
 FROM node:20.13.1
 
 # Set the working directory
-WORKDIR /app/messaging/backend
+WORKDIR /app/messaging
 
 # Copy the backend code
 COPY . .
