@@ -11,7 +11,7 @@ COPY . .
 RUN npm install
 
 # Build the app
-RUN npm build
+# RUN npm build
 
 # # Use Nginx to serve the static files
 # FROM nginx:alpine
