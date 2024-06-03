@@ -6,7 +6,7 @@ export let client;
 export async function connectDatabase() {
   client = new cassandra.Client({
     cloud: {
-      secureConnectBundle: "resources/secure-connect-messaging.zip",
+      secureConnectBundle: "services/secure-connect-messaging.zip",
     },
     credentials: {
       username: process.env["CLIENT_ID"],
