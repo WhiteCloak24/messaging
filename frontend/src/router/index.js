@@ -3,6 +3,7 @@ import CheckAuthorizationLayout from "../layout/CheckAuthorizationLayout";
 import AuthorizedLayout from "../layout/AuthorizedLayout";
 import UnauthorizedLayout from "../layout/UnauthorizedLayout";
 import Login from "../pages/Login";
+import Signup from "../pages/Signup";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <Login />,
+          },
+          {
+            index: 'signup',
+            element: <Signup />,
           },
         ],
       },

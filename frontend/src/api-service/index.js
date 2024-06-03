@@ -8,3 +8,10 @@ export const login = (value) => {
     data: value,
   });
 };
+export const signup = (value) => {
+  return apiClient({
+    method: routes.SIGN_UP.METHOD,
+    url: routes.SIGN_UP.PATH,
+    data: value,
+  });
+};
