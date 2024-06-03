@@ -1,6 +1,4 @@
-import { getCurrentUTCTimestamp } from "../utils/index.js";
-
-import { generateJWT, generateSessionId } from "../resources/helper.js";
+import { createUser } from "../models/User";
 
 export const signupController = async (req, res) => {
   const { email = "", user_name = "", password = "" } = req.body;

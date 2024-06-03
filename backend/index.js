@@ -7,10 +7,10 @@ import {
   cookieParserMiddleWare,
   corsMiddleWare,
 } from "./middlewares/index.js";
-import { connectDatabase } from "./resources/database.js";
 import { authRouter } from "./routes/index.js";
-import { parseCookies } from "./commons/index.js";
-import { getSessionQuery } from "./queries/AuthQueries.js";
+import { connectDatabase } from "./config/database.js";
+import { getSessionQuery } from "./models/index.js";
+import { parseCookies } from "./utils/index.js";
 
 async function startApiServer() {
   const app = express();

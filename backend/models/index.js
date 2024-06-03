@@ -1,6 +1,4 @@
-import { getCurrentUTCTimestamp } from "../commons/index.js";
-import { client } from "../resources/database.js";
-import { v4 as uuidv4 } from "uuid";
+import { client } from "../config/database";
 
 export const checkEmailExist = async ({ email = "" }) => {
   if (email) {
