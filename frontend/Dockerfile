@@ -8,10 +8,10 @@ WORKDIR /app/messaging
 COPY . .
 
 # Install dependencies
-RUN yarn install
+RUN npm install
 
 # Build the app
-RUN yarn build
+# RUN npm build
 
 # # Use Nginx to serve the static files
 # FROM nginx:alpine
@@ -23,4 +23,4 @@ RUN yarn build
 EXPOSE 8000
 
 # Start Nginx
-CMD ["npm", "start", ""]
+CMD ["npm", "start"]
