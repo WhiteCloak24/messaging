@@ -10,6 +10,7 @@ COPY . .
 # Install dependencies
 RUN npm install
 
+RUN npm build
 
 # Make port 3000 available to the world outside this container
 EXPOSE 4000
