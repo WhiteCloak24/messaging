@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 
 import cassandra from "cassandra-driver";
 
@@ -19,5 +18,4 @@ export async function connectDatabase() {
   await client.execute("USE admin");
   console.timeEnd("Connection with db created in");
 }
-
 

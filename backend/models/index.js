@@ -10,17 +10,7 @@ export const checkEmailExist = async ({ email = "" }) => {
     return null;
   }
 };
-export const addUserQuery = async ({ email = "", username = "" }) => {
-  if (email && username) {
-    const newUserId = uuidv4();
-    const resp = await client.execute(
-      `INSERT INTO users (user_id, created_at, username, email) VALUES ( ${newUserId}, ${getCurrentUTCTimestamp()} , '${username}' ,'${email}');`
-    );
-    return resp || null;
-  } else {
-    return null;
-  }
-};
+
 export const createSessionQuery = async ({ user_id = "", created_at = "", session_id = "", token = "" }) => {
   if (user_id && created_at && session_id && token) {
     const query = `INSERT INTO sessions (user_id, created_at, session_id, token_id) VALUES ( ?,?,?,?);`;
