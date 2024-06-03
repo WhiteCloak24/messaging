@@ -47,7 +47,7 @@ export function createSession(length = 32) {
   return sessionId;
 }
 
-const saltRounds = 90; // Number of salt rounds
+const saltRounds = 10; // Number of salt rounds
 
 export const hashPassword = async ({ password }) => {
   try {
