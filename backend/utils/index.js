@@ -1,5 +1,6 @@
 import cookieParser from "cookie-parser";
 import cookie from "cookie";
+import bcrypt from "bcrypt";
 
 export function getCurrentUTCTimestamp() {
   return Date.now();
@@ -45,3 +46,26 @@ export function createSession(length = 32) {
 
   return sessionId;
 }
+
+const saltRounds = 90; // Number of salt rounds
+
+export const hashPassword = async ({ password }) => {
+  try {
+    const salt = await bcrypt.genSalt(saltRounds);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    return hashedPassword;
+  } catch (error) {
+    console.error("Error hashing password:", error);
+    throw error;
+  }
+};
+
+export const verifyPassword = async ({ password, hashedPassword }) => {
+  try {
+    const isMatch = await bcrypt.compare(password, hashedPassword);
+    return isMatch;
+  } catch (error) {
+    console.error("Error verifying password:", error);
+    throw error;
+  }
+};

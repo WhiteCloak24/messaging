@@ -6,7 +6,7 @@ const userSchema = Joi.object({
   password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
 });
 
-export const validateUser = (userData,next) => {
+export const validateUser = (userData) => {
   const { error, value } = userSchema.validate(userData);
   if (error) {
     throw new Error(error.details[0].message);
