@@ -8,6 +8,7 @@ const UnauthorizedLayout = () => {
   if (authorizationState === AuthorizationStates.LOGGED_OUT) {
     return (
       <div className="unauthorized-layout">
+        <div onClick={() => console.log("asdgasghd")}>asldhs</div>
         <Outlet />
       </div>
     );

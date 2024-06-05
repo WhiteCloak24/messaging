@@ -4,6 +4,7 @@ import { RouterProvider } from "react-router-dom";
 import { AuthorizationProvider } from "./hooks/useAuthorization";
 import { SocketProvider } from "./hooks/useApplicationSocket";
 import React from "react";
+import AlertContainer from "./components/AlertContainer";
 
 function App() {
   const queryClient = new QueryClient({
@@ -16,13 +17,16 @@ function App() {
   });
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthorizationProvider>
-        <SocketProvider>
-          <RouterProvider router={router} />;
-        </SocketProvider>
-      </AuthorizationProvider>
-    </QueryClientProvider>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <AuthorizationProvider>
+          <SocketProvider>
+            <RouterProvider router={router} />
+          </SocketProvider>
+        </AuthorizationProvider>
+      </QueryClientProvider>
+      <AlertContainer />
+    </>
   );
 }
 
