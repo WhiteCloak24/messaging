@@ -40,46 +40,81 @@ const Signup = () => {
   }
 
   return (
-    <div className="h-full flex items-center justify-center">
-      <div className="h-1/2 w-2/5 rounded-md flex flex-col items-center p-4 bg-gray-400">
-        <div className="text-black font-bold text-4xl mt-5">Signup</div>
-        <div className="mt-8 w-full">
-          <div className="font-medium text-xl text-black mb-2">Enter User name</div>
-          <Controller
-            name={"user_name"}
-            control={control}
-            render={({ field }) => {
-              return <input {...field} className="h-12" type="text" />;
-            }}
-          />
-        </div>
-        <div className="mt-8 w-full">
-          <div className="font-medium text-xl text-black mb-2">Enter Email</div>
-          <Controller
-            name={"email"}
-            control={control}
-            render={({ field }) => {
-              return <input {...field} className="h-12" type="email" />;
-            }}
-          />
-        </div>
-        <div className="mt-8 w-full">
-          <div className="font-medium text-xl text-black mb-2">Enter Password</div>
-          <Controller
-            name={"password"}
-            control={control}
-            render={({ field }) => {
-              return <input {...field} className="h-12" type="text" />;
-            }}
-          />
-        </div>
-
-        <div onClick={() => navigate("/")}>Go to Login</div>
-        <div className="login-btn-group mt-10">
-          <button onClick={handleSubmit(onSubmit)} type="button" disabled={isPending} className="bg-gray-600 text-white rounded-md h-12 w-full">
-            {isPending ? "Please wait" : "Submit"}
-          </button>
-        </div>
+    <div className="flex h-screen bg-gray-200 items-center justify-center">
+      <div className="bg-white p-8 rounded shadow-md h-2/4 w-2/4 flex flex-col items-center justify-center">
+        <h2 className="text-gray-800 text-2xl font-semibold mb-4">Sign Up</h2>
+        <form className="w-full">
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+              User Name
+            </label>
+            <Controller
+              name={"user_name"}
+              control={control}
+              render={({ field }) => {
+                return (
+                  <input
+                    {...field}
+                    type="text"
+                    placeholder="Enter your user name"
+                    className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                );
+              }}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+              Email
+            </label>
+            <Controller
+              name={"email"}
+              control={control}
+              render={({ field }) => {
+                return (
+                  <input
+                    {...field}
+                    type="email"
+                    placeholder="Enter your email"
+                    className="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                );
+              }}
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+              Password
+            </label>
+            <Controller
+              name={"password"}
+              control={control}
+              render={({ field }) => {
+                return (
+                  <input
+                    {...field}
+                    className="appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                  />
+                );
+              }}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <button
+              className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="button"
+              onClick={handleSubmit(onSubmit)}
+              disabled={isPending}>
+              {isPending ? "Please wait..." : "Sign Up"}
+            </button>
+            <button className="text-gray-600 hover:text-gray-700 text-sm" type="button" onClick={() => navigate("/")}>
+              Sign In
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
