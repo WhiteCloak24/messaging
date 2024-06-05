@@ -1,4 +1,6 @@
 import axios from "axios";
+import { dispatchCustomEventFn } from "../resources/functions";
+import { AlertEVENTS } from "../resources/constants";
 
 export const apiClient = axios.create({
   baseURL: "http://localhost:4000",
@@ -27,6 +29,7 @@ apiClient.interceptors.response.use(
     return response;
   },
   (error) => {
+    dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: error?.response?.data?.message } });
     throw new Error(error?.response?.data?.message);
   }
 );
