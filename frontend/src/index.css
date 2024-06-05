@@ -16,12 +16,6 @@ body {
 .unauthorized-layout {
   @apply h-full bg-slate-50 bg-opacity-25;
 }
-input {
-  @apply rounded-sm w-full;
-}
-.login-btn-group {
-  @apply w-full flex items-center justify-around gap-3;
-}
 .alert-container {
   @apply w-60 fixed bottom-2 left-2 pointer-events-none;
 }
