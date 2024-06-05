@@ -5,7 +5,7 @@ import { login } from "../../api-service";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { dispatchCustomEventFn } from "../../resources/functions";
-import { AuthorizationEVENTS } from "../../resources/constants";
+import { AlertEVENTS, AuthorizationEVENTS } from "../../resources/constants";
 import { useNavigate } from "react-router-dom";
 
 const validationSchema = yup.object().shape({

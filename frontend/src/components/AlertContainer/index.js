@@ -47,15 +47,20 @@ const AlertContainer = () => {
   return (
     <div className="alert-container ">
       <div className="flex flex-col gap-3">
-        {alerts.map((alert) => (
-          <div key={alert?.id} id={alert?.id} className="alert-error pointer-events-auto">
-            <div className="h-1/4 min-h-7 border-b border-black flex items-center px-2 justify-between">
+        {alerts.map((alert, index) => (
+          <div
+            key={alert?.id}
+            style={{ order: index + 1 }}
+            id={alert?.id}
+            className="alert-error flex flex-col pointer-events-auto animate-alertAnimation">
+            <div className="h-1/5 min-h-7 border-b border-black flex items-center px-2 justify-between">
               <div>Error</div>
               <div className="cursor-pointer" onClick={() => removeAlert(alert?.id)}>
                 Close
               </div>
             </div>
             <div className="h-full p-2">{alert?.message}</div>
+            <Loader />
           </div>
         ))}
       </div>
@@ -64,3 +69,29 @@ const AlertContainer = () => {
 };
 
 export default AlertContainer;
+
+const Loader = ({ time = 5000 }) => {
+  const loaderRef = useRef();
+  const loaderContainerRef = useRef();
+  const timeRef = useRef(0);
+  useEffect(() => {
+    let interval;
+    if (loaderRef.current) {
+      interval = setInterval(() => {
+        const containerWidth = loaderContainerRef.current.offsetWidth - 2;
+        timeRef.current = timeRef.current + 10;
+        const loaderWidth = (timeRef.current / time) * containerWidth;
+        loaderRef.current.style.width = `${loaderWidth}px`;
+      }, 10);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [loaderRef.current]);
+
+  return (
+    <div ref={loaderContainerRef} className="h-1 mb-1 mx-1">
+      <div ref={loaderRef} className="bg-red-500 w-0 h-full"></div>
+    </div>
+  );
+};
