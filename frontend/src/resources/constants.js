@@ -8,3 +8,6 @@ export const AuthorizationEVENTS = {
   SET_USER_ID: "SET_USER_ID",
   LOGGED_IN: "LOGGED_IN",
 };
+export const AlertEVENTS = {
+  ALERT: "ALERT",
+};
