@@ -16,7 +16,7 @@ const AlertContainer = () => {
     setAlerts((prevAlerts) => {
       return prevAlerts.filter((alert) => alert?.id !== id);
     });
-    processQueue(); // Process the next alert in the queue
+    // processQueue(); // Process the next alert in the queue
   };
   const processQueue = () => {
     if (!alertQueueRef.current.isEmpty()) {
