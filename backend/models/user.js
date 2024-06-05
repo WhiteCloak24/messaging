@@ -19,3 +19,16 @@ export const createUser = async ({ email = "", user_name = "", password = "" }) 
     }
   }
 };
+
+export const checkUserExist = async ({ email = "" }) => {
+  const query = `SELECT * FROM users WHERE email = ? ALLOW FILTERING;`;
+  const resp = await client.execute(query, [email]);
+  return resp.rows || null;
+};
+
+export const createUserSession = async ({ user_id, session_created_at, jwt_token, session_id }) => {
+  const query = `INSERT INTO sessions (user_id, session_created_at, jwt_token, session_id) VALUES ( ?,?,?,?);`;
+  const params = [user_id, session_created_at, jwt_token, session_id];
+  const resp = await client.execute(query, params);
+  return resp || null;
+};

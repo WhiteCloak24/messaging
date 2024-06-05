@@ -1,6 +1,7 @@
 import cookieParser from "cookie-parser";
 import cookie from "cookie";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export function getCurrentUTCTimestamp() {
   return Date.now();
@@ -21,12 +22,10 @@ export function generateSessionId(length = 16) {
   return sessionId;
 }
 
-export function generateJWT({ email = "", sessionId = "", created_at = "" }) {
+export function generateJWT(payload) {
   const token = jwt.sign(
     {
-      email,
-      sessionId,
-      created_at,
+      ...payload,
     },
     process.env.JWT_SECRET_KEY,
     {
@@ -35,6 +34,7 @@ export function generateJWT({ email = "", sessionId = "", created_at = "" }) {
   );
   return token;
 }
+
 export function createSession(length = 32) {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const charactersLength = characters.length;
