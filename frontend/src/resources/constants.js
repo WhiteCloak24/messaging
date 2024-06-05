@@ -11,3 +11,7 @@ export const AuthorizationEVENTS = {
 export const AlertEVENTS = {
   ALERT: "ALERT",
 };
+export const TooltipEvent = {
+  ENTER: "TOOLTIP_ENTER",
+  LEAVE: "TOOLTIP_LEAVE",
+};

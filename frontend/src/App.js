@@ -5,6 +5,7 @@ import { AuthorizationProvider } from "./hooks/useAuthorization";
 import { SocketProvider } from "./hooks/useApplicationSocket";
 import React from "react";
 import AlertContainer from "./components/AlertContainer";
+import TooltipHandler from "./components/Tooltip";
 
 function App() {
   const queryClient = new QueryClient({
@@ -26,6 +27,7 @@ function App() {
         </AuthorizationProvider>
       </QueryClientProvider>
       <AlertContainer />
+      <TooltipHandler />
     </>
   );
 }

@@ -10,7 +10,7 @@ const UnauthorizedLayout = () => {
   if (authorizationState === AuthorizationStates.LOGGED_OUT) {
     return (
       <div className="unauthorized-layout">
-        <div
+        {/* <div
           onClick={() => {
             setCount((prev) => prev + 1);
             dispatchCustomEventFn({
@@ -23,7 +23,7 @@ const UnauthorizedLayout = () => {
             });
           }}>
           Show alert
-        </div>
+        </div> */}
         <Outlet />
       </div>
     );

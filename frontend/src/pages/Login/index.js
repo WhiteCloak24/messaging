@@ -8,6 +8,7 @@ import { useAuthorization } from "../../hooks/useAuthorization";
 import { dispatchCustomEventFn } from "../../resources/functions";
 import { AuthorizationEVENTS } from "../../resources/constants";
 import { useNavigate } from "react-router-dom";
+import TooltipWrapper from "../../components/Tooltip/TooltipWrapper";
 
 const validationSchema = yup.object().shape({
   email: yup.string().email("Must be a valid email").required("Email is required"),
@@ -64,9 +65,11 @@ const Login = () => {
         </div>
         <div onClick={() => navigate("/signup")}>Go to Signup</div>
         <div className="login-btn-group mt-10">
-          <button onClick={handleSubmit(onSubmit)} type="button" disabled={isPending} className="bg-gray-600 text-white rounded-md h-12 w-full">
-            {isPending ? "Please wait" : "Submit"}
-          </button>
+          <TooltipWrapper>
+            <button onClick={handleSubmit(onSubmit)} type="button" disabled={isPending} className="bg-gray-600 text-white rounded-md h-12 w-full">
+              {isPending ? "Please wait" : "Submit"}
+            </button>
+          </TooltipWrapper>
         </div>
       </div>
     </div>
