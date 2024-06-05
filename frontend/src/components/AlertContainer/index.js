@@ -45,11 +45,17 @@ const AlertContainer = () => {
   };
 
   return (
-    <div className="w-60 h-full fixed bottom-0 left-0 pointer-events-none">
-      <div className="alerts">F
+    <div className="alert-container ">
+      <div className="flex flex-col gap-3">
         {alerts.map((alert) => (
-          <div key={alert?.id} id={alert?.id} className="alert bg-red text-black h-28">
-            {alert?.message}
+          <div key={alert?.id} id={alert?.id} className="alert-error pointer-events-auto">
+            <div className="h-1/4 min-h-7 border-b border-black flex items-center px-2 justify-between">
+              <div>Error</div>
+              <div className="cursor-pointer" onClick={() => removeAlert(alert?.id)}>
+                Close
+              </div>
+            </div>
+            <div className="h-full p-2">{alert?.message}</div>
           </div>
         ))}
       </div>
