@@ -27,8 +27,9 @@ const Login = () => {
     mutationKey: "login",
     mutationFn: login,
     onSuccess: (data) => {
-      if (data?.data?.status?.success) {
-        dispatchCustomEventFn({ eventName: AuthorizationEVENTS.SET_USER_ID, eventData: { user_id: data?.data?.userData?.user_id } });
+      if (data?.data?.success) {
+        console.log(data);
+        dispatchCustomEventFn({ eventName: AuthorizationEVENTS.SET_USER_ID, eventData: { user_id: data?.data?.data?.user_id } });
       }
     },
   });
