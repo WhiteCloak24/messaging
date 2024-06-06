@@ -80,6 +80,10 @@ export const SocketProvider = ({ children }) => {
     const { socketInstance } = state;
     if (socketInstance?.connected) {
       console.log("Listeners to be attached");
+      socketInstance.on("jwt-token", (data) => {
+        console.log("jwt-token", data);
+        // dispatchCustomEventFn({ eventName: AuthorizationEVENTS., eventData: data });
+      });
       socketInstance.on("user-logout", (data) => {
         console.log("user-logout", data);
         dispatchCustomEventFn({ eventName: AuthorizationEVENTS.LOGGED_OUT, eventData: data });
