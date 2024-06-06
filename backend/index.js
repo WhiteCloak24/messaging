@@ -1,7 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import customParser from "socket.io-msgpack-parser";
+import customParser from "socket.io-msgpack-parser";                      // will use protobuff later
 import { bodyParserMiddleWare, cookieParserMiddleWare, corsMiddleWare } from "./middlewares/appMiddleware.js";
 import { authRouter } from "./routes/index.js";
 import { connectDatabase } from "./config/database.js";

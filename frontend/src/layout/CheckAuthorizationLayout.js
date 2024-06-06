@@ -7,15 +7,17 @@ import FullPageLoader from "../components/FullPageLoader";
 import { dispatchCustomEventFn } from "../resources/functions";
 
 const CheckAuthorizationLayout = () => {
-  const { user_id, authorizationState, setUserId, setAuthorizationState } = useAuthorization();
+  const { user_id, authorizationState, setUserId, setAuthorizationState, setXAuthToken } = useAuthorization();
   const { subscribeSocket } = useApplicationSocket();
 
   useEffect(() => {
     window.addEventListener(AuthorizationEVENTS.SET_USER_ID, handleSetUser);
     window.addEventListener(AuthorizationEVENTS.LOGGED_OUT, handleLogout);
+    window.addEventListener(AuthorizationEVENTS.SET_TOKEN, handleSetToken);
     return () => {
       window.removeEventListener(AuthorizationEVENTS.SET_USER_ID, handleSetUser);
       window.removeEventListener(AuthorizationEVENTS.LOGGED_OUT, handleLogout);
+      window.removeEventListener(AuthorizationEVENTS.SET_TOKEN, handleSetToken);
     };
   }, []);
 
@@ -25,6 +27,12 @@ const CheckAuthorizationLayout = () => {
     }
   }, [authorizationState, user_id]);
 
+  function handleSetToken(e) {
+    if (e?.detail?.jwt_token) {
+      setXAuthToken({ token: e.detail.jwt_token });
+      setAuthorizationState({ state: AuthorizationStates.LOGGED_IN });
+    }
+  }
   function handleSetUser(e) {
     if (e?.detail?.user_id) {
       localStorage.user_id = e?.detail?.user_id;

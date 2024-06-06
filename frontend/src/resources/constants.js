@@ -6,6 +6,7 @@ export const AuthorizationStates = {
 export const AuthorizationEVENTS = {
   LOGGED_OUT: "LOGGED_OUT",
   SET_USER_ID: "SET_USER_ID",
+  SET_TOKEN: "SET_TOKEN",
   LOGGED_IN: "LOGGED_IN",
 };
 export const AlertEVENTS = {

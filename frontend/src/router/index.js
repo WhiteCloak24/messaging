@@ -13,6 +13,12 @@ export const router = createBrowserRouter([
       {
         path: "/home",
         element: <AuthorizedLayout />,
+        children: [
+          {
+            index: true,
+            element: <div>Home</div>,
+          },
+        ],
       },
       {
         path: "/",
