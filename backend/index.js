@@ -1,7 +1,7 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
-import customParser from "socket.io-msgpack-parser";                      // will use protobuff later
+import customParser from "socket.io-msgpack-parser"; // will use protobuff later
 import { bodyParserMiddleWare, cookieParserMiddleWare, corsMiddleWare } from "./middlewares/appMiddleware.js";
 import { authRouter } from "./routes/index.js";
 import { connectDatabase } from "./config/database.js";
@@ -36,6 +36,7 @@ async function startApiServer() {
     const parsedCookies = parseCookies({ cookies });
     const session_id = parsedCookies?.session_id || "";
     const sessions = await getSessions({ session_id, user_id });
+    console.log("Client connected", socket.id);
     if (sessions?.length > 0) {
       const session = sessions[0];
       const jwt_token = session?.jwt_token;
