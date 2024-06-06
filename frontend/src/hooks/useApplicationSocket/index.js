@@ -26,11 +26,12 @@ export const SocketProvider = ({ children }) => {
     }
   }, [state.isSocketConnected]);
 
-  const subscribeSocket = useCallback(({ socket_url = "", user_id = "" }) => {
+  const subscribeSocket = useCallback(({ socket_url = "", user_id = "", session_id = "" }) => {
     const socketInstance = io(socket_url, {
       transports: ["websocket"],
       auth: {
-        token: user_id,
+        user_id,
+        session_id,
       },
       reconnection: true,
       reconnectionDelay: 1000,
@@ -46,15 +47,20 @@ export const SocketProvider = ({ children }) => {
 
   const initializeSocket = useCallback(({ socketInstance = null }) => {
     if (socketInstance) {
+      socketInstance.on("connect_error", (err) => {
+        socketInstance.disconnect();
+        if (err.message === "Authentication error") {
+          console.error("Authentication failed:", err.data.content);
+        } else {
+          console.error("Connection error:", err.message);
+        }
+      });
       socketInstance.on("connect", () => {
         console.log("Subscribed to socket");
         setState((prev) => ({ ...prev, isSocketConnected: true }));
       });
       socketInstance.on("disconnect", (reason) => {
-        if (reason === "io server disconnect" || reason === "transport close") {
-          console.log("socketInstance disconnected ==", reason);
-          socketInstance.connect();
-        }
+        console.log('Disconnected from the server:', reason);
       });
       socketInstance.connect();
     }
