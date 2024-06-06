@@ -1,9 +1,12 @@
+import { parseCookies } from "../utils/index.js";
 
-export function authenticateTokenMiddleware(io) {
-  io.use((socket, next) => {
+export const authenticateConnectionMiddleware = (io) => {
+  io.use(async (socket, next) => {
     const user_id = socket.handshake.auth.user_id;
-    const session_id = socket.handshake.auth.session_id;
-    if (!false) {
+    const cookies = socket.handshake.headers.cookie;
+    const parsedCookies = parseCookies({ cookies });
+    const session_id = parsedCookies?.session_id || "";
+    if (user_id && session_id) {
       next();
     } else {
       const err = new Error("Authentication error");
@@ -11,4 +14,4 @@ export function authenticateTokenMiddleware(io) {
       socket.disconnect();
     }
   });
-}
+};

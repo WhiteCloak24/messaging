@@ -6,7 +6,9 @@ import { bodyParserMiddleWare, cookieParserMiddleWare, corsMiddleWare } from "./
 import { authRouter } from "./routes/index.js";
 import { connectDatabase } from "./config/database.js";
 import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js";
-import { authenticateTokenMiddleware } from "./middlewares/socketMiddleware.js";
+import { authenticateConnectionMiddleware } from "./middlewares/socketMiddleware.js";
+import { parseCookies } from "./utils/index.js";
+import { getSessions } from "./models/socket.js";
 
 async function startApiServer() {
   const app = express();
@@ -20,7 +22,7 @@ async function startApiServer() {
   corsMiddleWare(app);
   cookieParserMiddleWare(app);
 
-  authenticateTokenMiddleware(io);
+  authenticateConnectionMiddleware(io);
 
   app.set("trust proxy", true);
   app.get("/", (req, res) => {
@@ -30,16 +32,16 @@ async function startApiServer() {
 
   io.on("connection", async (socket) => {
     const user_id = socket.handshake.auth.user_id ?? "";
-    console.log("New client connected", socket?.id, user_id);
-    // const cookies = socket.handshake.headers.cookie;
-    // const parsedCookies = parseCookies({ cookies });
-    // const session_id = parsedCookies?.session_id || "";
-    // if (user_id && session_id) {
-    //   const response = await getSessionQuery({ user_id, session_id });
-    //   const data = response?.rows;
-    //   if (data?.length > 0) {
-    //   }
-    // }
+    const cookies = socket.handshake.headers.cookie;
+    const parsedCookies = parseCookies({ cookies });
+    const session_id = parsedCookies?.session_id || "";
+    const sessions = await getSessions({ session_id, user_id });
+    if (sessions?.length > 0) {
+      console.log(sessions);
+    } else {
+      // logout the user
+    }
+
     socket.on("disconnect", () => {
       console.log("Client disconnected");
     });
