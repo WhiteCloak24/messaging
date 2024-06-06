@@ -8,7 +8,7 @@ const initialState = {
   socketInstance: null,
   isSocketConnected: false,
   subscribeSocket: ({ socket_url = "", session_id = "", user_id = "", port = "" }) => null,
-  unsubscribeChat: () => null,
+  unsubscribeSocket: () => null,
 };
 
 export const SocketContext = createContext(initialState);
@@ -68,7 +68,7 @@ export const SocketProvider = ({ children }) => {
     }
   }, []);
 
-  const unsubscribeChat = useCallback(() => {
+  const unsubscribeSocket = useCallback(() => {
     if (state.socketInstance) {
       state.socketInstance.disconnect();
       state.socketInstance.off("connect");
@@ -96,7 +96,7 @@ export const SocketProvider = ({ children }) => {
       value={{
         ...state,
         subscribeSocket,
-        unsubscribeChat,
+        unsubscribeSocket,
       }}>
       {children}
     </SocketContext.Provider>
