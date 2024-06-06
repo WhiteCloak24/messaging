@@ -3,7 +3,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import customParser from "socket.io-msgpack-parser"; // will use protobuff later
 import { bodyParserMiddleWare, cookieParserMiddleWare, corsMiddleWare } from "./middlewares/appMiddleware.js";
-import { authRouter } from "./routes/index.js";
+import { authRouter, userRouter } from "./routes/index.js";
 import { connectDatabase } from "./config/database.js";
 import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js";
 import { authenticateConnectionMiddleware } from "./middlewares/socketMiddleware.js";
@@ -29,6 +29,7 @@ async function startApiServer() {
     res.send("Dashboard");
   });
   app.use("/auth", authRouter);
+  app.use("/user", userRouter);
 
   io.on("connection", async (socket) => {
     const user_id = socket.handshake.auth.user_id ?? "";

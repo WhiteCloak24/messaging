@@ -32,3 +32,9 @@ export const createUserSession = async ({ user_id, session_created_at, jwt_token
   const resp = await client.execute(query, params);
   return resp || null;
 };
+
+export const getUserListing = async () => {
+  const query = `SELECT * FROM users;`;
+  const resp = await client.execute(query);
+  return resp.rows || null;
+};
