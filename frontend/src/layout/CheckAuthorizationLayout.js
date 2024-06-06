@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
 import { useAuthorization } from "../hooks/useAuthorization";
-import { AuthorizationEVENTS, AuthorizationStates } from "../resources/constants";
+import { AlertEVENTS, AuthorizationEVENTS, AuthorizationStates } from "../resources/constants";
 import { Outlet } from "react-router-dom";
 import { useApplicationSocket } from "../hooks/useApplicationSocket";
 import FullPageLoader from "../components/FullPageLoader";
+import { dispatchCustomEventFn } from "../resources/functions";
 
 const CheckAuthorizationLayout = () => {
   const { user_id, authorizationState, setUserId, setAuthorizationState } = useAuthorization();
@@ -32,6 +33,7 @@ const CheckAuthorizationLayout = () => {
     }
   }
   function handleLogout(e) {
+    dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: e.detail.reason } });
     localStorage.clear();
     setUserId({ user_id: "" });
     setAuthorizationState({ state: AuthorizationStates.LOGGED_OUT });

@@ -35,10 +35,14 @@ async function startApiServer() {
     const cookies = socket.handshake.headers.cookie;
     const parsedCookies = parseCookies({ cookies });
     const session_id = parsedCookies?.session_id || "";
+    console.log("socket");
     const sessions = await getSessions({ session_id, user_id });
     if (sessions?.length > 0) {
       console.log(sessions);
     } else {
+      socket.emit("user-logout", {
+        reason: "Session not found",
+      });
       // logout the user
     }
 

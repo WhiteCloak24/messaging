@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext, createContext, useMemo, useCallback } from "react";
 import { io } from "socket.io-client";
 import customParser from "socket.io-msgpack-parser";
+import { AuthorizationEVENTS } from "../../resources/constants";
+import { dispatchCustomEventFn } from "../../resources/functions";
 
 const initialState = {
   socketInstance: null,
@@ -60,7 +62,7 @@ export const SocketProvider = ({ children }) => {
         setState((prev) => ({ ...prev, isSocketConnected: true }));
       });
       socketInstance.on("disconnect", (reason) => {
-        console.log('Disconnected from the server:', reason);
+        console.log("Disconnected from the server:", reason);
       });
       socketInstance.connect();
     }
@@ -78,6 +80,10 @@ export const SocketProvider = ({ children }) => {
     const { socketInstance } = state;
     if (socketInstance?.connected) {
       console.log("Listeners to be attached");
+      socketInstance.on("user-logout", (data) => {
+        console.log("user-logout", data);
+        dispatchCustomEventFn({ eventName: AuthorizationEVENTS.LOGGED_OUT, eventData: data });
+      });
     }
   }, [state.socketInstance]);
 
