@@ -16,3 +16,4 @@ export const TooltipEvent = {
   ENTER: "TOOLTIP_ENTER",
   LEAVE: "TOOLTIP_LEAVE",
 };
+export const AvatarPreview = "AVATAR_PREVIEW"
