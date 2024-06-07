@@ -6,6 +6,7 @@ import { SocketProvider } from "./hooks/useApplicationSocket";
 import React from "react";
 import AlertContainer from "./components/AlertContainer";
 import TooltipHandler from "./components/Tooltip";
+import ImagePreviewer from "./components/ImagePreviewer";
 
 function App() {
   const queryClient = new QueryClient({
@@ -28,6 +29,7 @@ function App() {
       </QueryClientProvider>
       <AlertContainer />
       <TooltipHandler />
+      <ImagePreviewer />
     </>
   );
 }
