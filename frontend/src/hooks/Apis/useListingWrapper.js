@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
-const useListingWrapper = ({ queryKey = "", queryFn = () => null }) => {
-  const Request = useQuery({ queryKey, queryFn, select: (data) => data?.data?.data || [] });
+const useListingWrapper = ({ queryFn = () => null }) => {
+  const Request = useQuery({ queryKey: queryFn.name, queryFn, select: (data) => data?.data?.data || [] });
   return { ...Request };
 };
 

@@ -1,5 +1,6 @@
 import React from "react";
 import Avatar from "../../../components/Avatar";
+import UserListing from "./UserListing";
 const contacts = [
   { name: "Jasmine Thomp", status: "Incoming Video Call · 45 min" },
   { name: "Konstantin Frank", status: "Hey · 1 day" },
@@ -7,7 +8,7 @@ const contacts = [
 ];
 const Sidebar = () => {
   return (
-    <div className="w-1/6 bg-white h-screen border-customBlue">
+    <div className="w-1/6 bg-white h-screen border-customBlue flex flex-col">
       <div className="flex justify-between items-center p-4">
         <div className="font-bold text-lg">Chats</div>
         <div>
@@ -17,16 +18,8 @@ const Sidebar = () => {
       <div className="px-4">
         <input type="text" placeholder="Search contact / chat" className="search-chat-input mt-2" />
       </div>
-      <div className="flex flex-col gap-1 cursor-pointer">
-        {contacts.map((contact, index) => (
-          <div key={index} className="py-2 px-4 hover:bg-grey flex gap-2">
-            <Avatar size="45" />
-            <div>
-              <p className="font-semibold text-sm">{contact.name}</p>
-              <p className="text-xs text-gray-600">{contact.status}</p>
-            </div>
-          </div>
-        ))}
+      <div className="flex flex-col gap-1 cursor-pointer overflow-y-auto h-full">
+        <UserListing />
       </div>
     </div>
   );
