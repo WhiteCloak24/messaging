@@ -9,8 +9,8 @@ const ChatMessages = () => {
   return (
     <div className="flex-1 p-4 overflow-y-scroll">
       {messages.map((msg, index) => (
-        <div key={index} className={`mb-4 ${msg.type === 'sent' ? 'text-right' : ''}`}>
-          <p className="inline-block p-2 rounded bg-blue-100">{msg.content}</p>
+        <div key={index} className={`mb-4 ${msg.type === 'sent' ? ' bg-white' : 'bg-customDarkblue text-white'}`}>
+          <p className="inline-block p-2 rounded">{msg.content}</p>
           <p className="text-xs text-gray-500">{msg.time}</p>
         </div>
       ))}

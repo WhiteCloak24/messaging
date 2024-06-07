@@ -5,7 +5,8 @@ module.exports = {
     extend: {
       colors: {
         grey: "#f1f5f9",
-        customBlue:"#dbeafe"
+        customBlue:"#dbeafe",
+        customDarkblue:"#2563eb"
       },
       fontSize: {
         responsive: "clamp(1rem, 2vw + 1vh, 3rem)", // Adjust the values as needed
