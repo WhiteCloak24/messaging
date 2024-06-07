@@ -28,6 +28,7 @@ const ImagePreviewer = () => {
   }, []);
 
   const closePreview = useCallback(() => {
+    setIsImagePreview(false);
     const container = previewContainerRef.current;
     previewRef.current.classList.remove("top-0");
     if (container) {
