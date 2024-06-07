@@ -9,7 +9,9 @@ html {
 body {
   height: 100%;
 }
-
+input{
+  @apply focus:outline-none
+}
 #root {
   height: 100%;
 }
@@ -26,5 +28,5 @@ body {
   @apply bg-red-400 rounded-md text-black h-28;
 }
 .search-chat-input {
-  @apply w-full py-2 px-6 rounded-3xl mb-4 bg-gray-200 placeholder:text-sm focus:outline-none;
+  @apply w-full py-2 px-6 rounded-3xl mb-4 bg-gray-200 placeholder:text-sm;
 }
