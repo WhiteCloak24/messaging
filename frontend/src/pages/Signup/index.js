@@ -5,6 +5,8 @@ import { signup } from "../../api-service";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
+import { AlertEVENTS } from "../../resources/constants";
+import { dispatchCustomEventFn } from "../../resources/functions";
 
 const validationSchema = yup.object().shape({
   email: yup.string().email("Must be a valid email").required("Email is required"),
@@ -28,9 +30,8 @@ const Signup = () => {
     mutationKey: "signup",
     mutationFn: signup,
     onSuccess: (data) => {
-      console.log(data);
-      if (data?.data?.status?.success) {
-        // dispatchCustomEventFn({ eventName: AuthorizationEVENTS.SET_USER_ID, eventData: { user_id: data?.data?.userData?.user_id } });
+      if (data?.data?.success) {
+        dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: data?.data?.message || "" } });
       }
     },
   });

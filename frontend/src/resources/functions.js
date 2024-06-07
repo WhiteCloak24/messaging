@@ -14,5 +14,5 @@ export function generateRandomId(length = 16) {
   return id;
 }
 export function getInitials({ firstName = "", lastName = "" }) {
-  return `${firstName?.charAt(0) || "U"}${lastName?.charAt(0) || ""}`;
+  return `${firstName?.charAt(0)?.toUpperCase() || "U"}${lastName?.charAt(0)?.toUpperCase() || ""}`;
 }
