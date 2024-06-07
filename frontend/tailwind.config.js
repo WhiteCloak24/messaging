@@ -3,6 +3,9 @@ module.exports = {
   content: ["./src/**/*.{html,js}"],
   theme: {
     extend: {
+      fontSize: {
+        'responsive': 'clamp(1rem, 2vw + 1vh, 3rem)', // Adjust the values as needed
+      },
       keyframes: {
         alert_transition: {
           "0%": {
