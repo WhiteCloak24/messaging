@@ -22,3 +22,10 @@ export const userListing = (value) => {
     data: value,
   });
 };
+export const chatListing = (value) => {
+  return apiClient({
+    method: routes.CHAT_LISTING.METHOD,
+    url: routes.CHAT_LISTING.PATH,
+    data: value,
+  });
+};

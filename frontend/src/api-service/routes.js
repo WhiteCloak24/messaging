@@ -11,4 +11,8 @@ export const routes = {
     PATH: "user/listing",
     METHOD: "GET",
   },
+  CHAT_LISTING: {
+    PATH: "chat/listing",
+    METHOD: "GET",
+  },
 };

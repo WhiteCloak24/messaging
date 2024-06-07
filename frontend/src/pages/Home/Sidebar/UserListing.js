@@ -5,9 +5,9 @@ import Avatar from "../../../components/Avatar";
 
 const UserListing = () => {
   const { data: userList = [] } = useListingWrapper({ queryFn: userListing });
-  console.log(userList);
   return (
-    <>
+    <div>
+      <div className="px-4 font-semibold">All Users ({userList?.length})</div>
       {userList.map((user, index) => (
         <div key={index} className="py-2 px-4 hover:bg-grey flex gap-2">
           <Avatar firstName={user?.user_name} size="45" />
@@ -17,7 +17,7 @@ const UserListing = () => {
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 
