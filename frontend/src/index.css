@@ -10,7 +10,7 @@ body {
   height: 100%;
 }
 input{
-  @apply bg-gray-200 focus:outline-none focus:bg-white
+  @apply bg-gray-200 border focus:outline-none focus:bg-white focus:border border-gray-200
 }
 #root {
   height: 100%;
