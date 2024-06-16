@@ -1,0 +1,14 @@
+services:
+  - name: messaging-backend
+    type: web
+    env: node
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    autoDeploy: true
+
+  # - name: my-frontend
+  #   type: web
+  #   env: static
+  #   buildCommand: cd frontend && npm install && npm run build
+  #   staticPublishPath: frontend/build
+  #   autoDeploy: true
