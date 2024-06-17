@@ -16,7 +16,7 @@ apiClient.interceptors.request.use(
   (config) => {
     // const accessToken = localStorage.getItem("nph-acc-tkn");
     // if (accessToken) {
-    //   config.headers["Authorization"] = `Bearer ${accessToken}`;
+      config.headers["Authorization"] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZXNzaW9uX2NyZWF0ZWRfYXQiOjE3MTc3NTg3ODY1NjksInNlc3Npb25faWQiOiJxVk41VmJ3VEZ3UEpYZUxSIiwiZW1haWwiOiJ5YXNoQGdtYWlsLmNvbSIsImNsaWVudF9pcCI6Ijo6MSIsInVzZXJfYWdlbnQiOiJNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTI1LjAuMC4wIFNhZmFyaS81MzcuMzYiLCJ1c2VyX2lkIjoiMWIwMjM5MzctNzczMy00NWNlLTlkZDQtY2MzNGUwZGVhOThiIiwiaWF0IjoxNzE3NzU4Nzg2LCJleHAiOjE4MDQxNTg3ODZ9.E4gIhxrNj1zIUDlV7kH04h9x1EBhp7B72Xnf_FJtCaw`;
     // }
     return config;
   },

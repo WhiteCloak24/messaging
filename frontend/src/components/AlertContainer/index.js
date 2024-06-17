@@ -76,7 +76,7 @@ const Loader = ({ time = 5000 }) => {
   const timeRef = useRef(0);
   useEffect(() => {
     let interval;
-    if (loaderRef.current) {
+    if (loaderRef.current && loaderContainerRef.current) {
       interval = setInterval(() => {
         const containerWidth = loaderContainerRef.current.offsetWidth - 2;
         timeRef.current = timeRef.current + 10;
@@ -87,7 +87,7 @@ const Loader = ({ time = 5000 }) => {
     return () => {
       clearInterval(interval);
     };
-  }, [loaderRef.current]);
+  }, [loaderRef.current, loaderContainerRef.current]);
 
   return (
     <div ref={loaderContainerRef} className="h-1 mb-1 mx-1">

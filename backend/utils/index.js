@@ -34,6 +34,15 @@ export function generateJWT(payload) {
   );
   return token;
 }
+export function verifyJWT(req, res, next) {
+  const token = req.headers.authorization || "";
+  if (!token) {
+    return res.status(401).json({ status: false, message: "Unauthorized: Missing token" });
+  }
+  const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  req.user = decoded;
+  next();
+}
 
 export function createSession(length = 32) {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

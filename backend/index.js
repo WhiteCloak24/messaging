@@ -3,11 +3,11 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import customParser from "socket.io-msgpack-parser"; // will use protobuff later
 import { bodyParserMiddleWare, cookieParserMiddleWare, corsMiddleWare } from "./middlewares/appMiddleware.js";
-import { authRouter, userRouter } from "./routes/index.js";
+import { authRouter, chatRouter, userRouter } from "./routes/index.js";
 import { connectDatabase } from "./config/database.js";
 import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js";
 import { authenticateConnectionMiddleware } from "./middlewares/socketMiddleware.js";
-import { parseCookies } from "./utils/index.js";
+import { parseCookies, verifyJWT } from "./utils/index.js";
 import { getSessions } from "./models/socket.js";
 
 async function startApiServer() {
@@ -29,7 +29,13 @@ async function startApiServer() {
     res.send("Dashboard");
   });
   app.use("/auth", authRouter);
-  app.use("/user", userRouter);
+
+  app.use("/user", verifyJWT, userRouter);
+  app.use("/chat", verifyJWT, chatRouter);
+
+  app.use((req, res, next) => {
+    res.status(404).json({ success: false, message: "Could not find resource" });
+  });
 
   io.on("connection", async (socket) => {
     const user_id = socket.handshake.auth.user_id ?? "";
