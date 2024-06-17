@@ -3,8 +3,8 @@ import { dispatchCustomEventFn } from "../resources/functions";
 import { AlertEVENTS } from "../resources/constants";
 
 export const apiClient = axios.create({
-  // baseURL: "http://localhost:4000",
-  baseURL: "https://messaging-xqe6.onrender.com",
+  baseURL: "http://localhost:4000",
+  // baseURL: "https://messaging-xqe6.onrender.com",
   withCredentials: true,
   headers: {
     Accept: "application/json",

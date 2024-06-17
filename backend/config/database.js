@@ -4,7 +4,8 @@ export let client;
 
 export async function connectDatabase() {
   client = new cassandra.Client({
-    contactPoints: ["34.93.23.0"], // Replace with your Cassandra node IPs
+    // contactPoints: ["34.93.23.0"], // Replace with your Cassandra node IPs
+    contactPoints: ["http://localhost:4000"], // Replace with your Cassandra node IPs
     localDataCenter: "datacenter1", // Replace with your data center name
     keyspace: "development",
   });
