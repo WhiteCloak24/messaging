@@ -17,7 +17,7 @@ const AuthorizedLayout = () => {
     };
   }, [isSocketConnected]);
 
-  if (authorizationState === AuthorizationStates.LOGGED_IN) {
+  if (authorizationState !== AuthorizationStates.LOGGED_IN) {
     return (
       <div className="authorized-layout">
         <Outlet />

@@ -7,7 +7,7 @@ import { dispatchCustomEventFn } from "../resources/functions";
 const UnauthorizedLayout = () => {
   const { authorizationState } = useAuthorization();
   const [count, setCount] = useState(0);
-  if (authorizationState === AuthorizationStates.LOGGED_OUT) {
+  if (authorizationState !== AuthorizationStates.LOGGED_OUT) {
     return (
       <div className="unauthorized-layout">
         {/* <div

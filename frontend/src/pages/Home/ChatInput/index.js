@@ -37,9 +37,11 @@ const ChatInput = () => {
       <div className="bg-gray-200 h-8 w-8 rounded-full flex items-center justify-center cursor-pointer hover:text-amber-700">
         <FiPlus />
       </div>
-      <div className="bg-gray-200 h-8 w-8 rounded-full flex items-center justify-center cursor-pointer hover:text-blue-300">
-        <FaRegImage />
-      </div>
+      <TooltipWrapper tooltipText="Select Image">
+        <div className="bg-gray-200 h-8 w-8 rounded-full flex items-center justify-center cursor-pointer hover:text-blue-300">
+          <FaRegImage />
+        </div>
+      </TooltipWrapper>
       <TooltipWrapper tooltipText="Select Emoji">
         <div className="bg-gray-200 h-8 w-8 rounded-full flex items-center justify-center cursor-pointer hover:text-yellow-600">
           <FaSmile />
@@ -51,17 +53,21 @@ const ChatInput = () => {
         className="flex-1 p-2 rounded border"
       />
       {!isRecording ? (
-        <div className="cursor-pointer" onClick={startRecording}>
-          <FaMicrophone />
-        </div>
+        <TooltipWrapper tooltipText="Start Recording">
+          <div className="cursor-pointer" onClick={startRecording}>
+            <FaMicrophone />
+          </div>
+        </TooltipWrapper>
       ) : (
         <div className="cursor-pointer" onClick={stopRecording}>
           Stop
         </div>
       )}
-      <div className="cursor-pointer">
-        <FaTelegramPlane />
-      </div>
+      <TooltipWrapper tooltipText="Send Message">
+        <div className="cursor-pointer">
+          <FaTelegramPlane />
+        </div>
+      </TooltipWrapper>
       {audioURL && <audio src={audioURL} controls />}
     </div>
   );

@@ -16,7 +16,8 @@ const TooltipHandler = () => {
 
   const handleTooltipEnter = useCallback(
     (e) => {
-      const elementRef = document.getElementsByClassName("ns-tooltip-ref")?.[0];
+      const id = e.detail.tooltipId || "";
+      const elementRef = document.getElementsByClassName(`ns-tooltip-ref-${id}`)?.[0];
       if (elementRef) {
         const { top, left, height, width, bottom } =
           elementRef.getBoundingClientRect();
@@ -38,7 +39,8 @@ const TooltipHandler = () => {
 
   const handleTooltipLeave = useCallback(
     (e) => {
-      const elementRef = document.getElementsByClassName("ns-tooltip-ref")?.[0];
+      const id = e.detail.tooltipId || "";
+      const elementRef = document.getElementsByClassName(`ns-tooltip-ref-${id}`)?.[0];
       if (elementRef) {
         setTooltipText("");
       }

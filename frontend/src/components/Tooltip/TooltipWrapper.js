@@ -10,16 +10,17 @@ const TooltipWrapper = ({
   className = "",
   tooltipText = "Dummy Text",
 }) => {
-  const handleMouseEnter = useCallback(() => {
+  const id = generateRandomId();
+  const handleMouseEnter = useCallback((_, id) => {
     dispatchCustomEventFn({
       eventName: TooltipEvent.ENTER,
-      eventData: { tooltipText },
+      eventData: { tooltipText, tooltipId: id },
     });
   }, []);
-  const handleMouseLeave = useCallback(() => {
+  const handleMouseLeave = useCallback((_, id) => {
     dispatchCustomEventFn({
       eventName: TooltipEvent.LEAVE,
-      eventData: { tooltipText },
+      eventData: { tooltipText, tooltipId: id },
     });
   }, []);
 
@@ -28,11 +29,11 @@ const TooltipWrapper = ({
     return React.cloneElement(children, {
       className: `${
         children.props.className
-          ? children.props.className + " ns-tooltip-ref"
-          : "ns-tooltip-ref "
+          ? children.props.className + " ns-tooltip-ref-" + id
+          : `ns-tooltip-ref-${id} `
       }${className}`,
-      onMouseEnter: handleMouseEnter,
-      onMouseLeave: handleMouseLeave,
+      onMouseEnter: (e) => handleMouseEnter(e, id),
+      onMouseLeave: (e) => handleMouseLeave(e, id),
     });
   }
 
