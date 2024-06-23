@@ -1,22 +1,42 @@
 import React, { useCallback, useRef } from "react";
-import { dispatchCustomEventFn, generateRandomId } from "../../resources/functions";
+import {
+  dispatchCustomEventFn,
+  generateRandomId,
+} from "../../resources/functions";
 import { TooltipEvent } from "../../resources/constants";
 
-const TooltipWrapper = ({ children, tooltipText = "Dummy Text" }) => {
-  const wrapperRef = useRef();
-  const element_id = useRef(generateRandomId());
+const TooltipWrapper = ({
+  children,
+  className = "",
+  tooltipText = "Dummy Text",
+}) => {
   const handleMouseEnter = useCallback(() => {
-    dispatchCustomEventFn({ eventName: TooltipEvent.ENTER, eventData: { element_id: wrapperRef?.current?.id, tooltipText } });
-  }, [wrapperRef]);
+    dispatchCustomEventFn({
+      eventName: TooltipEvent.ENTER,
+      eventData: { tooltipText },
+    });
+  }, []);
   const handleMouseLeave = useCallback(() => {
-    dispatchCustomEventFn({ eventName: TooltipEvent.LEAVE, eventData: { element_id: wrapperRef?.current?.id, tooltipText } });
-  }, [wrapperRef]);
+    dispatchCustomEventFn({
+      eventName: TooltipEvent.LEAVE,
+      eventData: { tooltipText },
+    });
+  }, []);
 
-  return (
-    <span id={element_id.current} ref={wrapperRef} className="w-full h-full" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      {children}
-    </span>
-  );
+  if (React.isValidElement(children)) {
+    // Clone the child and append the className to its existing className
+    return React.cloneElement(children, {
+      className: `${
+        children.props.className
+          ? children.props.className + " ns-tooltip-ref"
+          : "ns-tooltip-ref "
+      }${className}`,
+      onMouseEnter: handleMouseEnter,
+      onMouseLeave: handleMouseLeave,
+    });
+  }
+
+  return children;
 };
 
 export default TooltipWrapper;

@@ -1,14 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { TooltipEvent } from "../../resources/constants";
 
-const initialState = {
-  top: 0,
-  left: 0,
-  tooltipText: "",
-};
 const TooltipHandler = () => {
-  const [tooltipContent, setTooltipContent] = useState(initialState);
-  const observer = useRef(null);
+  const [tooltipText, setTooltipText] = useState("");
   const tooltipElement = useRef();
 
   useEffect(() => {
@@ -20,47 +14,47 @@ const TooltipHandler = () => {
     };
   }, []);
 
-  const positionTooltip = (tooltipData) => {
-    const element_id = tooltipData.element_id;
-    const tooltipText = tooltipData.tooltipText;
-    const element = document.getElementById(element_id);
-    const { top, right, bottom, width, height, left } = element.getBoundingClientRect();
-    const centerHeight = height / 2;
-    const targetHeight = tooltipElement.current.offsetHeight / 2;
-    const topCoordinate = top + centerHeight - targetHeight;
-    setTooltipContent({ top: topCoordinate, left: right, tooltipText });
-  };
   const handleTooltipEnter = useCallback(
     (e) => {
-      const tooltipData = e.detail;
-      positionTooltip(tooltipData);
-      if (observer.current) {
-        observer.current.disconnect();
+      const elementRef = document.getElementsByClassName("ns-tooltip-ref")?.[0];
+      if (elementRef) {
+        const { top, left, height, width, bottom } =
+          elementRef.getBoundingClientRect();
+        // for bottom
+        // tooltipElement.current.style.top = `${bottom}px`;
+        // tooltipElement.current.style.left = `${left + width / 2}px`;
+        // tooltipElement.current.style.transform = `translateX(-50%)`;
+        // tooltipElement.current.style["margin-top"] = "10px";
+        // for top
+        tooltipElement.current.style.top = `${top}px`;
+        tooltipElement.current.style.left = `${left + width / 2}px`;
+        tooltipElement.current.style.transform = `translate(-50%,-100%)`;
+        // tooltipElement.current.style["margin-bottom"] = "10px";
       }
-      const obs = new MutationObserver(() => {
-        positionTooltip(tooltipData);
-      });
-      observer.current = obs;
-      obs.observe(tooltipElement.current, { attributes: true });
+      setTooltipText(e.detail.tooltipText || "");
     },
     [tooltipElement.current]
   );
 
   const handleTooltipLeave = useCallback(
     (e) => {
-      if (observer) {
-        observer.current.disconnect();
+      const elementRef = document.getElementsByClassName("ns-tooltip-ref")?.[0];
+      if (elementRef) {
+        setTooltipText("");
       }
-      setTooltipContent(initialState);
     },
-    [observer]
+    [tooltipElement.current]
   );
 
   return (
     <>
-      <span ref={tooltipElement} style={{ top: tooltipContent.top, left: tooltipContent.left + 1 }} className="bg-black rounded-md fixed ">
-        {tooltipContent.tooltipText && <div className="tooltip p-2 w-fit h-fit text-sm text-white">{tooltipContent.tooltipText}</div>}
-      </span>
+      <div ref={tooltipElement} className="tooltip absolute">
+        {tooltipText && (
+          <div className="tooltip p-2 w-fit h-fit text-sm text-white bg-black rounded-md mb-2">
+            {tooltipText}
+          </div>
+        )}
+      </div>
     </>
   );
 };

@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { FaRegImage } from "react-icons/fa6";
 import { FaSmile, FaMicrophone, FaTelegramPlane } from "react-icons/fa";
+import TooltipWrapper from "../../../components/Tooltip/TooltipWrapper";
 const ChatInput = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState("");
@@ -39,9 +40,11 @@ const ChatInput = () => {
       <div className="bg-gray-200 h-8 w-8 rounded-full flex items-center justify-center cursor-pointer hover:text-blue-300">
         <FaRegImage />
       </div>
-      <div className="bg-gray-200 h-8 w-8 rounded-full flex items-center justify-center cursor-pointer hover:text-yellow-600">
-        <FaSmile />
-      </div>
+      <TooltipWrapper tooltipText="Select Emoji">
+        <div className="bg-gray-200 h-8 w-8 rounded-full flex items-center justify-center cursor-pointer hover:text-yellow-600">
+          <FaSmile />
+        </div>
+      </TooltipWrapper>
       <input
         type="text"
         placeholder="Type a message..."
