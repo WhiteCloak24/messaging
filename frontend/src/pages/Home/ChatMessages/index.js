@@ -13,7 +13,6 @@ const ChatMessages = ({ activeChat = {} }) => {
     <div className="flex-1 p-4 overflow-y-scroll flex flex-col">
       {messageListing.map((msg) => {
         const { chat_id = "" } = msg || {};
-        console.log(user_id);
         const isSent = user_id === msg?.sender_id;
         return (
           <div key={chat_id} className={`mb-4 w-fit h-fit rounded-md ${isSent ? "self-end" : "self-start"}`}>
