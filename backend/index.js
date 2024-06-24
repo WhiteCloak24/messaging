@@ -7,9 +7,10 @@ import { authRouter, chatRouter, userRouter } from "./routes/index.js";
 import { connectDatabase } from "./config/database.js";
 import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js";
 import { authenticateConnectionMiddleware } from "./middlewares/socketMiddleware.js";
-import { parseCookies, verifyJWT } from "./utils/index.js";
+import { generateChatId, generateTimeUUID, getCurrentUTCTimestamp, parseCookies, verifyJWT } from "./utils/index.js";
 import { getSessions } from "./models/socket.js";
 import { checkFriend, createFriend } from "./models/chat.js";
+import { sendMessage } from "./models/messages.js";
 
 const ioSessionMap = {};
 
@@ -65,14 +66,28 @@ async function startApiServer() {
     // Add the socket.id to the array for this user_id
     ioSessionMap[user_id].push(socket.id);
 
-    socket.on("send-message", async (data, ...rest) => {
+    socket.on("send-message", async (data) => {
       const recipient_id = data?.recipients?.[0];
       const res = await checkFriend({ user_id, friend_id: recipient_id });
-      if (res?.length > 0) {
-      } else {
-        createFriend({ friend_id: recipient_id, user_id, last_message: data?.message });
+      const sent_time = getCurrentUTCTimestamp();
+      const timeUUID = generateTimeUUID();
+      if (res?.length === 0) {
+        createFriend({ friend_id: recipient_id, user_id, last_message: data?.message, sent_time });
       }
-      // console.log(res);
+      const response = await sendMessage({ user_id, receiverId: recipient_id, sent_time, message: data?.message, timeUUID });
+      if (!response || response?.info?.queriedHost === null) {
+        // res.status(404).json({ success: true, message: "Unable to Send" });
+      } else {
+        const chatId = generateChatId({ senderId: user_id, receiverId: recipient_id });
+        socket.emit("chat-update", {
+          type: "new-message",
+          data: {
+            chatId,
+          },
+        });
+      }
+
+      console.log(response);
     });
 
     socket.on("disconnect", () => {

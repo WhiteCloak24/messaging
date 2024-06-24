@@ -2,9 +2,13 @@ import cookieParser from "cookie-parser";
 import cookie from "cookie";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { v1 as timeuuid } from "uuid";
 
 export function getCurrentUTCTimestamp() {
   return Date.now();
+}
+export function generateTimeUUID() {
+  return timeuuid()
 }
 export function parseCookies({ cookies = null }) {
   if (!cookies) return null;
@@ -76,5 +80,12 @@ export const verifyPassword = async ({ password, hashedPassword }) => {
   } catch (error) {
     console.error("Error verifying password:", error);
     throw error;
+  }
+};
+export const generateChatId = ({ senderId = "", receiverId = "" }) => {
+  if (senderId > receiverId) {
+    return `${senderId}_${receiverId}`;
+  } else {
+    return `${receiverId}_${senderId}`;
   }
 };
