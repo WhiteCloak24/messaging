@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const dispatchCustomEventFn = ({ eventName = "", eventData = null }) => {
   if (!eventName) return;
   const customEvent = new CustomEvent(eventName, { detail: eventData });
@@ -15,4 +17,8 @@ export function generateRandomId(length = 16) {
 }
 export function getInitials({ firstName = "", lastName = "" }) {
   return `${firstName?.charAt(0)?.toUpperCase() || "U"}${lastName?.charAt(0)?.toUpperCase() || ""}`;
+}
+export function formatDate({ timestamp = "" }) {
+  if (!timestamp) return "Invalid Date";
+  return moment(timestamp).format("hh:mm A");
 }

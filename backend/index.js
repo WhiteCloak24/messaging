@@ -79,18 +79,22 @@ async function startApiServer() {
         // res.status(404).json({ success: true, message: "Unable to Send" });
       } else {
         const chatId = generateChatId({ senderId: user_id, receiverId: recipient_id });
-        socket.emit("chat-update", {
-          type: "new-message",
-          data: {
-            chatId,
-          },
-        });
+        if (ioSessionMap[recipient_id]) {
+          io.to(ioSessionMap[recipient_id]).emit("chat-update", {
+            type: "new-message",
+            data: {
+              chatId,
+            },
+          });
+        }
+        const messageListing = await getMessageListing({ user_id, recipientId: recipient_id });
+        socket.emit("message-listing", messageListing);
       }
     });
-    socket.on("message-listing", async (data, callback) => {
+    socket.on("message-listing", async (data) => {
       const recipientId = data?.recipientId;
       const messageListing = await getMessageListing({ user_id, recipientId });
-      callback(messageListing);
+      socket.emit("message-listing", messageListing);
     });
 
     socket.on("disconnect", () => {

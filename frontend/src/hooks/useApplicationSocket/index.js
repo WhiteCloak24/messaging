@@ -65,6 +65,14 @@ export const SocketProvider = ({ children }) => {
       socketInstance.on("connect", () => {
         console.log("Subscribed to socket");
         setState((prev) => ({ ...prev, isSocketConnected: true }));
+        socketInstance.on("chat-update", (data) => {
+          console.log(data);
+        });
+        socketInstance.on("message-listing", (messageListing) => {
+          if (messageListing instanceof Array) {
+            setState((prev) => ({ ...prev, messageListing: messageListing }));
+          }
+        });
       });
       socketInstance.on("disconnect", (reason) => {
         console.log("Disconnected from the server:", reason);
@@ -112,11 +120,7 @@ export const SocketProvider = ({ children }) => {
         recipientId,
       };
       setState((prev) => ({ ...prev, messageListing: [] }));
-      state.socketInstance.emit("message-listing", payload, (messageListing) => {
-        if (messageListing instanceof Array) {
-          setState((prev) => ({ ...prev, messageListing: messageListing }));
-        }
-      });
+      state.socketInstance.emit("message-listing", payload);
     },
     [state.socketInstance]
   );
