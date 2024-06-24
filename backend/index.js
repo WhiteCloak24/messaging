@@ -126,15 +126,17 @@ async function startApiServer() {
           delete ioSessionMap[user_id]; // Remove the user_id entry if no more sockets
         }
       }
-      joinedRooms[user_id].forEach((room) => {
-        socket.leave(room, (err) => {
-          if (err) {
-            console.error(`Error leaving room ${room}:`, err);
-          } else {
-            console.log(`Left room: ${room}`);
-          }
+      if (joinedRooms && joinedRooms[user_id]) {
+        joinedRooms[user_id].forEach((room) => {
+          socket.leave(room, (err) => {
+            if (err) {
+              console.error(`Error leaving room ${room}:`, err);
+            } else {
+              console.log(`Left room: ${room}`);
+            }
+          });
         });
-      });
+      }
       console.log("Client disconnected");
     });
   });
