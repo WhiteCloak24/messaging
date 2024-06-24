@@ -35,7 +35,7 @@ export function generateJWT(payload) {
   return token;
 }
 export function verifyJWT(req, res, next) {
-  const token = req.headers.authorization || "";
+  const token = req.cookies.Authorization || "";
   if (!token) {
     return res.status(401).json({ status: false, message: "Unauthorized: Missing token" });
   }

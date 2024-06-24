@@ -39,7 +39,7 @@ export const SocketProvider = ({ children }) => {
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
       reconnectionAttempts: 10,
-      parser: customParser,
+      // parser: customParser,
     });
     setState((prev) => ({
       ...prev,

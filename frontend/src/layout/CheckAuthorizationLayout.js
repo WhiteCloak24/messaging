@@ -7,7 +7,7 @@ import FullPageLoader from "../components/FullPageLoader";
 import { dispatchCustomEventFn } from "../resources/functions";
 
 const CheckAuthorizationLayout = () => {
-  const { user_id, authorizationState, setUserId, setAuthorizationState, setXAuthToken } = useAuthorization();
+  const { user_id, authorizationState, setUserId, setAuthorizationState, setXAuthToken, setSessionId, session_id } = useAuthorization();
   const { subscribeSocket } = useApplicationSocket();
 
   useEffect(() => {
@@ -22,10 +22,10 @@ const CheckAuthorizationLayout = () => {
   }, []);
 
   useEffect(() => {
-    if (authorizationState === AuthorizationStates.LOGGING_IN && user_id) {
-      subscribeSocket({ socket_url: "http://localhost:4000" || process.env.REACT_APP_SOCKET_URL, user_id: user_id });
+    if (authorizationState === AuthorizationStates.LOGGING_IN && user_id && session_id) {
+      subscribeSocket({ socket_url: "http://localhost:4000" || process.env.REACT_APP_SOCKET_URL, user_id: user_id, session_id });
     }
-  }, [authorizationState, user_id]);
+  }, [authorizationState, user_id, session_id]);
 
   function handleSetToken(e) {
     if (e?.detail?.jwt_token) {
@@ -37,6 +37,7 @@ const CheckAuthorizationLayout = () => {
     if (e?.detail?.user_id) {
       localStorage.user_id = e?.detail?.user_id;
       setUserId({ user_id: e?.detail?.user_id });
+      setSessionId({ session_id: e?.detail?.session_id });
       setAuthorizationState({ state: AuthorizationStates.LOGGING_IN });
     }
   }

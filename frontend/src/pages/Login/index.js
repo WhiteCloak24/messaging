@@ -28,8 +28,10 @@ const Login = () => {
     mutationFn: login,
     onSuccess: (data) => {
       if (data?.data?.success) {
-        console.log(data);
-        dispatchCustomEventFn({ eventName: AuthorizationEVENTS.SET_USER_ID, eventData: { user_id: data?.data?.data?.user_id } });
+        dispatchCustomEventFn({
+          eventName: AuthorizationEVENTS.SET_USER_ID,
+          eventData: { user_id: data?.data?.data?.user_id, session_id: data?.data?.data?.session_id },
+        });
       }
     },
   });

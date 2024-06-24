@@ -15,7 +15,7 @@ async function startApiServer() {
   const httpServer = createServer(app);
   const io = new Server(httpServer, {
     cors: { origin: "*" },
-    parser: customParser,
+    // parser: customParser,
   });
 
   bodyParserMiddleWare(app);
@@ -31,7 +31,7 @@ async function startApiServer() {
   app.use("/auth", authRouter);
 
   app.use("/user", verifyJWT, userRouter);
-  app.use("/chat", verifyJWT, chatRouter);
+  app.use("/chat", verifyJWT, chatRouter);  
 
   app.use((req, res, next) => {
     res.status(404).json({ success: false, message: "Could not find resource" });

@@ -53,7 +53,7 @@ export const loginController = expressAsyncHandler(async (req, res) => {
           maxAge: 24 * 60 * 60 * 1000, // 1 day expiry
           sameSite: "None",
         });
-        res.status(200).json({ success: true, data: { user_id, email }, message: "User Logged in successfully" });
+        res.status(200).json({ success: true, data: { user_id, email, session_id }, message: "User Logged in successfully" });
       }
     } else {
       res.status(404).json({ success: true, message: "Invalid password" });

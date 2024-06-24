@@ -3,6 +3,7 @@ import { AuthorizationStates } from "../../resources/constants";
 
 const AuthContext = createContext({
   user_id: localStorage.user_id || "",
+  session_id: "",
   authorizationState: localStorage.user_id ? AuthorizationStates.LOGGING_IN : AuthorizationStates.LOGGED_OUT,
   AuthToken: "",
   setUserId: ({ user_id }) => null,
@@ -20,6 +21,9 @@ export const AuthorizationProvider = ({ children }) => {
   const setUserId = useCallback(({ user_id }) => {
     setAuthState((prev) => ({ ...prev, user_id }));
   }, []);
+  const setSessionId = useCallback(({ session_id }) => {
+    setAuthState((prev) => ({ ...prev, session_id }));
+  }, []);
 
   const setXAuthToken = useCallback(({ token }) => {
     setAuthState((prev) => ({ ...prev, AuthToken: token }));
@@ -31,7 +35,7 @@ export const AuthorizationProvider = ({ children }) => {
   const { user_id, authorizationState, AuthToken } = authState;
 
   const values = useMemo(
-    () => ({ user_id, authorizationState, AuthToken, setAuthorizationState, setXAuthToken, setUserId }),
+    () => ({ user_id, authorizationState, AuthToken, setAuthorizationState, setXAuthToken, setUserId, setSessionId }),
     [authState?.user_id, authorizationState, AuthToken]
   );
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
