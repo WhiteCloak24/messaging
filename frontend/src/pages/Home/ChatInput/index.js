@@ -48,6 +48,7 @@ const ChatInput = ({ activeChat }) => {
   const sendMessageHandler = useCallback(
     (message) => {
       sendMessage({ recipients: [activeChat?.user_id], message });
+      setMessage('')
     },
     [activeChat?.user_id]
   );
@@ -72,6 +73,11 @@ const ChatInput = ({ activeChat }) => {
         type="text"
         placeholder="Type a message..."
         onChange={(e) => setMessage(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            sendMessageHandler(message);
+          }
+        }}
         value={message}
         className="flex-1 p-2 rounded border"
       />
