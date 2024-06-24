@@ -1,10 +1,12 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import { FiPlus } from "react-icons/fi";
 import { FaRegImage } from "react-icons/fa6";
 import { FaSmile, FaMicrophone, FaTelegramPlane } from "react-icons/fa";
 import TooltipWrapper from "../../../components/Tooltip/TooltipWrapper";
 import { useApplicationSocket } from "../../../hooks/useApplicationSocket";
+
 const ChatInput = ({ activeChat }) => {
+  const inputRef = useRef();
   const [message, setMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState("");
@@ -12,6 +14,12 @@ const ChatInput = ({ activeChat }) => {
   const audioChunks = useRef([]);
 
   const { sendMessage } = useApplicationSocket();
+
+  useEffect(() => {
+    if (inputRef && inputRef.current) {
+      inputRef.current?.focus();
+    }
+  }, [activeChat?.user_id]);
 
   const startRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -60,6 +68,7 @@ const ChatInput = ({ activeChat }) => {
         </div>
       </TooltipWrapper>
       <input
+        ref={inputRef}
         type="text"
         placeholder="Type a message..."
         onChange={(e) => setMessage(e.target.value)}

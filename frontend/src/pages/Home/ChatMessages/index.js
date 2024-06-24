@@ -14,8 +14,8 @@ const ChatMessages = ({ activeChat = {} }) => {
         const { chat_id = "" } = msg || {};
         const isSent = user_id === msg?.sender_id;
         return (
-          <div key={chat_id} className={`mb-4 w-fit h-fit rounded-md ${isSent === "sent" ? "self-end" : "self-start"}`}>
-            <p className={`inline-block p-2 rounded  ${isSent === "sent" ? " bg-white" : "bg-customDarkblue text-white"}`}>{msg?.message_text}</p>
+          <div key={chat_id} className={`mb-4 w-fit h-fit rounded-md ${isSent ? "self-end" : "self-start"}`}>
+            <p className={`inline-block p-2 rounded  ${isSent ? " bg-white" : "bg-customDarkblue text-white"}`}>{msg?.message_text}</p>
             <p className="text-xs text-gray-500">{formatDate({ timestamp: msg?.sent_time })}</p>
           </div>
         );
