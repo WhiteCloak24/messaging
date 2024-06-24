@@ -5,7 +5,6 @@ import Avatar from "../../../components/Avatar";
 
 const UserListing = ({ activeChat, setActiveChat }) => {
   const { data: userList = [] } = useListingWrapper({ queryFn: userListing });
-  console.log(userList);
   return (
     <div>
       <div className="px-4 font-semibold">All Users ({userList?.length})</div>

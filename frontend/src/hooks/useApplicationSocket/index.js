@@ -10,7 +10,9 @@ const initialState = {
   subscribeSocket: ({ socket_url = "", session_id = "", user_id = "", port = "" }) => null,
   unsubscribeSocket: () => null,
   sendMessage: ({ recipients = [], message = "" }) => null,
+  fetchMessageListing: ({ recipientId }) => null,
   user_id: "",
+  messageListing: [],
 };
 
 export const SocketContext = createContext(initialState);
@@ -104,6 +106,20 @@ export const SocketProvider = ({ children }) => {
     },
     [state.socketInstance]
   );
+  const fetchMessageListing = useCallback(
+    ({ recipientId = "" }) => {
+      const payload = {
+        recipientId,
+      };
+      setState((prev) => ({ ...prev, messageListing: [] }));
+      state.socketInstance.emit("message-listing", payload, (messageListing) => {
+        if (messageListing instanceof Array) {
+          setState((prev) => ({ ...prev, messageListing: messageListing }));
+        }
+      });
+    },
+    [state.socketInstance]
+  );
 
   return (
     <SocketContext.Provider
@@ -112,6 +128,7 @@ export const SocketProvider = ({ children }) => {
         subscribeSocket,
         unsubscribeSocket,
         sendMessage,
+        fetchMessageListing,
       }}>
       {children}
     </SocketContext.Provider>

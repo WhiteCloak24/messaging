@@ -23,7 +23,7 @@ const Home = () => {
       ) : (
         <div className="flex flex-col flex-1 border-customBlue border-x">
           <ChatHeader status="Active" activeChat={activeChat} />
-          <ChatMessages />
+          <ChatMessages activeChat={activeChat} />
           <ChatInput activeChat={activeChat} />
         </div>
       )}

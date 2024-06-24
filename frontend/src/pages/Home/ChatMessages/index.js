@@ -1,20 +1,24 @@
-import React from "react";
-const messages = [
-  { type: "sent", content: "I hope these article helps.", time: "May 10, 2022, 11:14 AM" },
-  { type: "sent", content: "I hope these article helps.", time: "May 10, 2022, 11:14 AM" },
-  { type: "received", content: "https://www.envato.com/atomic-power-plant-engine/", time: "May 10, 2022, 11:14 AM" },
+import React, { useEffect } from "react";
+import { useApplicationSocket } from "../../../hooks/useApplicationSocket";
 
-  // Add other messages here...
-];
-const ChatMessages = () => {
+const ChatMessages = ({ activeChat = {} }) => {
+  const { fetchMessageListing, messageListing, user_id } = useApplicationSocket();
+  useEffect(() => {
+    fetchMessageListing({ recipientId: activeChat?.user_id });
+  }, [activeChat?.user_id]);
+
   return (
     <div className="flex-1 p-4 overflow-y-scroll flex flex-col">
-      {/* {messages.map((msg, index) => (
-        <div key={index} className={`mb-4 w-fit h-fit rounded-md ${msg.type === "sent" ? "self-end" : "self-start"}`}>
-          <p className={`inline-block p-2 rounded  ${msg.type === "sent" ? " bg-white" : "bg-customDarkblue text-white"}`}>{msg.content}</p>
-          <p className="text-xs text-gray-500">{msg.time}</p>
-        </div>
-      ))} */}
+      {messageListing.map((msg, index) => {
+        const { chat_id = "" } = msg || {};
+        const isSent = user_id === msg?.sender_id;
+        return (
+          <div key={chat_id} className={`mb-4 w-fit h-fit rounded-md ${isSent=== "sent" ? "self-end" : "self-start"}`}>
+            <p className={`inline-block p-2 rounded  ${isSent=== "sent" ? " bg-white" : "bg-customDarkblue text-white"}`}>{msg?.message_text}</p>
+            <p className="text-xs text-gray-500">{msg?.sent_time}</p>
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -10,7 +10,7 @@ import { authenticateConnectionMiddleware } from "./middlewares/socketMiddleware
 import { generateChatId, generateTimeUUID, getCurrentUTCTimestamp, parseCookies, verifyJWT } from "./utils/index.js";
 import { getSessions } from "./models/socket.js";
 import { checkFriend, createFriend } from "./models/chat.js";
-import { sendMessage } from "./models/messages.js";
+import { getMessageListing, sendMessage } from "./models/messages.js";
 
 const ioSessionMap = {};
 
@@ -86,8 +86,11 @@ async function startApiServer() {
           },
         });
       }
-
-      console.log(response);
+    });
+    socket.on("message-listing", async (data, callback) => {
+      const recipientId = data?.recipientId;
+      const messageListing = await getMessageListing({ user_id, recipientId });
+      callback(messageListing);
     });
 
     socket.on("disconnect", () => {
