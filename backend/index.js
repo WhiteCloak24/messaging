@@ -112,6 +112,7 @@ async function startApiServer() {
                 type: "new-message",
                 data: {
                   chatId,
+                  message: data?.message,
                 },
               });
             }

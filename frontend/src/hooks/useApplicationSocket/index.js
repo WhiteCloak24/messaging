@@ -67,7 +67,9 @@ export const SocketProvider = ({ children }) => {
         console.log("Subscribed to socket");
         setState((prev) => ({ ...prev, isSocketConnected: true }));
         socketInstance.on("chat-update", (data) => {
-          console.log(data);
+          new Notification("New Message", {
+            body: data?.data?.message || '',
+          });
         });
         socketInstance.on("message-listing", (messageListing) => {
           if (messageListing instanceof Array) {
@@ -143,7 +145,7 @@ export const SocketProvider = ({ children }) => {
         unsubscribeSocket,
         sendMessage,
         fetchMessageListing,
-        setActiveChat
+        setActiveChat,
       }}>
       {children}
     </SocketContext.Provider>
