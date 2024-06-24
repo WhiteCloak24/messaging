@@ -41,7 +41,7 @@ export const loginController = expressAsyncHandler(async (req, res) => {
       if (!sessionCreationResp || sessionCreationResp.info.queriedHost === null) {
         res.status(404).json({ success: true, message: "Unable to create session" });
       } else {
-        res.cookie("session_created_at", session_created_at, {
+        res.cookie("Authorization", jwt_token, {
           httpOnly: true, // HTTP-only, prevents access via JavaScript
           secure: true, // For https set true
           maxAge: 24 * 60 * 60 * 1000, // 1 day expiry
