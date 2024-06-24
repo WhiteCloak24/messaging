@@ -13,6 +13,7 @@ import { checkFriend, createFriend } from "./models/chat.js";
 import { getMessageListing, sendMessage } from "./models/messages.js";
 
 const ioSessionMap = {};
+const joinedRooms = {};
 
 async function startApiServer() {
   const app = express();
@@ -65,7 +66,27 @@ async function startApiServer() {
     }
     // Add the socket.id to the array for this user_id
     ioSessionMap[user_id].push(socket.id);
+    socket.on("active-chat", async (data) => {
+      joinedRooms[user_id].forEach((room) => {
+        socket.leave(room, (err) => {
+          if (err) {
+            console.error(`Error leaving room ${room}:`, err);
+          } else {
+            console.log(`Left room: ${room}`);
+          }
+        });
+      });
 
+      const recipientId = data?.recipientId;
+      const chatId = generateChatId({ senderId: user_id, receiverId: recipientId });
+
+      if (!joinedRooms[user_id]) {
+        joinedRooms[user_id] = [];
+      }
+      // Add the socket.id to the array for this user_id
+      joinedRooms[user_id].push(chatId);
+      socket.join(chatId);
+    });
     socket.on("send-message", async (data) => {
       const recipient_id = data?.recipients?.[0];
       const res = await checkFriend({ user_id, friend_id: recipient_id });
@@ -75,6 +96,7 @@ async function startApiServer() {
         createFriend({ friend_id: recipient_id, user_id, last_message: data?.message, sent_time });
       }
       const response = await sendMessage({ user_id, receiverId: recipient_id, sent_time, message: data?.message, timeUUID });
+      const messageListing = await getMessageListing({ user_id, recipientId: recipient_id });
       if (!response || response?.info?.queriedHost === null) {
         // res.status(404).json({ success: true, message: "Unable to Send" });
       } else {
@@ -86,8 +108,8 @@ async function startApiServer() {
               chatId,
             },
           });
+          io.to(chatId).emit("message-listing", messageListing);
         }
-        const messageListing = await getMessageListing({ user_id, recipientId: recipient_id });
         socket.emit("message-listing", messageListing);
       }
     });
@@ -104,6 +126,15 @@ async function startApiServer() {
           delete ioSessionMap[user_id]; // Remove the user_id entry if no more sockets
         }
       }
+      joinedRooms[user_id].forEach((room) => {
+        socket.leave(room, (err) => {
+          if (err) {
+            console.error(`Error leaving room ${room}:`, err);
+          } else {
+            console.log(`Left room: ${room}`);
+          }
+        });
+      });
       console.log("Client disconnected");
     });
   });

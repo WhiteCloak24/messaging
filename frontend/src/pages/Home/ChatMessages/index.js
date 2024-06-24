@@ -3,9 +3,10 @@ import { useApplicationSocket } from "../../../hooks/useApplicationSocket";
 import { formatDate } from "../../../resources/functions";
 
 const ChatMessages = ({ activeChat = {} }) => {
-  const { fetchMessageListing, messageListing, user_id } = useApplicationSocket();
+  const { fetchMessageListing, messageListing, user_id, setActiveChat } = useApplicationSocket();
   useEffect(() => {
     fetchMessageListing({ recipientId: activeChat?.user_id });
+    setActiveChat({ recipientId: activeChat?.user_id });
   }, [activeChat?.user_id]);
 
   return (

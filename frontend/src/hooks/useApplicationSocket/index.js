@@ -11,6 +11,7 @@ const initialState = {
   unsubscribeSocket: () => null,
   sendMessage: ({ recipients = [], message = "" }) => null,
   fetchMessageListing: ({ recipientId }) => null,
+  setActiveChat: ({ recipientId }) => null,
   user_id: "",
   messageListing: [],
 };
@@ -124,6 +125,15 @@ export const SocketProvider = ({ children }) => {
     },
     [state.socketInstance]
   );
+  const setActiveChat = useCallback(
+    ({ recipientId = "" }) => {
+      const payload = {
+        recipientId,
+      };
+      state.socketInstance.emit("active-chat", payload);
+    },
+    [state.socketInstance]
+  );
 
   return (
     <SocketContext.Provider
@@ -133,6 +143,7 @@ export const SocketProvider = ({ children }) => {
         unsubscribeSocket,
         sendMessage,
         fetchMessageListing,
+        setActiveChat
       }}>
       {children}
     </SocketContext.Provider>
