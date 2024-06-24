@@ -7,6 +7,7 @@ import HomeIconCanvas from "./HomeIconCanvas";
 
 const Home = () => {
   const [activeChat, setActiveChat] = useState(null);
+  console.log(activeChat);
   return (
     <div className="flex h-screen">
       <Sidebar activeChat={activeChat} setActiveChat={setActiveChat} />

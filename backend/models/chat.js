@@ -2,7 +2,7 @@ import { client } from "../config/database.js";
 import { getUserData } from "./user.js";
 
 export const getChats = async ({ user_id = "" }) => {
-  const query = `SELECT * FROM user_friends WHERE user_id = ? ALLOW FILTERING;`;
+  const query = `SELECT friend_id as user_id, friend_last_message_time, friend_image as user_image, friend_name as user_name, last_message, unread_count FROM user_friends WHERE user_id = ? ALLOW FILTERING;`;
   const resp = await client.execute(query, [user_id]);
   return resp.rows || [];
 };

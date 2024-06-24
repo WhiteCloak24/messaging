@@ -20,7 +20,11 @@ const Sidebar = ({ activeChat, setActiveChat }) => {
         <input type="text" placeholder="Search contact / chat" className="search-chat-input mt-2" />
       </div>
       <div className="flex flex-col gap-1 overflow-y-auto h-full">
-        {showChats ? <Chats /> : <UserListing activeChat={activeChat} setActiveChat={setActiveChat} />}
+        {showChats ? (
+          <Chats activeChat={activeChat} setActiveChat={setActiveChat} />
+        ) : (
+          <UserListing activeChat={activeChat} setActiveChat={setActiveChat} />
+        )}
       </div>
     </div>
   );

@@ -67,15 +67,17 @@ async function startApiServer() {
     // Add the socket.id to the array for this user_id
     ioSessionMap[user_id].push(socket.id);
     socket.on("active-chat", async (data) => {
-      joinedRooms[user_id].forEach((room) => {
-        socket.leave(room, (err) => {
-          if (err) {
-            console.error(`Error leaving room ${room}:`, err);
-          } else {
-            console.log(`Left room: ${room}`);
-          }
+      if (joinedRooms && joinedRooms[user_id] && joinedRooms[user_id] instanceof Array) {
+        joinedRooms[user_id].forEach((room) => {
+          socket.leave(room, (err) => {
+            if (err) {
+              console.error(`Error leaving room ${room}:`, err);
+            } else {
+              console.log(`Left room: ${room}`);
+            }
+          });
         });
-      });
+      }
 
       const recipientId = data?.recipientId;
       const chatId = generateChatId({ senderId: user_id, receiverId: recipientId });
@@ -126,7 +128,7 @@ async function startApiServer() {
           delete ioSessionMap[user_id]; // Remove the user_id entry if no more sockets
         }
       }
-      if (joinedRooms && joinedRooms[user_id]) {
+      if (joinedRooms && joinedRooms[user_id] && joinedRooms[user_id] instanceof Array) {
         joinedRooms[user_id].forEach((room) => {
           socket.leave(room, (err) => {
             if (err) {
