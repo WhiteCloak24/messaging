@@ -103,16 +103,20 @@ async function startApiServer() {
         // res.status(404).json({ success: true, message: "Unable to Send" });
       } else {
         const chatId = generateChatId({ senderId: user_id, receiverId: recipient_id });
-        if (ioSessionMap[recipient_id]) {
-          io.to(ioSessionMap[recipient_id]).emit("chat-update", {
-            type: "new-message",
-            data: {
-              chatId,
-            },
-          });
-          io.to(chatId).emit("message-listing", messageListing);
+        io.to(chatId).emit("message-listing", messageListing);
+        if (ioSessionMap[recipient_id] && ioSessionMap[recipient_id] instanceof Array) {
+          for (let index = 0; index < ioSessionMap[recipient_id].length; index++) {
+            const socketId = ioSessionMap[recipient_id][index];
+            if (!(io.of("/").adapter.rooms.has(chatId) && io.of("/").adapter.rooms.get(chatId).has(socketId))) {
+              io.sockets.sockets.get(socketId).emit("chat-update", {
+                type: "new-message",
+                data: {
+                  chatId,
+                },
+              });
+            }
+          }
         }
-        socket.emit("message-listing", messageListing);
       }
     });
     socket.on("message-listing", async (data) => {
