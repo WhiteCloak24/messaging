@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Avatar from "../../../components/Avatar";
-const ChatHeader = ({ name, status }) => {
+const ChatHeader = ({ status, activeChat = {} }) => {
+  const { user_name = "" } = useMemo(() => activeChat || {}, [activeChat?.user_id]);
   return (
     <div className="w-full flex items-center p-4 border-b bg-white">
       <Avatar imgSrc="https://via.placeholder.com/40" />
@@ -10,7 +11,7 @@ const ChatHeader = ({ name, status }) => {
         className="rounded-full mr-4"
       /> */}
       <div className="ml-4">
-        <p className="font-bold">{name}</p>
+        <p className="font-bold">{user_name}</p>
         <p className="text-sm text-gray-600">{status}</p>
       </div>
     </div>

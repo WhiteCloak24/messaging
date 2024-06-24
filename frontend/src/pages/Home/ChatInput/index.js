@@ -1,13 +1,17 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { FiPlus } from "react-icons/fi";
 import { FaRegImage } from "react-icons/fa6";
 import { FaSmile, FaMicrophone, FaTelegramPlane } from "react-icons/fa";
 import TooltipWrapper from "../../../components/Tooltip/TooltipWrapper";
-const ChatInput = () => {
+import { useApplicationSocket } from "../../../hooks/useApplicationSocket";
+const ChatInput = ({ activeChat }) => {
+  const [message, setMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState("");
   const mediaRecorder = useRef(null);
   const audioChunks = useRef([]);
+
+  const { sendMessage } = useApplicationSocket();
 
   const startRecording = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -32,6 +36,14 @@ const ChatInput = () => {
     mediaRecorder.current.stop();
     setIsRecording(false);
   };
+
+  const sendMessageHandler = useCallback(
+    (message) => {
+      sendMessage({ recipients: [activeChat?.user_id], message });
+    },
+    [activeChat?.user_id]
+  );
+
   return (
     <div className="w-full flex p-4 border-t bg-white items-center gap-3">
       <div className="bg-gray-200 h-8 w-8 rounded-full flex items-center justify-center cursor-pointer hover:text-amber-700">
@@ -50,6 +62,8 @@ const ChatInput = () => {
       <input
         type="text"
         placeholder="Type a message..."
+        onChange={(e) => setMessage(e.target.value)}
+        value={message}
         className="flex-1 p-2 rounded border"
       />
       {!isRecording ? (
@@ -64,7 +78,7 @@ const ChatInput = () => {
         </div>
       )}
       <TooltipWrapper tooltipText="Send Message">
-        <div className="cursor-pointer">
+        <div className="cursor-pointer" onClick={() => sendMessageHandler(message)}>
           <FaTelegramPlane />
         </div>
       </TooltipWrapper>

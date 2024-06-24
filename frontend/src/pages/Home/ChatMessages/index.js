@@ -9,12 +9,12 @@ const messages = [
 const ChatMessages = () => {
   return (
     <div className="flex-1 p-4 overflow-y-scroll flex flex-col">
-      {messages.map((msg, index) => (
+      {/* {messages.map((msg, index) => (
         <div key={index} className={`mb-4 w-fit h-fit rounded-md ${msg.type === "sent" ? "self-end" : "self-start"}`}>
           <p className={`inline-block p-2 rounded  ${msg.type === "sent" ? " bg-white" : "bg-customDarkblue text-white"}`}>{msg.content}</p>
           <p className="text-xs text-gray-500">{msg.time}</p>
         </div>
-      ))}
+      ))} */}
     </div>
   );
 };
