@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect } from "react";
 
 const HomeIconCanvas = ({ size = 400 }) => {
   const canvasRef = useRef(null);
