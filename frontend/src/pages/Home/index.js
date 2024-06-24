@@ -13,7 +13,7 @@ const Home = () => {
       {!activeChat ? (
         <div className="w-full h-full flex flex-col items-center justify-center gap-10">
           <div>
-            <HomeIconCanvas size={300} />
+            <HomeIconCanvas size={200} />
           </div>
           <div className="text-blue-600 font-semibold text-3xl">
             Select any chat to start,
@@ -22,7 +22,7 @@ const Home = () => {
         </div>
       ) : (
         <div className="flex flex-col flex-1 border-customBlue border-x">
-          <ChatHeader name="Jasmine Thomp" status="Active" activeChat={activeChat} />
+          <ChatHeader status="Active" activeChat={activeChat} />
           <ChatMessages />
           <ChatInput activeChat={activeChat} />
         </div>
