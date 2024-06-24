@@ -9,6 +9,9 @@ import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js"
 import { authenticateConnectionMiddleware } from "./middlewares/socketMiddleware.js";
 import { parseCookies, verifyJWT } from "./utils/index.js";
 import { getSessions } from "./models/socket.js";
+import { checkFriend, createFriend } from "./models/chat.js";
+
+const ioSessionMap = {};
 
 async function startApiServer() {
   const app = express();
@@ -31,7 +34,7 @@ async function startApiServer() {
   app.use("/auth", authRouter);
 
   app.use("/user", verifyJWT, userRouter);
-  app.use("/chat", verifyJWT, chatRouter);  
+  app.use("/chat", verifyJWT, chatRouter);
 
   app.use((req, res, next) => {
     res.status(404).json({ success: false, message: "Could not find resource" });
@@ -54,10 +57,31 @@ async function startApiServer() {
       socket.emit("user-logout", {
         reason: "Session not found",
       });
-      // logout the user
     }
 
+    if (!ioSessionMap[user_id]) {
+      ioSessionMap[user_id] = [];
+    }
+    // Add the socket.id to the array for this user_id
+    ioSessionMap[user_id].push(socket.id);
+
+    socket.on("send-message", async (data, ...rest) => {
+      const recipient_id = data?.recipients?.[0];
+      const res = await checkFriend({ user_id, friend_id: recipient_id });
+      if (res?.length > 0) {
+      } else {
+        createFriend({ friend_id: recipient_id, user_id, last_message: data?.message });
+      }
+      // console.log(res);
+    });
+
     socket.on("disconnect", () => {
+      if (ioSessionMap[user_id]) {
+        ioSessionMap[user_id] = ioSessionMap[user_id].filter((id) => id !== socket.id);
+        if (ioSessionMap[user_id].length === 0) {
+          delete ioSessionMap[user_id]; // Remove the user_id entry if no more sockets
+        }
+      }
       console.log("Client disconnected");
     });
   });
@@ -69,22 +93,4 @@ async function startApiServer() {
   });
 }
 
-// async function startSocketServer() {
-//   const app = express();
-//   const httpServer = createServer(app);
-
-//   const io = new Server(httpServer, {
-//     cors: { origin: "*" },
-//     parser: customParser,
-//   });
-
-//   io.listen(5000, async () => {
-//     console.log("Socket Server is running on PORT 5000");
-//     io.on("connection", (socket) => {
-//       console.log("Socket connected", socket?.id);
-//     });
-//   });
-// }
-
-// await startSocketServer();
 await startApiServer();

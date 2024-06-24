@@ -4,7 +4,6 @@ export const authenticateConnectionMiddleware = (io) => {
   io.use(async (socket, next) => {
     const user_id = socket.handshake.auth.user_id;
     const cookies = socket.handshake.headers.cookie;
-    console.log(user_id, cookies);
     const parsedCookies = parseCookies({ cookies });
     const session_id = parsedCookies?.session_id || "";
     if (user_id && session_id) {

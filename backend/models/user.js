@@ -38,3 +38,8 @@ export const getUserListing = async () => {
   const resp = await client.execute(query);
   return resp.rows || null;
 };
+export const getUserData = async ({ user_id = "" }) => {
+  const query = `SELECT * FROM users WHERE user_id = ? ALLOW FILTERING;`;
+  const resp = await client.execute(query, [user_id]);
+  return resp.rows?.[0] || null;
+};

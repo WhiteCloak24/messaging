@@ -96,14 +96,13 @@ export const SocketProvider = ({ children }) => {
     ({ recipients = [], message = "" }) => {
       if (recipients.length > 0) {
         const payload = {
-          senderId: state.user_id,
           message,
           recipients,
         };
-        console.log(payload);
+        state.socketInstance.emit("send-message", payload);
       }
     },
-    [state.user_id]
+    [state.socketInstance]
   );
 
   return (
