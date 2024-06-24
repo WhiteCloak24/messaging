@@ -79,9 +79,7 @@ export const SocketProvider = ({ children }) => {
   const attachListeners = useCallback(() => {
     const { socketInstance } = state;
     if (socketInstance?.connected) {
-      console.log("Listeners to be attached");
       socketInstance.on("jwt-token", (data) => {
-        console.log("jwt-token", data);
         dispatchCustomEventFn({ eventName: AuthorizationEVENTS.SET_TOKEN, eventData: { jwt_token: data?.jwt_token } });
       });
       socketInstance.on("user-logout", (data) => {

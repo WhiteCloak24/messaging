@@ -9,7 +9,6 @@ import { dispatchCustomEventFn } from "../resources/functions";
 const CheckAuthorizationLayout = () => {
   const { user_id, authorizationState, setUserId, setAuthorizationState, setXAuthToken, setSessionId, session_id } = useAuthorization();
   const { subscribeSocket } = useApplicationSocket();
-
   useEffect(() => {
     window.addEventListener(AuthorizationEVENTS.SET_USER_ID, handleSetUser);
     window.addEventListener(AuthorizationEVENTS.LOGGED_OUT, handleLogout);
@@ -36,6 +35,7 @@ const CheckAuthorizationLayout = () => {
   function handleSetUser(e) {
     if (e?.detail?.user_id) {
       localStorage.user_id = e?.detail?.user_id;
+      localStorage.session_id = e?.detail?.session_id;
       setUserId({ user_id: e?.detail?.user_id });
       setSessionId({ session_id: e?.detail?.session_id });
       setAuthorizationState({ state: AuthorizationStates.LOGGING_IN });
