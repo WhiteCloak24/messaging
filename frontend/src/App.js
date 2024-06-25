@@ -7,6 +7,7 @@ import React from "react";
 import AlertContainer from "./components/AlertContainer";
 import TooltipHandler from "./components/Tooltip";
 import ImagePreviewer from "./components/ImagePreviewer";
+import ModalContainer from "./components/Modal/ModalContainer";
 
 function App() {
   const queryClient = new QueryClient({
@@ -30,6 +31,7 @@ function App() {
       <AlertContainer />
       <TooltipHandler />
       <ImagePreviewer />
+      <ModalContainer />
     </>
   );
 }

@@ -16,4 +16,8 @@ export const TooltipEvent = {
   ENTER: "TOOLTIP_ENTER",
   LEAVE: "TOOLTIP_LEAVE",
 };
-export const AvatarPreview = "AVATAR_PREVIEW"
+export const ModalEvent = {
+  OPEN: "MODAL_OPEN",
+  CLOSE: "MODAL_CLOSE",
+};
+export const AvatarPreview = "AVATAR_PREVIEW";

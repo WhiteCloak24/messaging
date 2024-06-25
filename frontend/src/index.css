@@ -31,3 +31,6 @@ input{
 .search-chat-input {
   @apply w-full py-2 px-6 rounded-3xl mb-4 placeholder:text-sm;
 }
+.backdrop{
+  @apply bg-[#00000080] -z-[1]
+}
