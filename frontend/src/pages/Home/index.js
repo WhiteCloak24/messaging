@@ -33,9 +33,9 @@ const Home = () => {
         </div>
       )}
 
-      {/* <Modal open={openModal} onClose={() => setOpenModal(false)}>
+      <Modal open={openModal} onClose={() => setOpenModal(false)} closeOnClickOutside>
         <div>This is Modal Heading</div>
-      </Modal> */}
+      </Modal>
     </div>
   );
 };

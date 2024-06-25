@@ -10,8 +10,8 @@ html {
 body {
   height: 100%;
 }
-input{
-  @apply bg-gray-200 border focus:outline-none focus:bg-white focus:border border-gray-200
+input {
+  @apply bg-gray-200 border focus:outline-none focus:bg-white focus:border border-gray-200;
 }
 #root {
   height: 100%;
@@ -31,6 +31,17 @@ input{
 .search-chat-input {
   @apply w-full py-2 px-6 rounded-3xl mb-4 placeholder:text-sm;
 }
-.backdrop{
-  @apply bg-[#00000080] -z-[1]
+.backdrop {
+  @apply bg-[#00000080] -z-[1];
+}
+.opacity-animation {
+  animation: fadeIn 225ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
