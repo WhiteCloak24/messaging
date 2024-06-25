@@ -6,7 +6,7 @@ self.addEventListener("install", (evt) => {
     caches
       .open(staticCacheName)
       .then((cache) => {
-        cache.addAll(["/static/js/bundle.js", "/index.html", "/"]);
+        cache.addAll(["/static/js/bundle.js", "/manifest.json", "/favicon.ico", "/logo192.png", "/index.html", "/"]);
       })
       .catch((err) => {
         console.error(err);
