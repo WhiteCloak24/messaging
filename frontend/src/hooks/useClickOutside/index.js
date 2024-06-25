@@ -4,7 +4,6 @@ const useClickOutside = ({ useDocument = true, backGround = () => null, ref = []
   useEffect(() => {
     function handleClickOutside(event) {
       let callFunction = false;
-      console.log(ref);
       if (ref && ref.length > 0) {
         for (let index = 0; index < ref.length; index++) {
           let refs = ref[index];
