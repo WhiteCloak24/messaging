@@ -25,7 +25,7 @@ const ModalContainer = () => {
     if (showModal.show) {
       updateOpenModalDom();
     }
-  }, [showModal.show]);
+  }, [showModal.show, showModal.modalData?.Component]);
   useEffect(() => {
     if (showModal.show) {
       modalContainerRef.current?.focus();
@@ -36,7 +36,7 @@ const ModalContainer = () => {
         document.removeEventListener("keydown", handleKeyDown);
       }
     };
-  }, [showModal.show]);
+  }, [showModal.show, showModal.modalData?.Component]);
 
   const handleOpenModal = (e) => {
     setShowModal({ show: true, modalData: e.detail });
@@ -107,10 +107,7 @@ const ModalContainer = () => {
     <>
       {showModal.show ? (
         <div id={`ns-modal-${ModalContainerIdRef?.current}`} role="modal" className="fixed z-50 inset-0">
-          <div
-            ref={backdropRef}
-            className={`backdrop opacity-0 fixed inset-0 flex items-center justify-center opacity-animation`}
-          ></div>
+          <div ref={backdropRef} className={`backdrop opacity-0 fixed inset-0 flex items-center justify-center opacity-animation`}></div>
           <div ref={modalContainerRef} tabIndex={-1} className="ns-modal-container absolute top-1/2 left-1/2 transform shadow-sm p-8 bg-white"></div>
         </div>
       ) : (
