@@ -47,8 +47,9 @@ const ChatInput = ({ activeChat }) => {
 
   const sendMessageHandler = useCallback(
     (message) => {
+      if (!message?.trim()) return;
       sendMessage({ recipients: [activeChat?.user_id], message });
-      setMessage('')
+      setMessage("");
     },
     [activeChat?.user_id]
   );

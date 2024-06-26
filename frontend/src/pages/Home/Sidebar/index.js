@@ -7,7 +7,7 @@ import { IoArrowBack } from "react-icons/io5";
 const Sidebar = ({ activeChat, setActiveChat }) => {
   const [showChats, setShowChats] = useState(true);
   return (
-    <div className="w-1/6 min-w-80 bg-white h-screen border-customBlue flex flex-col">
+    <div className="w-full md:w-1/6 min-w-80 bg-white h-screen border-customBlue flex flex-col">
       <div className="flex justify-between items-center p-4">
         <div className="font-bold text-lg">Chats</div>
         <div>
