@@ -41,9 +41,9 @@ const Login = () => {
   }
 
   return (
-    <div className="flex h-screen bg-gray-200 items-center justify-center">
-      <div className="bg-white p-8 rounded shadow-md h-2/4 w-2/4 flex flex-col items-center justify-center">
-        <h2 className="text-gray-800 text-2xl font-semibold mb-4">Login</h2>
+    <div className="flex h-screen bg-gray-200 items-center justify-center px-4 sm:px-6 lg:px-8">
+      <div className="bg-white p-8 rounded shadow-md sm:w-full lg:w-1/2">
+        <h2 className="text-gray-800 text-2xl font-semibold mb-4 text-center">Login</h2>
         <form className="w-full">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
