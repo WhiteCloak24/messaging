@@ -10,7 +10,7 @@ const Chats = ({ activeChat = {}, setActiveChat = () => null }) => {
     <div>
       <div className="px-4 font-semibold">All Chats ({chatList?.length})</div>
       {chatList.map((user) => {
-       
+        console.log(user);
         return (
           <div
             key={user?.friend_id}

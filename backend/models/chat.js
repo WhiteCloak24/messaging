@@ -12,12 +12,30 @@ export const checkFriend = async ({ user_id = "", friend_id = "" }) => {
   return resp.rows?.[0] || [];
 };
 export const createFriend = async ({ user_id = "", friend_id = "", last_message = "", sent_time = "" }) => {
-  const res = await getUserData({ user_id: friend_id });
-  const res2 = await getUserData({ user_id });
-  const query = `INSERT INTO user_friends (user_id, friend_last_message_time, friend_id, friend_image, friend_name, last_message, unread) VALUES ( ?, ?, ?, ?, ?, ?, ? );`;
-  await client.execute(query, [user_id, sent_time, friend_id, "", res2?.user_name, last_message, 0], { prepare: true });
-  const query2 = `INSERT INTO user_friends (user_id, friend_last_message_time, friend_id, friend_image, friend_name, last_message, unread) VALUES ( ?, ?, ?, ?, ?, ?, ? );`;
-  await client.execute(query2, [friend_id, sent_time, user_id, "", res?.user_name, last_message, 1], { prepare: true });
+  const friendData = await getUserData({ user_id: friend_id });
+  const userData = await getUserData({ user_id });
+  const query = `BEGIN BATCH INSERT INTO user_friends (user_id, friend_last_message_time, friend_id, friend_image, friend_name, last_message, unread) VALUES ( ?, ?, ?, ?, ?, ?, ? ); INSERT INTO user_friends (user_id, friend_last_message_time, friend_id, friend_image, friend_name, last_message, unread) VALUES ( ?, ?, ?, ?, ?, ?, ? ); APPLY BATCH;`;
+  await client.execute(
+    query,
+    [
+      user_id,
+      sent_time,
+      friend_id,
+      "",
+      friendData?.user_name,
+      last_message,
+      0,
+      friend_id,
+      sent_time,
+      user_id,
+      "",
+      userData?.user_name,
+      last_message,
+      0,
+    ],
+    { prepare: true }
+  );
+
   return true;
 };
 

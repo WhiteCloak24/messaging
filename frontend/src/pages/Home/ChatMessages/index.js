@@ -17,7 +17,7 @@ const ChatMessages = ({ activeChat = {} }) => {
         return (
           <div
             key={chat_id}
-            className={`mb-4 w-fit h-fit px-4 py-2 flex gap-4 max-w-[60%] rounded-md overflow-auto ${
+            className={`mb-4 w-fit h-fit px-4 py-2 flex gap-4 max-w-[60%] rounded-md ${
               isSent ? "self-end bg-customDarkblue text-white" : "self-start bg-white"
             }`}>
             <div className="flex self-start whitespace-pre-wrap break-all">{msg?.message_text}</div>
