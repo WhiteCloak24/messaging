@@ -18,31 +18,35 @@ export function generateRandomId(length = 16) {
 export function getInitials({ firstName = "", lastName = "" }) {
   return `${firstName?.charAt(0)?.toUpperCase() || "U"}${lastName?.charAt(0)?.toUpperCase() || ""}`;
 }
-export function formatDate({ timestamp = "" }) {
+export function formatTime({ timestamp = "", format = "hh:mm A" }) {
   if (!timestamp) return "Invalid Date";
-  return moment(timestamp).format("hh:mm A");
+  return moment(timestamp).format(format);
+}
+export function formatDate({ timestamp = "", format = "DD/MM/YY" }) {
+  if (!timestamp) return "Invalid Date";
+  return moment(timestamp).format(format);
 }
 
 export function showUpdateNotification() {
-  const notification = document.createElement('div');
-  notification.innerText = 'New content is available. Please refresh.';
-  notification.style.position = 'fixed';
-  notification.style.bottom = '0';
-  notification.style.width = '100%';
-  notification.style.backgroundColor = '#ff9800';
-  notification.style.color = '#fff';
-  notification.style.textAlign = 'center';
-  notification.style.padding = '1em';
-  notification.style.zIndex = '1000';
+  const notification = document.createElement("div");
+  notification.innerText = "New content is available. Please refresh.";
+  notification.style.position = "fixed";
+  notification.style.bottom = "0";
+  notification.style.width = "100%";
+  notification.style.backgroundColor = "#ff9800";
+  notification.style.color = "#fff";
+  notification.style.textAlign = "center";
+  notification.style.padding = "1em";
+  notification.style.zIndex = "1000";
 
-  const refreshButton = document.createElement('button');
-  refreshButton.innerText = 'Refresh';
-  refreshButton.style.marginLeft = '1em';
-  refreshButton.addEventListener('click', () => {
-      if (navigator.serviceWorker.controller) {
-          navigator.serviceWorker.controller.postMessage({ action: 'skipWaiting' });
-      }
-      window.location.reload();
+  const refreshButton = document.createElement("button");
+  refreshButton.innerText = "Refresh";
+  refreshButton.style.marginLeft = "1em";
+  refreshButton.addEventListener("click", () => {
+    if (navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({ action: "skipWaiting" });
+    }
+    window.location.reload();
   });
   notification.appendChild(refreshButton);
   document.body.appendChild(notification);
