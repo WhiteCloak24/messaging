@@ -18,11 +18,11 @@ self.addEventListener("activate", (evt) => {
 });
 self.addEventListener("fetch", (evt) => {
   //   console.log("Fetch Event", evt);
-  evt.respondWith(
-    caches.match(evt.request).then((resp) => {
-      if (resp) {
-        return resp;
-      }
-    })
-  );
+  // evt.respondWith(
+  //   caches.match(evt.request).then((resp) => {
+  //     if (resp) {
+  //       return resp;
+  //     }
+  //   })
+  // );
 });

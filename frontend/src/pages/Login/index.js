@@ -46,7 +46,7 @@ const Login = () => {
         <h2 className="text-gray-800 text-2xl font-semibold mb-6 text-center">Login</h2>
         <form>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" for="email">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
               Email
             </label>
             <Controller
