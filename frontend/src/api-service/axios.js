@@ -23,10 +23,19 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
   (response) => {
+    console.log(response);
     return response;
   },
   (error) => {
-    dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: error?.response?.data?.message } });
+    if (error?.response?.data?.message) {
+      dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: error?.response?.data?.message  } });
+    }
+    if (!navigator.onLine) {
+      dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: "You are offline" } });
+    }
+    if (navigator.onLine) {
+      dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: "Connection Refused" } });
+    }
     throw new Error(error?.response?.data?.message);
   }
 );
