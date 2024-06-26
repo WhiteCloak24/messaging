@@ -17,8 +17,6 @@ self.addEventListener("activate", (evt) => {
   console.log("Service worker has been activated");
 });
 self.addEventListener("fetch", (evt) => {
-  // console.log(evt);
-  // dispatchCustomEventFn({ eventName: "ALERT", eventData: { message: "service worker" } });
   evt.respondWith(
     caches.match(evt.request).then((resp) => {
       if (resp) {
