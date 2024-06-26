@@ -24,14 +24,14 @@ export const createFriend = async ({ user_id = "", friend_id = "", last_message 
       "",
       friendData?.user_name,
       last_message,
-      0,
+      1,
       friend_id,
       sent_time,
       user_id,
       "",
       userData?.user_name,
       last_message,
-      0,
+      1,
     ],
     { prepare: true }
   );
