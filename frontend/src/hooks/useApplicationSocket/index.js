@@ -72,9 +72,11 @@ export const SocketProvider = ({ children }) => {
               queryKey: "chatListing",
             },
           });
-          new Notification("New Message", {
-            body: data?.data?.message || "",
-          });
+          if (data?.type === "new-message") {
+            new Notification("New Message", {
+              body: data?.data?.message || "",
+            });
+          }
         });
         socketInstance.on("message-listing", (messageListing) => {
           if (messageListing instanceof Array) {

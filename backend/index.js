@@ -9,7 +9,7 @@ import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js"
 import { authenticateConnectionMiddleware } from "./middlewares/socketMiddleware.js";
 import { generateChatId, generateTimeUUID, getCurrentUTCTimestamp, parseCookies, verifyJWT } from "./utils/index.js";
 import { getSessions } from "./models/socket.js";
-import { checkFriend, createFriend, updateUnreadCount } from "./models/chat.js";
+import { checkFriend, clearUnreadCount, createFriend, incrementUnreadCount } from "./models/chat.js";
 import { getMessageListing, sendMessage } from "./models/messages.js";
 
 const ioSessionMap = {};
@@ -81,6 +81,16 @@ async function startApiServer() {
 
       const recipientId = data?.recipientId;
       const chatId = generateChatId({ senderId: user_id, receiverId: recipientId });
+      const clearResp = await clearUnreadCount({ user_id, friend_id: recipientId });
+      console.log(clearResp);
+      if (!(!clearResp || clearResp.info.queriedHost === null)) {
+        socket.emit("chat-update", {
+          type: "msg-read",
+          data: {
+            chatId,
+          },
+        });
+      }
 
       if (!joinedRooms[user_id]) {
         joinedRooms[user_id] = [];
@@ -115,7 +125,7 @@ async function startApiServer() {
                   message: data?.message,
                 },
               });
-              updateUnreadCount({ friend_id: user_id, user_id: recipient_id });
+              incrementUnreadCount({ friend_id: user_id, user_id: recipient_id });
             }
           }
         }
