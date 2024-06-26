@@ -82,7 +82,7 @@ async function startApiServer() {
       const recipientId = data?.recipientId;
       const chatId = generateChatId({ senderId: user_id, receiverId: recipientId });
       const clearResp = await clearUnreadCount({ user_id, friend_id: recipientId });
-      if (!(!clearResp || clearResp.info.queriedHost === null)) {
+      if (!(!clearResp || clearResp?.info?.queriedHost === null)) {
         socket.emit("chat-update", {
           type: "msg-read",
           data: {
@@ -103,6 +103,7 @@ async function startApiServer() {
       const res = await checkFriend({ user_id, friend_id: recipient_id });
       const sent_time = getCurrentUTCTimestamp();
       const timeUUID = generateTimeUUID();
+      console.log(res);
       if (res?.length === 0) {
         createFriend({ friend_id: recipient_id, user_id, last_message: data?.message, sent_time });
       }

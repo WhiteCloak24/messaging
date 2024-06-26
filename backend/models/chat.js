@@ -29,9 +29,12 @@ export const incrementUnreadCount = async ({ user_id = "", friend_id = "" }) => 
 };
 export const clearUnreadCount = async ({ user_id = "", friend_id = "" }) => {
   const chatData = await getChatData({ friend_id, user_id });
-  const query = `UPDATE user_friends SET unread = ? WHERE user_id = ? AND friend_last_message_time = ? `;
-  const resp = await client.execute(query, [0, user_id, chatData?.friend_last_message_time], { prepare: true });
-  return resp || {};
+  if (chatData && Object.keys(chatData).length) {
+    const query = `UPDATE user_friends SET unread = ? WHERE user_id = ? AND friend_last_message_time = ? `;
+    const resp = await client.execute(query, [0, user_id, chatData?.friend_last_message_time], { prepare: true });
+    return resp || {};
+  }
+  return true;
 };
 
 export const getChatData = async ({ user_id = "", friend_id = "" }) => {
