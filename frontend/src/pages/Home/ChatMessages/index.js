@@ -1,7 +1,13 @@
 import React, { useEffect } from "react";
 import { useApplicationSocket } from "../../../hooks/useApplicationSocket";
 import { formatTime } from "../../../resources/functions";
+import { IoCheckmarkOutline } from "react-icons/io5";
+import { IoCheckmarkDoneOutline } from "react-icons/io5";
 
+const MessageStatusIconMap = {
+  Sent: <IoCheckmarkOutline />,
+  Delivered: <IoCheckmarkDoneOutline />,
+};
 const ChatMessages = ({ activeChat = {} }) => {
   const { fetchMessageListing, messageListing, user_id, setActiveChat } = useApplicationSocket();
   useEffect(() => {
@@ -21,7 +27,9 @@ const ChatMessages = ({ activeChat = {} }) => {
               isSent ? "self-end bg-customDarkblue text-white" : "self-start bg-white"
             }`}>
             <div className="flex self-start whitespace-pre-wrap break-all">{msg?.message_text}</div>
-            <div className={`text-xs ${isSent ? "text-gray-100" : "text-gray-500"} flex self-end min-w-14`}>{formatTime({ timestamp: msg?.sent_time })}</div>
+            <div className={`text-xs ${isSent ? "text-gray-100" : "text-gray-500"} flex self-end min-w-16`}>
+              {formatTime({ timestamp: msg?.sent_time })}&nbsp; <span className="h-full">{MessageStatusIconMap["Delivered"]}</span>
+            </div>
           </div>
         );
       })}
