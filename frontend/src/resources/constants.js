@@ -20,4 +20,5 @@ export const ModalEvent = {
   OPEN: "MODAL_OPEN",
   CLOSE: "MODAL_CLOSE",
 };
+export const RefetchQuery = "REFETCH_QUERY";
 export const AvatarPreview = "AVATAR_PREVIEW";

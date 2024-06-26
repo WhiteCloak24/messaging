@@ -18,6 +18,7 @@ const Chats = ({ activeChat = {}, setActiveChat = () => null }) => {
             <p className="font-semibold text-sm">{user.user_name}</p>
             {/* <p className="text-xs text-gray-600">{user.status}</p> */}
           </div>
+          <div className="flex self-center items-center ml-auto bg-blue-600 text-white text-xs rounded-full p-2 w-6 h-6 justify-center">{user?.unread}</div>
         </div>
       ))}
     </div>

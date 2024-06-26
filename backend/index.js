@@ -9,7 +9,7 @@ import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js"
 import { authenticateConnectionMiddleware } from "./middlewares/socketMiddleware.js";
 import { generateChatId, generateTimeUUID, getCurrentUTCTimestamp, parseCookies, verifyJWT } from "./utils/index.js";
 import { getSessions } from "./models/socket.js";
-import { checkFriend, createFriend } from "./models/chat.js";
+import { checkFriend, createFriend, updateUnreadCount } from "./models/chat.js";
 import { getMessageListing, sendMessage } from "./models/messages.js";
 
 const ioSessionMap = {};
@@ -115,6 +115,7 @@ async function startApiServer() {
                   message: data?.message,
                 },
               });
+              updateUnreadCount({ friend_id: user_id, user_id: recipient_id });
             }
           }
         }

@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, createContext, useMemo, useCallback } from "react";
 import { io } from "socket.io-client";
 import customParser from "socket.io-msgpack-parser";
-import { AuthorizationEVENTS } from "../../resources/constants";
+import { AuthorizationEVENTS, RefetchQuery } from "../../resources/constants";
 import { dispatchCustomEventFn } from "../../resources/functions";
 
 const initialState = {
@@ -64,11 +64,16 @@ export const SocketProvider = ({ children }) => {
         }
       });
       socketInstance.on("connect", () => {
-        console.log("Subscribed to socket");
         setState((prev) => ({ ...prev, isSocketConnected: true }));
         socketInstance.on("chat-update", (data) => {
+          dispatchCustomEventFn({
+            eventName: RefetchQuery,
+            eventData: {
+              queryKey: "chatListing",
+            },
+          });
           new Notification("New Message", {
-            body: data?.data?.message || '',
+            body: data?.data?.message || "",
           });
         });
         socketInstance.on("message-listing", (messageListing) => {
