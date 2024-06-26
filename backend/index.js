@@ -82,7 +82,6 @@ async function startApiServer() {
       const recipientId = data?.recipientId;
       const chatId = generateChatId({ senderId: user_id, receiverId: recipientId });
       const clearResp = await clearUnreadCount({ user_id, friend_id: recipientId });
-      console.log(clearResp);
       if (!(!clearResp || clearResp.info.queriedHost === null)) {
         socket.emit("chat-update", {
           type: "msg-read",
