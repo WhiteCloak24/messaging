@@ -39,7 +39,7 @@ async function startApiServer() {
   app.use("/chat", verifyJWT, chatRouter);
 
   app.use((req, res, next) => {
-    res.status(404).json({ success: false, message: "Could not find resource" });
+    res.status(404).json({ success: false, message: "Could not find resourcee" });
   });
 
   io.on("connection", async (socket) => {
