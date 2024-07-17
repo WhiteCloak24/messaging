@@ -7,7 +7,7 @@ export async function connectDatabase() {
     contactPoints: [process.env.CASSANDRA_DB_IP], // Replace with your Cassandra node IPs
     // contactPoints: [process.env.CASSANDRA_DB_IP], // Replace with your Cassandra node IPs 
     localDataCenter: "datacenter1", // Replace with your data center name
-    // keyspace: "admin",
+    keyspace: "admin",
   });
   console.time("Connection with db created in");
   await client.connect();
