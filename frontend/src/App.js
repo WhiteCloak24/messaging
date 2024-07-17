@@ -24,7 +24,7 @@ function App() {
       navigator.serviceWorker
         .register(`${process.env.PUBLIC_URL}/sw.js`)
         .then((sw) => {
-          console.log("Service Worker Registered",sw);
+          console.log("Service Worker registered",sw);
         })
         .catch((err) => {
           console.log(err);
