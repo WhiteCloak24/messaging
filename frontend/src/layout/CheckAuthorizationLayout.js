@@ -22,7 +22,7 @@ const CheckAuthorizationLayout = () => {
 
   useEffect(() => {
     if (authorizationState === AuthorizationStates.LOGGING_IN && user_id && session_id) {
-      subscribeSocket({ socket_url: "http://localhost:4000" || process.env.REACT_APP_SOCKET_URL, user_id: user_id, session_id });
+      subscribeSocket({ socket_url: process.env.REACT_APP_BE_URL, user_id: user_id, session_id });
     }
   }, [authorizationState, user_id, session_id]);
 
