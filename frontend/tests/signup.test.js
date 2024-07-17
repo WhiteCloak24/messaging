@@ -8,7 +8,7 @@ describe("Signup 1000 Users", () => {
     const email = `user${i}@example.com`;
     const password = "password123";
 
-    test(`should sign up user ${i}`, async () => {
+    test(`should sign up userr ${i}`, async () => {
       const response = await axios.post(baseUrl, {
         user_name,
         email,
