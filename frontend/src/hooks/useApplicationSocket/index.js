@@ -66,12 +66,6 @@ export const SocketProvider = ({ children }) => {
       socketInstance.on("connect", () => {
         setState((prev) => ({ ...prev, isSocketConnected: true }));
         socketInstance.on("chat-update", (data) => {
-          dispatchCustomEventFn({
-            eventName: RefetchQuery,
-            eventData: {
-              queryKey: "chatListing",
-            },
-          });
           if (data?.type === "new-message") {
             new Notification("New Message", {
               body: data?.data?.message || "",
@@ -81,6 +75,16 @@ export const SocketProvider = ({ children }) => {
         socketInstance.on("message-listing", (messageListing) => {
           if (messageListing instanceof Array) {
             setState((prev) => ({ ...prev, messageListing: messageListing }));
+          }
+        });
+        socketInstance.on("refetch", (data) => {
+          if (data?.type === "chat-listing") {
+            dispatchCustomEventFn({
+              eventName: RefetchQuery,
+              eventData: {
+                queryKey: "chatListing",
+              },
+            });
           }
         });
       });

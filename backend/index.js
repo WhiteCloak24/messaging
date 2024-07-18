@@ -39,16 +39,16 @@ async function startApiServer() {
   app.use("/chat", verifyJWT, chatRouter);
 
   app.use((req, res, next) => {
-    res.status(404).json({ success: false, message: "Could not find resourcee" });
+    res.status(404).json({ success: false, message: "Could not find resource" });
   });
 
   io.on("connection", async (socket) => {
+    console.log("Client connected", socket.id);
     const user_id = socket.handshake.auth.user_id ?? "";
     const cookies = socket.handshake.headers.cookie;
     const parsedCookies = parseCookies({ cookies });
     const session_id = parsedCookies?.session_id || "";
     const sessions = await getSessions({ session_id, user_id });
-    console.log("Client connected", socket.id);
     if (sessions?.length > 0) {
       const session = sessions[0];
       const jwt_token = session?.jwt_token;
@@ -105,6 +105,12 @@ async function startApiServer() {
       const timeUUID = generateTimeUUID();
       if (res?.length === 0) {
         createFriend({ friend_id: recipient_id, user_id, last_message: data?.message, sent_time });
+        for (let index = 0; index < ioSessionMap[recipient_id].length; index++) {
+          const socketId = ioSessionMap[recipient_id][index];
+          io.sockets.sockets.get(socketId).emit("refetch", {
+            type: "chat-listing",
+          });
+        }
       }
       const response = await sendMessage({ user_id, receiverId: recipient_id, sent_time, message: data?.message, timeUUID });
       const messageListing = await getMessageListing({ user_id, recipientId: recipient_id });
