@@ -8,10 +8,11 @@ DOCKER_CONTAINER_NAME="cass_cluster"  # Replace with your container name
 DOCKER_CASSANDRA_PORT="9042"
 ADMIN_KEYSPACE="admin"  # Replace with your keyspace name
 DUMP_FILE="users.cql"
+CQLSH_PATH="C:/apache-cassandra-3.11.6/bin/cqlsh"  # Use forward slashes
 
 # Step 1: Export Schema and Data from Local Cassandra
 echo "Exporting schema and data from local Cassandra..."
-cqlsh $LOCAL_CASSANDRA_HOST $LOCAL_CASSANDRA_PORT -e "COPY $ADMIN_KEYSPACE.users TO '$DUMP_FILE';"  # Replace table_name with actual tables
+$CQLSH_PATH $LOCAL_CASSANDRA_HOST $LOCAL_CASSANDRA_PORT -e "COPY $ADMIN_KEYSPACE.users TO '$DUMP_FILE';"  # Replace table_name with actual tables
 
 # Step 2: Transfer the Dump to Google Cloud VM
 echo "Transferring dump file to Google Cloud VM..."
