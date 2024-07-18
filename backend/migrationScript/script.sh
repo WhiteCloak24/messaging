@@ -19,7 +19,7 @@ for table in $tables; do
     DUMP_FILE="${table}.cql"
 
     echo "Exporting schema for table $table..."
-    $CQLSH_PATH $LOCAL_CASSANDRA_HOST $LOCAL_CASSANDRA_PORT -e "USE $ADMIN_KEYSPACE; DESCRIBE TABLE $table;" > $SCHEMA_FILE
+    $CQLSH_PATH $LOCAL_CASSANDRA_HOST $LOCAL_CASSANDRA_PORT -e "USE $ADMIN_KEYSPACE; DESCRIBE TABLE $table;" | grep -v -e 'dclocal_read_repair_chance' -e 'read_repair_chance'  > $SCHEMA_FILE
 
     echo "Exporting data for table $table..."
     $CQLSH_PATH $LOCAL_CASSANDRA_HOST $LOCAL_CASSANDRA_PORT -e "USE $ADMIN_KEYSPACE; COPY $table TO '$DUMP_FILE';"
@@ -44,7 +44,7 @@ for table in $tables; do
     "
 
     Cleanup local schema and dump files
-    rm $SCHEMA_FILE $DUMP_FILE
+    # rm $SCHEMA_FILE $DUMP_FILE
 done
 
 echo "Migration complete."
