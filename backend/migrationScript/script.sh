@@ -23,22 +23,22 @@ for table in $tables; do
     echo "Exporting data for table $table..."
     $CQLSH_PATH $LOCAL_CASSANDRA_HOST $LOCAL_CASSANDRA_PORT -e "USE $ADMIN_KEYSPACE; COPY $table TO '$DUMP_FILE';"
 
-    # echo "Transferring schema and data for table $table to Google Cloud VM..."
-    # scp $SCHEMA_FILE $DUMP_FILE yashjain200024@$GCP_VM_IP:~/  # Replace your_username with your actual username
+    echo "Transferring schema and data for table $table to Google Cloud VM..."
+    scp $SCHEMA_FILE $DUMP_FILE yashjain200024@$GCP_VM_IP:~/  # Replace your_username with your actual username
 
-    # echo "Copying schema and data for table $table to Docker container..."
-    # ssh yashjain200024@$GCP_VM_IP "sudo docker cp ~/$SCHEMA_FILE $DOCKER_CONTAINER_NAME:/$SCHEMA_FILE"
-    # ssh yashjain200024@$GCP_VM_IP "sudo docker cp ~/$DUMP_FILE $DOCKER_CONTAINER_NAME:/$DUMP_FILE"
+    echo "Copying schema and data for table $table to Docker container..."
+    ssh yashjain200024@$GCP_VM_IP "sudo docker cp ~/$SCHEMA_FILE $DOCKER_CONTAINER_NAME:/$SCHEMA_FILE"
+    ssh yashjain200024@$GCP_VM_IP "sudo docker cp ~/$DUMP_FILE $DOCKER_CONTAINER_NAME:/$DUMP_FILE"
 
-    # echo "Importing schema and data for table $table into Docker Cassandra..."
-    # ssh yashjain200024@$GCP_VM_IP "
-    #     sudo docker exec $DOCKER_CONTAINER_NAME cqlsh -e \"
-    #     CREATE KEYSPACE IF NOT EXISTS $ADMIN_KEYSPACE WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
-    #     USE $ADMIN_KEYSPACE;
-    #     \" &&
-    #     sudo docker exec $DOCKER_CONTAINER_NAME cqlsh -e \"SOURCE '/$SCHEMA_FILE';\" &&
-    #     sudo docker exec $DOCKER_CONTAINER_NAME cqlsh $DOCKER_CASSANDRA_PORT -e \"COPY $ADMIN_KEYSPACE.$table FROM '/$DUMP_FILE';\"
-    # "
+    echo "Importing schema and data for table $table into Docker Cassandra..."
+    ssh yashjain200024@$GCP_VM_IP "
+        sudo docker exec $DOCKER_CONTAINER_NAME cqlsh -e \"
+        CREATE KEYSPACE IF NOT EXISTS $ADMIN_KEYSPACE WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+        USE $ADMIN_KEYSPACE;
+        \" &&
+        sudo docker exec $DOCKER_CONTAINER_NAME cqlsh -e \"SOURCE '/$SCHEMA_FILE';\" &&
+        sudo docker exec $DOCKER_CONTAINER_NAME cqlsh $DOCKER_CASSANDRA_PORT -e \"COPY $ADMIN_KEYSPACE.$table FROM '/$DUMP_FILE';\"
+    "
 
     # # Cleanup local schema and dump files
     # rm $SCHEMA_FILE $DUMP_FILE
