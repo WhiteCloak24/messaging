@@ -32,19 +32,15 @@ for table in $tables; do
     ssh yashjain200024@$GCP_VM_IP "sudo docker cp ~/$DUMP_FILE $DOCKER_CONTAINER_NAME:/$DUMP_FILE"
 
     echo "Importing schema and data for table $table into Docker Cassandra..."
-    ssh yashjain200024@$GCP_VM_IP "
-        sudo docker exec $DOCKER_CONTAINER_NAME cqlsh -e \"SOURCE '$SCHEMA_FILE';\"
-    "
-    ssh yashjain200024@$GCP_VM_IP "
-        sudo docker exec $DOCKER_CONTAINER_NAME cqlsh $DOCKER_CASSANDRA_PORT -e \"COPY $ADMIN_KEYSPACE.$table FROM '$DUMP_FILE';\"
-    "
+    ssh yashjain200024@$GCP_VM_IP "sudo docker exec $DOCKER_CONTAINER_NAME cqlsh -e \"SOURCE '$SCHEMA_FILE';\""
+    ssh yashjain200024@$GCP_VM_IP "sudo docker exec $DOCKER_CONTAINER_NAME cqlsh -e \"COPY $ADMIN_KEYSPACE.$table FROM '$DUMP_FILE';\""
     ssh yashjain200024@$GCP_VM_IP "
         sudo docker exec $DOCKER_CONTAINER_NAME rm -rf $SCHEMA_FILE
         sudo docker exec $DOCKER_CONTAINER_NAME rm -rf $DUMP_FILE
     "
 
-    Cleanup local schema and dump files
-    # rm $SCHEMA_FILE $DUMP_FILE
+    echo "Cleanup local schema and dump files"
+    rm $SCHEMA_FILE $DUMP_FILE
 done
 
 echo "Migration complete."
