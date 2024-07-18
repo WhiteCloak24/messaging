@@ -19,11 +19,11 @@ scp $DUMP_FILE yashjain200024@$GCP_VM_IP:~/$DUMP_FILE  # Replace your_username w
 
 # Step 3: Copy the Dump to Docker
 echo "Copying dump file to Docker container..."
-ssh yashjain200024@$GCP_VM_IP "docker cp ~/$DUMP_FILE $DOCKER_CONTAINER_NAME:/$DUMP_FILE"  # Replace your_username with your actual username
+ssh yashjain200024@$GCP_VM_IP "sudo docker cp ~/$DUMP_FILE $DOCKER_CONTAINER_NAME:/$DUMP_FILE"  # Replace your_username with your actual username
 
 # Step 4: Import Schema and Data into Docker Cassandra
 echo "Importing schema and data into Docker Cassandra..."
-ssh yashjain200024@$GCP_VM_IP "docker exec -it $DOCKER_CONTAINER_NAME cqlsh $DOCKER_CASSANDRA_PORT -e \"COPY $ADMIN_KEYSPACE.table_name FROM '/$DUMP_FILE';\""  # Replace table_name with actual tables
+ssh yashjain200024@$GCP_VM_IP "sudo docker exec -it $DOCKER_CONTAINER_NAME cqlsh $DOCKER_CASSANDRA_PORT -e \"COPY $ADMIN_KEYSPACE.users FROM '/$DUMP_FILE';\""  # Replace table_name with actual tables
 
 # Cleanup local dump file
 rm $DUMP_FILE
