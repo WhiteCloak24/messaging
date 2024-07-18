@@ -24,7 +24,7 @@ ssh yashjain200024@$GCP_VM_IP "sudo docker cp ~/$DUMP_FILE $DOCKER_CONTAINER_NAM
 
 # Step 4: Import Schema and Data into Docker Cassandra
 echo "Importing schema and data into Docker Cassandra..."
-ssh yashjain200024@$GCP_VM_IP "sudo docker exec -it $DOCKER_CONTAINER_NAME cqlsh $DOCKER_CASSANDRA_PORT -e \"COPY $ADMIN_KEYSPACE.users FROM '/$DUMP_FILE';\""  # Replace table_name with actual tables
+ssh yashjain200024@$GCP_VM_IP "sudo docker exec  $DOCKER_CONTAINER_NAME cqlsh -e \"COPY $ADMIN_KEYSPACE.users FROM '/$DUMP_FILE';\""  # Replace table_name with actual tables
 
 # Cleanup local dump file
 rm $DUMP_FILE
