@@ -32,16 +32,12 @@ for table in $tables; do
 
     echo "Importing schema and data for table $table into Docker Cassandra..."
     ssh yashjain200024@$GCP_VM_IP "
-        sudo docker exec $DOCKER_CONTAINER_NAME cqlsh -e \"
-        CREATE KEYSPACE IF NOT EXISTS $ADMIN_KEYSPACE WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
-        USE $ADMIN_KEYSPACE;
-        \" &&
         sudo docker exec $DOCKER_CONTAINER_NAME cqlsh -e \"SOURCE '/$SCHEMA_FILE';\" &&
         sudo docker exec $DOCKER_CONTAINER_NAME cqlsh $DOCKER_CASSANDRA_PORT -e \"COPY $ADMIN_KEYSPACE.$table FROM '/$DUMP_FILE';\"
     "
 
-    # # Cleanup local schema and dump files
-    # rm $SCHEMA_FILE $DUMP_FILE
+    # Cleanup local schema and dump files
+    rm $SCHEMA_FILE $DUMP_FILE
 done
 
 echo "Migration complete."
