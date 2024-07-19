@@ -10,7 +10,7 @@ const QueryRefetcher = () => {
   }, []);
 
   const handleQueryRefetch = useCallback((e) => {
-    queryClient.invalidateQueries({ queryKey: [e.detail?.queryKey], exact: false });
+    queryClient.invalidateQueries({ queryKey: e.detail?.queryKey, exact: false });
   }, []);
   return <></>;
 };

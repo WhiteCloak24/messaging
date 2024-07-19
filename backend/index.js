@@ -78,7 +78,8 @@ async function startApiServer() {
         if (!res) {
           throw new Error("Unable to send message");
         }
-        refetchQueryEventEmit({ socket, queryKey: ["messageListing"], type: "socket" });
+        refetchQueryEventEmit({ socket, queryKey: "messageListing", type: "socket" });
+        refetchQueryEventEmit({ socket, queryKey: ["chatListing"], type: "api" });
       } catch (err) {
         socket.emit("error", err?.message);
       }

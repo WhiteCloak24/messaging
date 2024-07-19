@@ -13,9 +13,12 @@ const Chats = ({ activeChat = {}, setActiveChat = () => null }) => {
       {chatList.map((user) => {
         return (
           <div
-            key={user?.friend_id}
+            key={user?.user_id}
             className={`py-2 px-4 hover:bg-grey ${activeChat?.user_id === user?.user_id ? "bg-grey" : ""} flex gap-2 cursor-pointer`}
-            onClick={() => setActiveChat(user)}>
+            onClick={() => {
+              sessionStorage.setItem("activeChat", user?.user_id);
+              setActiveChat(user);
+            }}>
             <Avatar firstName={user?.user_name} size="45" />
             <div>
               <p className="font-semibold text-md">{user.user_name}</p>

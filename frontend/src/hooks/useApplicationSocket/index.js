@@ -10,7 +10,7 @@ const initialState = {
   subscribeSocket: ({ socket_url = "", session_id = "", user_id = "", port = "" }) => null,
   unsubscribeSocket: () => null,
   sendMessage: ({ recipients = [], message = "" }) => null,
-  fetchMessageListing: ({ recipientId }) => null,
+  fetchMessageListing: ({ recipientId, socket }) => null,
   setActiveChat: ({ recipientId }) => null,
   user_id: "",
   messageListing: [],
@@ -73,13 +73,20 @@ export const SocketProvider = ({ children }) => {
           }
         });
         socketInstance.on("refetch", (data) => {
-          if (data?.type === "chat-listing") {
+          if (data?.type === "api") {
             dispatchCustomEventFn({
               eventName: RefetchQuery,
               eventData: {
-                queryKey: "chatListing",
+                queryKey: data?.queryKey,
               },
             });
+          }
+          if (data?.type === "socket") {
+            if (data?.queryKey === "messageListing") {
+              if (sessionStorage.getItem("activeChat")) {
+                fetchMessageListing({ recipientId: sessionStorage.getItem("activeChat"), socket: socketInstance });
+              }
+            }
           }
         });
       });
@@ -124,12 +131,15 @@ export const SocketProvider = ({ children }) => {
     [state.socketInstance]
   );
   const fetchMessageListing = useCallback(
-    ({ recipientId = "" }) => {
+    ({ recipientId = "", socket }) => {
       const payload = {
         recipientId,
       };
-      setState((prev) => ({ ...prev, messageListing: [] }));
-      state.socketInstance.emit("message-listing", payload, ({ data = [] }) => {
+      if (!socket) {
+        setState((prev) => ({ ...prev, messageListing: [] }));
+      }
+      const socketEmitter = socket || state.socketInstance;
+      socketEmitter.emit("message-listing", payload, ({ data = [] }) => {
         setState((prev) => ({ ...prev, messageListing: data }));
       });
     },
