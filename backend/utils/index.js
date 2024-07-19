@@ -4,11 +4,13 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { v1 as timeuuid } from "uuid";
 
+export const UserIdToSocketMap = {};
+
 export function getCurrentUTCTimestamp() {
   return Date.now();
 }
 export function generateTimeUUID() {
-  return timeuuid()
+  return timeuuid();
 }
 export function parseCookies({ cookies = null }) {
   if (!cookies) return null;
@@ -88,4 +90,29 @@ export const generateChatId = ({ senderId = "", receiverId = "" }) => {
   } else {
     return `${receiverId}_${senderId}`;
   }
+};
+
+export const addToUserIdSocketMap = ({ user_id = "", socket }) => {
+  if (!UserIdToSocketMap[user_id]) {
+    UserIdToSocketMap[user_id] = [];
+  }
+  // Add the socket.id to the array for this user_id
+  UserIdToSocketMap[user_id].push(socket);
+};
+export const removeFromUserIdSocketMap = ({ user_id = "", socket }) => {
+  if (UserIdToSocketMap[user_id] && UserIdToSocketMap[user_id].length > 0) {
+    UserIdToSocketMap[user_id] = UserIdToSocketMap[user_id].filter((userSocket) => userSocket?.id !== socket.id);
+    if (UserIdToSocketMap[user_id].length === 0) {
+      delete UserIdToSocketMap[user_id]; // Remove the user_id entry if no more sockets
+    }
+  }
+};
+export const getSocketsFromId = ({ id = "" }) => {
+  return UserIdToSocketMap[id] || [];
+};
+export const refetchQueryEventEmit = ({ queryKey = "", socket, type = "" }) => {
+  socket.emit("refetch", {
+    queryKey,
+    type,
+  });
 };
