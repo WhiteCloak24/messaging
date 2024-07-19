@@ -12,8 +12,12 @@ export const sendMessage = async ({ user_id = "", receiverId, message = "", sent
   }
 };
 export const getMessageListing = async ({ user_id = "", recipientId = "" }) => {
-  const chat_id = generateChatId({ senderId: user_id, receiverId: recipientId });
-  const query = `SELECT * from messages WHERE chat_id = ? ALLOW FILTERING;`;
-  const resp = await client.execute(query, [chat_id], { prepare: true });
-  return resp?.rows || [];
+  try {
+    const chat_id = generateChatId({ senderId: user_id, receiverId: recipientId });
+    const query = `SELECT * from messages WHERE chat_id = ? ALLOW FILTERING;`;
+    const resp = await client.execute(query, [chat_id], { prepare: true });
+    return resp?.rows || [];
+  } catch (e) {
+    return [];
+  }
 };

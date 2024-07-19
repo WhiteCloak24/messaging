@@ -72,11 +72,6 @@ export const SocketProvider = ({ children }) => {
             });
           }
         });
-        socketInstance.on("message-listing", (messageListing) => {
-          if (messageListing instanceof Array) {
-            setState((prev) => ({ ...prev, messageListing: messageListing }));
-          }
-        });
         socketInstance.on("refetch", (data) => {
           if (data?.type === "chat-listing") {
             dispatchCustomEventFn({
@@ -134,7 +129,9 @@ export const SocketProvider = ({ children }) => {
         recipientId,
       };
       setState((prev) => ({ ...prev, messageListing: [] }));
-      state.socketInstance.emit("message-listing", payload);
+      state.socketInstance.emit("message-listing", payload, ({ data = [] }) => {
+        setState((prev) => ({ ...prev, messageListing: data }));
+      });
     },
     [state.socketInstance]
   );

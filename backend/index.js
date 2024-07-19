@@ -20,6 +20,7 @@ import {
 } from "./utils/index.js";
 import { getSessions } from "./models/socket.js";
 import { sendMessageController } from "./controllers/messageController.js";
+import { getMessageListing } from "./models/messages.js";
 
 const joinedRooms = {};
 
@@ -83,6 +84,11 @@ async function startApiServer() {
       }
     });
 
+    socket.on("message-listing", async (data, callback = () => null) => {
+      const messageListing = await getMessageListing({ user_id, recipientId: data?.recipientId });
+      callback({ data: messageListing });
+    });
+
     // socket.on("active-chat", async (data) => {
     //   if (joinedRooms && joinedRooms[user_id] && joinedRooms[user_id] instanceof Array) {
     //     joinedRooms[user_id].forEach((room) => {
@@ -114,12 +120,6 @@ async function startApiServer() {
     //   // Add the socket.id to the array for this user_id
     //   joinedRooms[user_id].push(chatId);
     //   socket.join(chatId);
-    // });
-
-    // socket.on("message-listing", async (data) => {
-    //   const recipientId = data?.recipientId;
-    //   const messageListing = await getMessageListing({ user_id, recipientId });
-    //   socket.emit("message-listing", messageListing);
     // });
 
     socket.on("disconnect", () => {
