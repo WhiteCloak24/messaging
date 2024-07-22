@@ -2,7 +2,7 @@ import { createFriend, incrementUnreadCount, isChatFriend, updateFriendLastMessa
 import { sendMessage } from "../models/messages.js";
 import { generateChatId, generateTimeUUID, getCurrentUTCTimestamp, getSocketsFromId, refetchQueryEventEmit } from "../utils/index.js";
 
-export const sendMessageController = async ({ recipients = [], message = "", user_id = "" }) => {
+export const sendMessageController = async ({ recipients = [], message = "", user_id = "", attachment = "" }) => {
   for (let index = 0; index < recipients.length; index++) {
     const recipientId = recipients[index];
     const sockets = getSocketsFromId({ id: recipientId });
@@ -21,7 +21,7 @@ export const sendMessageController = async ({ recipients = [], message = "", use
         throw new Error("Unable to create friend");
       }
     }
-    const isSendMessageSuccess = await sendMessage({ user_id, receiverId: recipientId, sent_time, message, timeUUID });
+    const isSendMessageSuccess = await sendMessage({ user_id, receiverId: recipientId, sent_time, message, timeUUID, attachment });
     if (isSendMessageSuccess) {
       if (isFriend) {
         const isSuccess = await updateFriendLastMessage({ chatId, friend_id: recipientId, user_id, last_message: message, sent_time });

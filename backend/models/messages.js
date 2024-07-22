@@ -1,7 +1,7 @@
 import { client } from "../config/database.js";
 import { generateChatId } from "../utils/index.js";
 
-export const sendMessage = async ({ user_id = "", receiverId, message = "", sent_time, timeUUID }) => {
+export const sendMessage = async ({ user_id = "", receiverId, message = "", sent_time, timeUUID, attachment = "" }) => {
   try {
     const query = `INSERT INTO messages (chat_id, message_id, is_read, message_text, recipient_id, sender_id, sent_time) VALUES ( ?, ?, ?, ?, ?, ?, ? );`;
     const chat_id = generateChatId({ senderId: user_id, receiverId });

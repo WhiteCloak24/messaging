@@ -31,6 +31,8 @@ async function startApiServer() {
   const httpServer = createServer(app);
   const io = new Server(httpServer, {
     cors: { origin: "*" },
+    maxHttpBufferSize: 1e7,
+    pingTimeout: 2000000,
     // parser: customParser,
   });
 
@@ -76,31 +78,30 @@ async function startApiServer() {
 
     socket.on("send-message", async (data) => {
       try {
-        console.log(data);
-        // const { attachments = [] } = data;
-
-        // if (attachments.length > 0) {
-          // const aws = new S3Service();
-          // const chatId = generateChatId({ receiverId: user_id, senderId: data.recipients?.[0] });
-          // console.log(chatId);
-          // aws.createFolderIfNotExist(`${chatId}/`);
-          // for (let index = 0; index < attachments.length; index++) {
-          //   const fileServerName = `${generateUuid()}.${mimeType?.split("/")[1]}`;
-          //   const fileBuffer = attachments[index].file;
-          //   const mimeType = attachments[index].mimeType;
-          //   const buffer = Buffer.from(fileBuffer);
-          //   console.log(fileServerName);
-          //   console.timeEnd('Uploading took')
-          //   const response = await aws.putFile({ file: buffer, type: mimeType, filename: `${chatId}/${fileServerName}` });
-          //   console.timeEnd('Uploading took')
-          // }
-        // }
-        // const res = await sendMessageController({ message: data?.message, recipients: data.recipients, user_id });
-        // if (!res) {
-        //   throw new Error("Unable to send message");
-        // }
-        // refetchQueryEventEmit({ socket, queryKey: "messageListing", type: "socket" });
-        // refetchQueryEventEmit({ socket, queryKey: ["chatListing"], type: "api" });
+        const { attachments = [] } = data;
+        const uploadedAttachments = [];
+        if (attachments.length > 0) {
+          const aws = new S3Service();
+          const chatId = generateChatId({ receiverId: user_id, senderId: data.recipients?.[0] });
+          aws.createFolderIfNotExist(`${chatId}/`);
+          for (let index = 0; index < attachments.length; index++) {
+            const fileBuffer = attachments[index].file;
+            const mimeType = attachments[index].mimeType;
+            const fileServerName = `${generateUuid()}.${mimeType?.split("/")[1]}`;
+            const buffer = Buffer.from(fileBuffer);
+            const response = await aws.putFile({ file: buffer, type: mimeType, filename: `${chatId}/${fileServerName}` });
+            if (response) {
+              uploadedAttachments.push(fileServerName);
+            }
+            await sendMessageController({ message: "", recipients: data.recipients, user_id, attachment: fileServerName });
+          }
+        }
+        const res = await sendMessageController({ message: data?.message, recipients: data.recipients, user_id });
+        if (!res) {
+          throw new Error("Unable to send message");
+        }
+        refetchQueryEventEmit({ socket, queryKey: "messageListing", type: "socket" });
+        refetchQueryEventEmit({ socket, queryKey: ["chatListing"], type: "api" });
       } catch (err) {
         console.log(err?.message);
         socket.emit("error", err?.message);
