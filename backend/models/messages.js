@@ -40,7 +40,6 @@ export const deleteMessage = async ({ user_id = "", receiverId: recipientId = ""
     const res = await client.execute(query, [cassandra.types.TimeUuid.fromString(messageId), chat_id], { prepare: true });
     return true;
   } catch (e) {
-    console.log(e.message);
     return false;
   }
 };
