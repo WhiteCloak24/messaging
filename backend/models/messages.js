@@ -1,5 +1,5 @@
 import { client } from "../config/database.js";
-import { generateChatId } from "../utils/index.js";
+import { generateChatId, generateTimeUUID } from "../utils/index.js";
 
 export const sendMessage = async ({ user_id = "", receiverId, message = "", sent_time, timeUUID, attachment = "" }) => {
   try {
@@ -35,8 +35,8 @@ export const getMessageData = async ({ user_id = "", recipientId = "", messageId
 export const deleteMessage = async ({ user_id = "", recipientId = "", messageId = "" }) => {
   try {
     const chat_id = generateChatId({ senderId: user_id, receiverId: recipientId });
-    const query = `DELETE from messages WHERE chat_id = ? AND message_id = ? IF EXISTS;`;
-    const res = await client.execute(query, [chat_id, messageId], { prepare: true });
+    const query = `DELETE from messages WHERE message_id = ? AND chat_id = ?  IF EXISTS;`;
+    const res = await client.execute(query, [messageId, chat_id], { prepare: true });
     return true;
   } catch (e) {
     return false;
