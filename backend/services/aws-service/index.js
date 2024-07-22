@@ -68,6 +68,17 @@ export class S3Service {
         return false;
       });
   }
+  async putFile({ file, type, filename }) {
+    const command = new PutObjectCommand({ Bucket: process.env.AWS_BUCKET_NAME, Key: filename, ContentType: type, Body: file });
+    this.s3Client
+      .send(command)
+      .then(() => {
+        return true;
+      })
+      .catch(() => {
+        return false;
+      });
+  }
 
   async createFolderIfNotExist(Key) {
     if (!(await this.existsFolder(Key))) {

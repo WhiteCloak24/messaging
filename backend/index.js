@@ -80,12 +80,12 @@ async function startApiServer() {
         if (attachments.length > 0) {
           const aws = new S3Service();
           const chatId = generateChatId({ receiverId: user_id, senderId: data.recipients?.[0] });
-          aws.createFolderIfNotExist(chatId);
+          aws.createFolderIfNotExist(`${chatId}/`);
 
           for (let index = 0; index < attachments.length; index++) {
             const fileBuffer = attachments[index];
             const buffer = Buffer.from(fileBuffer);
-            console.log(buffer);
+            aws.putFile({ file: buffer, type: "image/jpeg", filename: `${chatId}/image.jpeg` });
             // const uploadParams = {
             //   Bucket: 'YOUR_BUCKET_NAME',
             //   Key: fileName,
