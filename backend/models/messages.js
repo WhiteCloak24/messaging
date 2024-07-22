@@ -33,13 +33,11 @@ export const getMessageData = async ({ user_id = "", recipientId = "", messageId
     return null;
   }
 };
-export const deleteMessage = async ({ user_id = "", recipientId = "", messageId = "" }) => {
+export const deleteMessage = async ({ user_id = "", receiverId: recipientId = "", messageId = "" }) => {
   try {
     const chat_id = generateChatId({ senderId: user_id, receiverId: recipientId });
-    const query = `DELETE FROM messages WHERE message_id=${cassandra.types.TimeUuid.fromString(messageId)} AND chat_id='${chat_id}';`;
-    const res = await client.execute(query, { prepare: true });
-    // const query = `DELETE message_text from messages WHERE message_id = ? AND chat_id = ?  IF EXISTS;`;
-    // const res = await client.execute(query, [cassandra.types.TimeUuid.fromString(messageId), `${chat_id}`], { prepare: true });
+    const query = `DELETE from messages WHERE message_id = ? AND chat_id = ?  IF EXISTS;`;
+    const res = await client.execute(query, [cassandra.types.TimeUuid.fromString(messageId), chat_id], { prepare: true });
     return true;
   } catch (e) {
     console.log(e.message);

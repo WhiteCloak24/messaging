@@ -50,7 +50,6 @@ export const deleteMessageController = async ({ messageId, receiverId, user_id }
         await aws.deleteFile({ filename: `${res?.chat_id}/${res?.attachment}` });
       }
       const isDeleted = await deleteMessage({ messageId, receiverId, user_id });
-      console.log(isDeleted);
     }
     return true;
   } catch (e) {
