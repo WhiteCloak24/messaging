@@ -26,6 +26,10 @@ export function formatDate({ timestamp = "", format = "DD/MM/YY" }) {
   if (!timestamp) return "Invalid Date";
   return moment(timestamp).format(format);
 }
+export function getTimeFromNow({ timestamp = "", format = "DD/MM/YY" }) {
+  if (!timestamp) return "Invalid Date";
+  return moment(timestamp).fromNow();
+}
 
 export function showUpdateNotification() {
   const notification = document.createElement("div");
