@@ -22,3 +22,23 @@ export const getMessageListing = async ({ user_id = "", recipientId = "" }) => {
     return [];
   }
 };
+export const getMessageData = async ({ user_id = "", recipientId = "", messageId = "" }) => {
+  try {
+    const chat_id = generateChatId({ senderId: user_id, receiverId: recipientId });
+    const query = `SELECT * from messages WHERE chat_id = ? AND message_id = ? ALLOW FILTERING;`;
+    const resp = await client.execute(query, [chat_id, messageId], { prepare: true });
+    return resp?.rows?.[0] || null;
+  } catch (e) {
+    return null;
+  }
+};
+export const deleteMessage = async ({ user_id = "", recipientId = "", messageId = "" }) => {
+  try {
+    const chat_id = generateChatId({ senderId: user_id, receiverId: recipientId });
+    const query = `DELETE from messages WHERE chat_id = ? AND message_id = ?;`;
+    await client.execute(query, [chat_id, messageId], { prepare: true });
+    return true;
+  } catch (e) {
+    return false;
+  }
+};

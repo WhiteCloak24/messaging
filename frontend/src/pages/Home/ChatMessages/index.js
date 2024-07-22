@@ -18,11 +18,10 @@ const ChatMessages = ({ activeChat = {} }) => {
   return (
     <div className="flex-1 p-4 overflow-y-scroll flex flex-col">
       {messageListing.map((msg) => {
-        const { chat_id = "" } = msg || {};
         const isSent = user_id === msg?.sender_id;
         return (
           <div
-            key={chat_id}
+            key={msg?.message_id}
             className={`relative mb-4 w-fit h-fit px-4 py-2 flex gap-4 max-w-[60%] rounded-md ${
               isSent ? "self-end bg-blue-600 text-white mr-4" : "self-start bg-white"
             }`}>
@@ -31,7 +30,9 @@ const ChatMessages = ({ activeChat = {} }) => {
               {formatTime({ timestamp: msg?.sent_time })}&nbsp; <span className="w-4 h-4 text-green-200">{MessageStatusIconMap["Delivered"]}</span>
             </div>
             <div className="absolute right-[-20px] text-black">
-              <span className="cursor-pointer">
+              <span
+                className="cursor-pointer"
+                onClick={() => deleteMessage({ messageId: msg?.message_id, receiverId: isSent ? msg?.recipient_id : user_id })}>
                 <IoTrashBin />
               </span>
             </div>

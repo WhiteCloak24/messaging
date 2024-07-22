@@ -20,7 +20,7 @@ import {
   verifyJWT,
 } from "./utils/index.js";
 import { getSessions } from "./models/socket.js";
-import { sendMessageController } from "./controllers/messageController.js";
+import { deleteMessageController, sendMessageController } from "./controllers/messageController.js";
 import { getMessageListing } from "./models/messages.js";
 import { S3Service } from "./services/aws-service/index.js";
 
@@ -106,6 +106,15 @@ async function startApiServer() {
         refetchQueryEventEmit({ socket, queryKey: ["chatListing"], type: "api" });
       } catch (err) {
         console.log(err?.message);
+        socket.emit("error", err?.message);
+      }
+    });
+
+    socket.on("delete-message", async (data) => {
+      try {
+        const { messageId, receiverId } = data;
+        const response = await deleteMessageController({ messageId, receiverId, user_id });
+      } catch (err) {
         socket.emit("error", err?.message);
       }
     });

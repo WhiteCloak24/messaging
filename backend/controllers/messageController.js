@@ -1,5 +1,5 @@
-import { createFriend, incrementUnreadCount, isChatFriend, updateFriendLastMessage } from "../models/chat.js";
-import { sendMessage } from "../models/messages.js";
+import { createFriend, isChatFriend, updateFriendLastMessage } from "../models/chat.js";
+import { deleteMessage, getMessageData, sendMessage } from "../models/messages.js";
 import { generateChatId, generateTimeUUID, getCurrentUTCTimestamp, getSocketsFromId, refetchQueryEventEmit } from "../utils/index.js";
 
 export const sendMessageController = async ({ recipients = [], message = "", user_id = "", attachment = "" }) => {
@@ -37,5 +37,19 @@ export const sendMessageController = async ({ recipients = [], message = "", use
       return false;
     }
     return true;
+  }
+};
+
+export const deleteMessageController = async ({ messageId, receiverId, user_id }) => {
+  try {
+    const res = await getMessageData({ messageId, recipientId: receiverId, user_id });
+    console.log(res);
+    if (res) {
+      if (res?.attachment) {
+      }
+      // deleteMessage({ messageId, receiverId, user_id });
+    }
+  } catch (e) {
+    return false;
   }
 };
