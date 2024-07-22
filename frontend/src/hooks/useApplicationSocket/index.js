@@ -10,6 +10,7 @@ const initialState = {
   subscribeSocket: ({ socket_url = "", session_id = "", user_id = "", port = "" }) => null,
   unsubscribeSocket: () => null,
   sendMessage: ({ recipients = [], message = "" }) => null,
+  deleteMessage: ({ messageId = "", receiverId = "" }) => null,
   fetchMessageListing: ({ recipientId, socket }) => null,
   setActiveChat: ({ recipientId }) => null,
   user_id: "",
@@ -131,6 +132,18 @@ export const SocketProvider = ({ children }) => {
     },
     [state.socketInstance]
   );
+  const deleteMessage = useCallback(
+    ({ messageId = "", receiverId = "" }) => {
+      if (messageId && receiverId) {
+        const payload = {
+          messageId,
+          receiverId,
+        };
+        state.socketInstance.emit("delete-message", payload);
+      }
+    },
+    [state.socketInstance]
+  );
   const fetchMessageListing = useCallback(
     ({ recipientId = "", socket }) => {
       const payload = {
@@ -165,6 +178,7 @@ export const SocketProvider = ({ children }) => {
         sendMessage,
         fetchMessageListing,
         setActiveChat,
+        deleteMessage,
       }}>
       {children}
     </SocketContext.Provider>

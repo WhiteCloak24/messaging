@@ -9,7 +9,7 @@ const MessageStatusIconMap = {
   Delivered: <IoCheckmarkDoneOutline className="w-full h-full" />,
 };
 const ChatMessages = ({ activeChat = {} }) => {
-  const { fetchMessageListing, messageListing, user_id, setActiveChat } = useApplicationSocket();
+  const { fetchMessageListing, messageListing, user_id, setActiveChat, deleteMessage } = useApplicationSocket();
   useEffect(() => {
     fetchMessageListing({ recipientId: activeChat?.user_id });
     setActiveChat({ recipientId: activeChat?.user_id });
