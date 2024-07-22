@@ -1,5 +1,6 @@
 import { createFriend, isChatFriend, updateFriendLastMessage } from "../models/chat.js";
 import { deleteMessage, getMessageData, sendMessage } from "../models/messages.js";
+import { S3Service } from "../services/aws-service/index.js";
 import { generateChatId, generateTimeUUID, getCurrentUTCTimestamp, getSocketsFromId, refetchQueryEventEmit } from "../utils/index.js";
 
 export const sendMessageController = async ({ recipients = [], message = "", user_id = "", attachment = "" }) => {
@@ -43,12 +44,15 @@ export const sendMessageController = async ({ recipients = [], message = "", use
 export const deleteMessageController = async ({ messageId, receiverId, user_id }) => {
   try {
     const res = await getMessageData({ messageId, recipientId: receiverId, user_id });
-    console.log(res);
+    const aws = new S3Service();
     if (res) {
       if (res?.attachment) {
+        await aws.deleteFile({ filename: `${res?.chat_id}/${res?.attachment}` });
       }
-      // deleteMessage({ messageId, receiverId, user_id });
+      const isDeleted = await deleteMessage({ messageId, receiverId, user_id });
+      console.log(isDeleted);
     }
+    return true;
   } catch (e) {
     return false;
   }

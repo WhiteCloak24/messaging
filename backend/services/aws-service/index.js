@@ -76,6 +76,19 @@ export class S3Service {
       });
   }
 
+  async deleteFile({ filename }) {
+    const command = new DeleteObjectCommand({ Bucket: process.env.AWS_BUCKET_NAME, Key: filename });
+    this.s3Client
+      .send(command)
+      .then(() => {
+        return true;
+      })
+      .catch((err) => {
+        console.log(err);
+        return false;
+      });
+  }
+
   async createFolderIfNotExist(Key) {
     if (!(await this.existsFolder(Key))) {
       return this.createFolder(Key);

@@ -114,6 +114,9 @@ async function startApiServer() {
       try {
         const { messageId, receiverId } = data;
         const response = await deleteMessageController({ messageId, receiverId, user_id });
+        if (response) {
+          refetchQueryEventEmit({ socket, queryKey: "messageListing", type: "socket" });
+        }
       } catch (err) {
         socket.emit("error", err?.message);
       }
