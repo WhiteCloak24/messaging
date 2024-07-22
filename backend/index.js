@@ -96,9 +96,11 @@ async function startApiServer() {
             await sendMessageController({ message: "", recipients: data.recipients, user_id, attachment: fileServerName });
           }
         }
-        const res = await sendMessageController({ message: data?.message, recipients: data.recipients, user_id });
-        if (!res) {
-          throw new Error("Unable to send message");
+        if (data?.message) {
+          const res = await sendMessageController({ message: data?.message, recipients: data.recipients, user_id });
+          if (!res) {
+            throw new Error("Unable to send message");
+          }
         }
         refetchQueryEventEmit({ socket, queryKey: "messageListing", type: "socket" });
         refetchQueryEventEmit({ socket, queryKey: ["chatListing"], type: "api" });
