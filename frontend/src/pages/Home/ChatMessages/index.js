@@ -26,7 +26,7 @@ const ChatMessages = ({ activeChat = {} }) => {
             className={`mb-4 w-fit h-fit px-4 py-2 flex gap-4 max-w-[60%] rounded-md ${
               isSent ? "self-end bg-blue-600 text-white" : "self-start bg-white"
             }`}>
-            <div className="flex self-start whitespace-pre-wrap break-all">{msg?.message_text}</div>
+            <div className="flex self-start whitespace-pre-wrap break-all">{msg?.message_text || msg.attachment}</div>
             <div className={`text-xs ${isSent ? "text-gray-100" : "text-gray-500"} flex self-end min-w-16`}>
               {formatTime({ timestamp: msg?.sent_time })}&nbsp; <span className="w-4 h-4 text-green-200">{MessageStatusIconMap["Delivered"]}</span>
             </div>
