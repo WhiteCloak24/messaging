@@ -56,3 +56,18 @@ export function showUpdateNotification() {
   document.body.appendChild(notification);
   window.location.reload();
 }
+
+export function convertFileToArrayBuffer(file) {
+  if (file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const fileBuffer = new Uint8Array(event.target.result);
+        resolve({ fileName: file.name, fileBuffer: fileBuffer, fileType: file.type, url: URL.createObjectURL(file) });
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  } else {
+    return null;
+  }
+}

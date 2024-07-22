@@ -119,11 +119,12 @@ export const SocketProvider = ({ children }) => {
   }, [state.socketInstance]);
 
   const sendMessage = useCallback(
-    ({ recipients = [], message = "" }) => {
+    ({ recipients = [], message = "", attachments = [] }) => {
       if (recipients.length > 0) {
         const payload = {
           message,
           recipients,
+          attachments,
         };
         state.socketInstance.emit("send-message", payload);
       }

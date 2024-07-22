@@ -21,6 +21,7 @@ import {
 import { getSessions } from "./models/socket.js";
 import { sendMessageController } from "./controllers/messageController.js";
 import { getMessageListing } from "./models/messages.js";
+import { S3Service } from "./services/aws-service/index.js";
 
 const joinedRooms = {};
 
@@ -74,12 +75,31 @@ async function startApiServer() {
 
     socket.on("send-message", async (data) => {
       try {
-        const res = await sendMessageController({ message: data?.message, recipients: data.recipients, user_id });
-        if (!res) {
-          throw new Error("Unable to send message");
+        const { attachments = [] } = data;
+
+        if (attachments.length > 0) {
+          const aws = new S3Service();
+          const chatId = generateChatId({ receiverId: user_id, senderId: data.recipients?.[0] });
+          aws.createFolderIfNotExist(chatId);
+
+          for (let index = 0; index < attachments.length; index++) {
+            const fileBuffer = attachments[index];
+            const buffer = Buffer.from(fileBuffer);
+            console.log(buffer);
+            // const uploadParams = {
+            //   Bucket: 'YOUR_BUCKET_NAME',
+            //   Key: fileName,
+            //   Body: buffer,
+            //   ACL: 'public-read' // Adjust permissions as needed
+            // };
+          }
         }
-        refetchQueryEventEmit({ socket, queryKey: "messageListing", type: "socket" });
-        refetchQueryEventEmit({ socket, queryKey: ["chatListing"], type: "api" });
+        // const res = await sendMessageController({ message: data?.message, recipients: data.recipients, user_id });
+        // if (!res) {
+        //   throw new Error("Unable to send message");
+        // }
+        // refetchQueryEventEmit({ socket, queryKey: "messageListing", type: "socket" });
+        // refetchQueryEventEmit({ socket, queryKey: ["chatListing"], type: "api" });
       } catch (err) {
         socket.emit("error", err?.message);
       }
@@ -90,52 +110,9 @@ async function startApiServer() {
       callback({ data: messageListing });
     });
 
-    // socket.on("active-chat", async (data) => {
-    //   if (joinedRooms && joinedRooms[user_id] && joinedRooms[user_id] instanceof Array) {
-    //     joinedRooms[user_id].forEach((room) => {
-    //       socket.leave(room, (err) => {
-    //         if (err) {
-    //           console.error(`Error leaving room ${room}:`, err);
-    //         } else {
-    //           console.log(`Left room: ${room}`);
-    //         }
-    //       });
-    //     });
-    //   }
-
-    //   const recipientId = data?.recipientId;
-    //   const chatId = generateChatId({ senderId: user_id, receiverId: recipientId });
-    //   const clearResp = await clearUnreadCount({ user_id, friend_id: recipientId });
-    //   if (!(!clearResp || clearResp?.info?.queriedHost === null)) {
-    //     socket.emit("chat-update", {
-    //       type: "msg-read",
-    //       data: {
-    //         chatId,
-    //       },
-    //     });
-    //   }
-
-    //   if (!joinedRooms[user_id]) {
-    //     joinedRooms[user_id] = [];
-    //   }
-    //   // Add the socket.id to the array for this user_id
-    //   joinedRooms[user_id].push(chatId);
-    //   socket.join(chatId);
-    // });
-
     socket.on("disconnect", () => {
       removeFromUserIdSocketMap({ socket, user_id });
-      // if (joinedRooms && joinedRooms[user_id] && joinedRooms[user_id] instanceof Array) {
-      //   joinedRooms[user_id].forEach((room) => {
-      //     socket.leave(room, (err) => {
-      //       if (err) {
-      //         console.error(`Error leaving room ${room}:`, err);
-      //       } else {
-      //         console.log(`Left room: ${room}`);
-      //       }
-      //     });
-      //   });
-      // }
+
       console.log("Client disconnected");
     });
   });
