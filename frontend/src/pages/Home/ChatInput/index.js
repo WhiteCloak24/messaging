@@ -52,7 +52,9 @@ const ChatInput = ({ activeChat }) => {
   const sendMessageHandler = useCallback(
     (message, attachments = []) => {
       if (!message?.trim() && attachments.length === 0) return;
-      const attachment = attachments.map((attachment) => attachment.fileBuffer);
+      const attachment = attachments.map((attachment) => {
+        return { file: attachment.fileBuffer, mimeType: attachment.fileType };
+      });
       sendMessage({ recipients: [activeChat?.user_id], message, attachments: attachment });
       setMessage("");
     },

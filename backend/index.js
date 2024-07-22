@@ -11,6 +11,7 @@ import {
   addToUserIdSocketMap,
   generateChatId,
   generateTimeUUID,
+  generateUuid,
   getCurrentUTCTimestamp,
   parseCookies,
   refetchQueryEventEmit,
@@ -75,25 +76,25 @@ async function startApiServer() {
 
     socket.on("send-message", async (data) => {
       try {
-        const { attachments = [] } = data;
+        console.log(data);
+        // const { attachments = [] } = data;
 
-        if (attachments.length > 0) {
-          const aws = new S3Service();
-          const chatId = generateChatId({ receiverId: user_id, senderId: data.recipients?.[0] });
-          aws.createFolderIfNotExist(`${chatId}/`);
-
-          for (let index = 0; index < attachments.length; index++) {
-            const fileBuffer = attachments[index];
-            const buffer = Buffer.from(fileBuffer);
-            aws.putFile({ file: buffer, type: "image/jpeg", filename: `${chatId}/image.jpeg` });
-            // const uploadParams = {
-            //   Bucket: 'YOUR_BUCKET_NAME',
-            //   Key: fileName,
-            //   Body: buffer,
-            //   ACL: 'public-read' // Adjust permissions as needed
-            // };
-          }
-        }
+        // if (attachments.length > 0) {
+          // const aws = new S3Service();
+          // const chatId = generateChatId({ receiverId: user_id, senderId: data.recipients?.[0] });
+          // console.log(chatId);
+          // aws.createFolderIfNotExist(`${chatId}/`);
+          // for (let index = 0; index < attachments.length; index++) {
+          //   const fileServerName = `${generateUuid()}.${mimeType?.split("/")[1]}`;
+          //   const fileBuffer = attachments[index].file;
+          //   const mimeType = attachments[index].mimeType;
+          //   const buffer = Buffer.from(fileBuffer);
+          //   console.log(fileServerName);
+          //   console.timeEnd('Uploading took')
+          //   const response = await aws.putFile({ file: buffer, type: mimeType, filename: `${chatId}/${fileServerName}` });
+          //   console.timeEnd('Uploading took')
+          // }
+        // }
         // const res = await sendMessageController({ message: data?.message, recipients: data.recipients, user_id });
         // if (!res) {
         //   throw new Error("Unable to send message");
@@ -101,6 +102,7 @@ async function startApiServer() {
         // refetchQueryEventEmit({ socket, queryKey: "messageListing", type: "socket" });
         // refetchQueryEventEmit({ socket, queryKey: ["chatListing"], type: "api" });
       } catch (err) {
+        console.log(err?.message);
         socket.emit("error", err?.message);
       }
     });

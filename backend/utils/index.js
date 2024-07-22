@@ -2,7 +2,7 @@ import cookieParser from "cookie-parser";
 import cookie from "cookie";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { v1 as timeuuid } from "uuid";
+import { v1 as timeuuid, v4 as uuid } from "uuid";
 
 export const UserIdToSocketMap = {};
 
@@ -115,4 +115,8 @@ export const refetchQueryEventEmit = ({ queryKey = "", socket, type = "" }) => {
     queryKey,
     type,
   });
+};
+
+export const generateUuid = () => {
+  return uuid();
 };
