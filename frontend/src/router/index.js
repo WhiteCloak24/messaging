@@ -5,6 +5,7 @@ import UnauthorizedLayout from "../layout/UnauthorizedLayout";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Home from "../pages/Home";
+import Icon from "../components/Icon";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
             element: <Signup />,
           },
         ],
+      },
+      {
+        path: "/icon",
+        element: <Icon />,
       },
     ],
   },
