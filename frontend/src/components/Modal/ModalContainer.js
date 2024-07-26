@@ -47,7 +47,7 @@ const ModalContainer = () => {
       const containerNode = modalNode.getElementsByClassName("ns-modal-container")?.[0] || null;
       if (containerNode) {
         const root = ReactDOM.createRoot(containerNode.firstChild);
-        root.unmount()
+        root.unmount();
       }
     }
     setShowModal({ show: false, modalData: e.detail });
@@ -57,11 +57,10 @@ const ModalContainer = () => {
     const modalNode = document.getElementById(`ns-modal-${ModalContainerIdRef?.current}`);
     if (modalNode) {
       const containerNode = modalNode.getElementsByClassName("ns-modal-container")?.[0] || null;
-      // backdropRef?.current?.classList?.replace("opacity-0", "opacity-100");
       if (containerNode) {
-        const modalChild = showModal.modalData?.Component || <></>;
+        const ModalChild = showModal.modalData?.Component || <></>;
         const root = ReactDOM.createRoot(modalNode.getElementsByClassName("ns-modal-container")?.[0]);
-        return root.render(modalChild);
+        return root.render(ModalChild);
       }
     }
   };
@@ -119,7 +118,7 @@ const ModalContainer = () => {
           <div
             ref={modalContainerRef}
             tabIndex={-1}
-            className="ns-modal-container absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-sm p-8 bg-white outline-none rounded-md"></div>
+            className="ns-modal-container absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-sm bg-white outline-none rounded-md"></div>
         </div>
       ) : (
         <></>

@@ -98,8 +98,8 @@ const ChatInput = ({ activeChat }) => {
           <FaTelegramPlane />
         </div>
       </TooltipWrapper>
-      <Modal open={openMicRecorder} onClose={() => setOpenMicRecorder(false)}>
-        <MicAudioRecorder />
+      <Modal open={openMicRecorder}>
+        <MicAudioRecorder onClose={() => setOpenMicRecorder(false)} />
       </Modal>
     </div>
   );

@@ -1,20 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import DynamicMicIcon from "../DynamicMicIcon";
+import { MdOutlineClose } from "react-icons/md";
 
-const MicAudioRecorder = () => {
+const MicAudioRecorder = ({ onClose = () => null }) => {
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorder = useRef(null);
   const audioChunks = useRef([]);
   const audioLevelInterval = useRef(null);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioLevel, setAudioLevel] = useState(0);
-
-  useEffect(() => {
-    return () => {
-      console.log(isRecording);
-      // stopRecording();
-    };
-  }, []);
 
   const startRecording = useCallback(async () => {
     const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -95,8 +89,20 @@ const MicAudioRecorder = () => {
       }, 150); // Update every second
     }
   }, []);
+
+  function handleClose() {
+    if (isRecording) {
+      stopRecording();
+    }
+    console.log('asdjbk');
+    onClose();
+  }
+
   return (
-    <div className="flex justify-between gap-10 min-h-80 min-w-[550px]">
+    <div className="modal flex justify-between gap-10 min-h-80 min-w-[550px] p-8">
+      <div className="close-modal" onClick={handleClose}>
+        <MdOutlineClose />
+      </div>
       <div className="flex flex-col gap-5">
         <div>
           Click on <b> Start Recording </b>to record your audio
