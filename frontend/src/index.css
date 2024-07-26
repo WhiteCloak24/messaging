@@ -44,10 +44,21 @@ input {
 .close-modal {
   @apply absolute right-0 top-0 bg-red-800 text-white rounded-full p-1 translate-x-1/2 -translate-y-1/2 cursor-pointer;
 }
+.mic-level-icon-container {
+  --audio-level: 0; /* Default value */
+  --min-size: 190px;
+  --max-size: 19rem;
+  --range: calc(var(--max-size) - var(--min-size));
+  --increase: calc(var(--audio-level) * var(--range));
+  width: calc(var(--min-size) + var(--increase));
+  height: calc(var(--min-size) + var(--increase));
+  background: rgba(0, 128, 0, 0.2);
+  transition: width 0.5s ease, height 0.5s ease; 
+}
 .mic-level-icon {
-  --mic-container-background: #fff; /* Default value */
+  --mic-div-background: #fff; /* Default value */
   transition: background-color 0.3s ease;
-  background-color: var(--mic-container-background);
+  background-color: var(--mic-div-background);
 }
 .mic-level-icon svg {
   --svg-background: #991b1b; /* Default value */

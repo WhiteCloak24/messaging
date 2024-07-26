@@ -114,19 +114,24 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
           {isRecording ? "Stop Recording" : "Start Recording"}
         </div>
       </div>
-      <div className="h-64 w-64 border flex items-center justify-center">
+      <div className="h-80 w-80 border flex items-center justify-center relative">
         <div
           style={{
-            // "--audio-level": audioLevel,
-            "--mic-container-background": audioLevel > 0 ? "#991b1b" : "#ffffff",
+            "--audio-level": audioLevel,
           }}
-          className="w-3/4 h-3/4 border rounded-full p-10 mic-level-icon">
-          <RiMic2Fill
+          className="rounded-full mic-level-icon-container">
+          <div
             style={{
-              "--svg-background": audioLevel > 0 ? "#ffffff" : "#991b1b",
+              "--mic-div-background": audioLevel > 0 ? "#991b1b" : "#ffffff",
             }}
-            className="w-full h-full"
-          />
+            className="w-[190px] h-[190px] border rounded-full p-10 mic-level-icon top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2">
+            <RiMic2Fill
+              style={{
+                "--svg-background": audioLevel > 0 ? "#ffffff" : "#991b1b",
+              }}
+              className="w-full h-full"
+            />
+          </div>
         </div>
       </div>
     </div>
