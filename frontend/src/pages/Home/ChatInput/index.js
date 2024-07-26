@@ -6,6 +6,7 @@ import TooltipWrapper from "../../../components/Tooltip/TooltipWrapper";
 import { useApplicationSocket } from "../../../hooks/useApplicationSocket";
 import AttachmentsPreviewer from "./AttachmentsPreviewer/AttachmentsPreviewer";
 import { convertFileToArrayBuffer } from "../../../resources/functions";
+import Modal from "../../../components/Modal/Modal";
 
 const ChatInput = ({ activeChat }) => {
   const inputRef = useRef();
@@ -129,7 +130,7 @@ const ChatInput = ({ activeChat }) => {
           <FaTelegramPlane />
         </div>
       </TooltipWrapper>
-      {audioURL && <audio src={audioURL} controls />}
+      <Modal></Modal>
     </div>
   );
 };
