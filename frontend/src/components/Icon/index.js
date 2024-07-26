@@ -1,18 +1,7 @@
 import React, { useEffect, useRef } from "react";
 
-let interval;
 const Icon = () => {
   const canvasRef = useRef(null);
-
-  useEffect(() => {
-    interval = setInterval(() => {
-      const num = Math.random();
-      drawIcon(num);
-    }, 800);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
 
   function drawIcon(num) {
     const context = canvasRef.current.getContext("2d");
@@ -28,7 +17,7 @@ const Icon = () => {
     context.lineWidth = 10;
     const lineShift = canvasWidth / 10;
     const totalHeight = 2 * lineShift + canvasHeight / 4;
-    const volume = 0.8;
+    const volume = num;
     const height = volume * totalHeight;
 
     context.beginPath();
@@ -44,34 +33,40 @@ const Icon = () => {
     context.stroke();
     context.closePath();
 
-    const startRatio = Math.min(1, height / lineShift);
-    const endRatio = 1 - startRatio;
+    const arcHeight = height;
+    const ratioOfHeight = arcHeight / lineShift;
+
+    const piMed = Math.PI / 2;
+    const offSet = piMed * ratioOfHeight;
+
     context.beginPath();
-    // context.arc(centerX, centerY, Math.min(lineShift, height), endRatio * Math.PI, startRatio * Math.PI, false);
-    // context.fill();
+    context.arc(centerX, centerY, lineShift, Math.max(0, Math.PI / 2 - offSet), Math.min(Math.PI, Math.PI / 2 + offSet), false);
+    context.fill();
     context.closePath();
+
     if (height > lineShift) {
       const barHeight = Math.min(height - lineShift, canvasHeight / 4);
       context.beginPath();
-      // context.fillRect(centerX - lineShift, centerY, 2 * lineShift, -barHeight);
+      context.fillRect(centerX - lineShift, centerY, 2 * lineShift, -barHeight);
       context.closePath();
     }
 
     if (height > totalHeight - lineShift) {
       context.beginPath();
       context.arc(centerX, centerY - canvasHeight / 4, lineShift - 5, Math.PI, 0, false);
-      context.fillStyle = "white";
+      context.fillStyle = "black";
       context.fill();
       context.closePath();
+
       context.beginPath();
       const arcHeight = height - lineShift - canvasHeight / 4;
-      const startRatio = Math.min(1, arcHeight / lineShift) / 2;
-      const endRatio = 0.5 - startRatio;
-      const startAngle = (1 + startRatio) * Math.PI;
-      const endAngle = 0 * Math.PI;
-      console.log({ startAngle, endAngle });
-      context.arc(centerX, centerY - canvasHeight / 4, lineShift - 5, startAngle, endAngle, false);
-      context.fillStyle = "black";
+      const ratioOfHeight = arcHeight / lineShift;
+
+      const piMed = Math.PI / 2;
+      const offSet = piMed * ratioOfHeight;
+
+      context.arc(centerX, centerY - canvasHeight / 4, lineShift - 5, -offSet, -(Math.PI - offSet), true);
+      context.fillStyle = "white";
       context.fill();
       context.closePath();
     }
@@ -83,6 +78,7 @@ const Icon = () => {
     context.stroke();
     context.closePath();
   }
+
   return <canvas ref={canvasRef} width={500} height={500} className="border" />;
 };
 
