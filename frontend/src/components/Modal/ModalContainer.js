@@ -111,7 +111,7 @@ const ModalContainer = () => {
           <div
             ref={modalContainerRef}
             tabIndex={-1}
-            className="ns-modal-container absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-sm p-8 bg-white outline-none"></div>
+            className="ns-modal-container absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-sm p-8 bg-white outline-none rounded-md"></div>
         </div>
       ) : (
         <></>
