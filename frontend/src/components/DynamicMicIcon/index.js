@@ -1,9 +1,13 @@
 import React, { useEffect, useRef } from "react";
 
-const Icon = () => {
+const DynamicMicIcon = ({ audioLevel = 0 }) => {
   const canvasRef = useRef(null);
 
-  function drawIcon(num) {
+  useEffect(() => {
+    drawIcon({ volume: audioLevel });
+  }, [audioLevel]);
+
+  function drawIcon({ volume }) {
     const context = canvasRef.current.getContext("2d");
     const canvas = canvasRef.current;
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -17,7 +21,6 @@ const Icon = () => {
     context.lineWidth = 10;
     const lineShift = canvasWidth / 10;
     const totalHeight = 2 * lineShift + canvasHeight / 4;
-    const volume = num;
     const height = volume * totalHeight;
 
     context.beginPath();
@@ -82,4 +85,4 @@ const Icon = () => {
   return <canvas ref={canvasRef} width={500} height={500} className="border" />;
 };
 
-export default Icon;
+export default DynamicMicIcon;

@@ -1,4 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
+import DynamicMicIcon from "../DynamicMicIcon";
 
 const MicAudioRecorder = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -94,7 +95,9 @@ const MicAudioRecorder = () => {
         </div>
         <div>{audioBlob && <audio controls src={URL.createObjectURL(audioBlob)}></audio>}</div>
       </div>
-      <div>{audioLevel}</div>
+      <div>
+        <DynamicMicIcon audioLevel={audioLevel} />
+      </div>
     </div>
   );
 };
