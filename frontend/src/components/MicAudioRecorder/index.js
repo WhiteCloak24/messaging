@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import DynamicMicIcon from "../DynamicMicIcon";
 import { MdOutlineClose } from "react-icons/md";
+import { RiMic2Fill } from "react-icons/ri";
 
 const MicAudioRecorder = ({ onClose = () => null }) => {
   const [isRecording, setIsRecording] = useState(false);
@@ -28,6 +28,7 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
     if (audioLevelInterval.current) {
       clearInterval(audioLevelInterval.current);
     }
+    setAudioLevel(0);
   }, []);
 
   function handleRecordingButton() {
@@ -94,16 +95,15 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
     if (isRecording) {
       stopRecording();
     }
-    console.log('asdjbk');
+    console.log("asdjbk");
     onClose();
   }
-
   return (
     <div className="modal flex justify-between gap-10 min-h-80 min-w-[550px] p-8">
       <div className="close-modal" onClick={handleClose}>
         <MdOutlineClose />
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-5 justify-between">
         <div>
           Click on <b> Start Recording </b>to record your audio
         </div>
@@ -113,10 +113,21 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
           onClick={handleRecordingButton}>
           {isRecording ? "Stop Recording" : "Start Recording"}
         </div>
-        <div>{audioBlob && <audio controls src={URL.createObjectURL(audioBlob)}></audio>}</div>
       </div>
-      <div>
-        <DynamicMicIcon audioLevel={audioLevel} />
+      <div className="h-64 w-64 border flex items-center justify-center">
+        <div
+          style={{
+            // "--audio-level": audioLevel,
+            "--mic-container-background": audioLevel > 0 ? "#991b1b" : "#ffffff",
+          }}
+          className="w-3/4 h-3/4 border rounded-full p-10 mic-level-icon">
+          <RiMic2Fill
+            style={{
+              "--svg-background": audioLevel > 0 ? "#ffffff" : "#991b1b",
+            }}
+            className="w-full h-full"
+          />
+        </div>
       </div>
     </div>
   );

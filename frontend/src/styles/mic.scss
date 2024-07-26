@@ -1,0 +1,16 @@
+@function get-div-background-color($val) {
+  @if $val > 0 {
+    @return #991b1b;
+  } @else {
+    @return white;
+  }
+}
+@function get-svg-background-color($val) {
+  @if $val == 0 {
+    @return #991b1b;
+  } @else {
+    @return white;
+  }
+}
+.mic-level-icon {
+}
