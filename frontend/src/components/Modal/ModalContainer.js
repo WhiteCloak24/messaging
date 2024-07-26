@@ -108,7 +108,10 @@ const ModalContainer = () => {
       {showModal.show ? (
         <div id={`ns-modal-${ModalContainerIdRef?.current}`} role="modal" className="fixed z-50 inset-0">
           <div ref={backdropRef} className={`backdrop opacity-0 fixed inset-0 flex items-center justify-center opacity-animation`}></div>
-          <div ref={modalContainerRef} tabIndex={-1} className="ns-modal-container absolute top-1/2 left-1/2 transform shadow-sm p-8 bg-white"></div>
+          <div
+            ref={modalContainerRef}
+            tabIndex={-1}
+            className="ns-modal-container absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 shadow-sm p-8 bg-white outline-none"></div>
         </div>
       ) : (
         <></>

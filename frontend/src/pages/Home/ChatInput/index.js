@@ -7,6 +7,7 @@ import { useApplicationSocket } from "../../../hooks/useApplicationSocket";
 import AttachmentsPreviewer from "./AttachmentsPreviewer/AttachmentsPreviewer";
 import { convertFileToArrayBuffer } from "../../../resources/functions";
 import Modal from "../../../components/Modal/Modal";
+import MicAudioRecorder from "../../../components/MicAudioRecorder";
 
 const ChatInput = ({ activeChat }) => {
   const inputRef = useRef();
@@ -17,7 +18,7 @@ const ChatInput = ({ activeChat }) => {
   const [audioURL, setAudioURL] = useState("");
   const mediaRecorder = useRef(null);
   const audioChunks = useRef([]);
-
+  const [openMicRecorder, setOpenMicRecorder] = useState(false);
   const { sendMessage } = useApplicationSocket();
 
   useEffect(() => {
@@ -114,23 +115,20 @@ const ChatInput = ({ activeChat }) => {
         value={message}
         className="flex-1 p-2 rounded border"
       />
-      {!isRecording ? (
-        <TooltipWrapper tooltipText="Start Recording">
-          <div className="cursor-pointer" onClick={startRecording}>
-            <FaMicrophone />
-          </div>
-        </TooltipWrapper>
-      ) : (
-        <div className="cursor-pointer" onClick={stopRecording}>
-          Stop
+      <TooltipWrapper tooltipText="Start Recording">
+        <div className="cursor-pointer" onClick={() => setOpenMicRecorder(true)}>
+          <FaMicrophone />
         </div>
-      )}
+      </TooltipWrapper>
+
       <TooltipWrapper tooltipText="Send Message">
         <div className="cursor-pointer" onClick={() => sendMessageHandler(message, attachments)}>
           <FaTelegramPlane />
         </div>
       </TooltipWrapper>
-      <Modal></Modal>
+      <Modal open={openMicRecorder} closeOnClickOutside onClose={() => setOpenMicRecorder(false)}>
+        <MicAudioRecorder />
+      </Modal>
     </div>
   );
 };
