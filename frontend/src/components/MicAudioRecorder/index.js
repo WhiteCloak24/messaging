@@ -71,7 +71,7 @@ const MicAudioRecorder = () => {
         }
         const average = sum / dataArray.length;
         // Normalize to range 0 to 1
-        const normalizedLevel = average / 256; // 256 is the max value in dataArray
+        const normalizedLevel = average / 128; // 256 is the max value in dataArray
         return normalizedLevel;
       };
 
