@@ -13,11 +13,7 @@ const ChatInput = ({ activeChat }) => {
   const inputRef = useRef();
   const [message, setMessage] = useState("");
   const [attachments, setAttachments] = useState([]);
-  const [isRecording, setIsRecording] = useState(false);
   const [isFileProcessing, setIsFileProcessing] = useState(false);
-  const [audioURL, setAudioURL] = useState("");
-  const mediaRecorder = useRef(null);
-  const audioChunks = useRef([]);
   const [openMicRecorder, setOpenMicRecorder] = useState(false);
   const { sendMessage } = useApplicationSocket();
 
@@ -26,30 +22,6 @@ const ChatInput = ({ activeChat }) => {
       inputRef.current?.focus();
     }
   }, [activeChat?.user_id]);
-
-  const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder.current = new MediaRecorder(stream);
-    mediaRecorder.current.ondataavailable = (event) => {
-      console.log(event);
-      audioChunks.current.push(event.data);
-    };
-
-    mediaRecorder.current.onstop = () => {
-      const audioBlob = new Blob(audioChunks.current, { type: "audio/wav" });
-      const audioUrl = URL.createObjectURL(audioBlob);
-      setAudioURL(audioUrl);
-      audioChunks.current = [];
-    };
-
-    mediaRecorder.current.start();
-    setIsRecording(true);
-  };
-
-  const stopRecording = () => {
-    mediaRecorder.current.stop();
-    setIsRecording(false);
-  };
 
   const sendMessageHandler = useCallback(
     (message, attachments = []) => {
@@ -126,7 +98,7 @@ const ChatInput = ({ activeChat }) => {
           <FaTelegramPlane />
         </div>
       </TooltipWrapper>
-      <Modal open={openMicRecorder} closeOnClickOutside onClose={() => setOpenMicRecorder(false)}>
+      <Modal open={openMicRecorder} onClose={() => setOpenMicRecorder(false)}>
         <MicAudioRecorder />
       </Modal>
     </div>

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import DynamicMicIcon from "../DynamicMicIcon";
 
 const MicAudioRecorder = () => {
@@ -8,8 +8,17 @@ const MicAudioRecorder = () => {
   const audioLevelInterval = useRef(null);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioLevel, setAudioLevel] = useState(0);
+
+  useEffect(() => {
+    return () => {
+      console.log(isRecording);
+      // stopRecording();
+    };
+  }, []);
+
   const startRecording = useCallback(async () => {
     const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    window.ns_audio_recorder_stream = micStream;
     handleMediaRecording({ micStream });
     handleAudioLevelDetection({ micStream });
   }, []);
@@ -17,6 +26,11 @@ const MicAudioRecorder = () => {
   const stopRecording = useCallback(() => {
     mediaRecorder.current.stop();
     setIsRecording(false);
+    if (window.ns_audio_recorder_stream) {
+      window.ns_audio_recorder_stream.getTracks().forEach((_) => {
+        _.stop();
+      });
+    }
     if (audioLevelInterval.current) {
       clearInterval(audioLevelInterval.current);
     }

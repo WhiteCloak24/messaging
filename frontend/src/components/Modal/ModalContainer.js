@@ -42,6 +42,14 @@ const ModalContainer = () => {
     setShowModal({ show: true, modalData: e.detail });
   };
   const handleCloseModal = (e) => {
+    const modalNode = document.getElementById(`ns-modal-${ModalContainerIdRef?.current}`);
+    if (modalNode) {
+      const containerNode = modalNode.getElementsByClassName("ns-modal-container")?.[0] || null;
+      if (containerNode) {
+        const root = ReactDOM.createRoot(containerNode.firstChild);
+        root.unmount()
+      }
+    }
     setShowModal({ show: false, modalData: e.detail });
   };
 
