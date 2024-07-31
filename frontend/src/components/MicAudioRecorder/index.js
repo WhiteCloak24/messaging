@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { RiMic2Fill } from "react-icons/ri";
 
+let audiolevel = 0;
+
 const MicAudioRecorder = ({ onClose = () => null }) => {
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorder = useRef(null);
@@ -83,11 +85,15 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
         const normalizedLevel = average / 128; // 256 is the max value in dataArray
         return normalizedLevel;
       };
-
       audioLevelInterval.current = setInterval(() => {
-        const level = getAudioLevel();
-        setAudioLevel(level);
-      }, 150); // Update every second
+        let level = getAudioLevel();
+        if (level < audiolevel) {
+          audiolevel =  audiolevel - 0.01
+        }else{
+          audiolevel = level
+        }
+        setAudioLevel(audiolevel);
+      }, 1); // Update every second
     }
   }, []);
 
