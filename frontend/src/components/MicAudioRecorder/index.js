@@ -60,7 +60,7 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
       };
 
       mediaRecorder.current.onstop = () => {
-        const audioBlob = new Blob(audioChunks.current, { type: "audio/wav" });
+        const audioBlob = new Blob(audioChunks.current, { type: "audio/mpeg" });
         setAudioBlob(audioBlob);
         audioChunks.current = [];
         mediaRecorder.current = null;
@@ -107,7 +107,7 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
         const mic_level_icon = document.getElementById("mic-level-icon");
         const mic_icon = document.getElementById("mic-icon");
         if (mic_level_icon_container) {
-          mic_level_icon_container.style.setProperty("--audio-level", audiolevel);
+          mic_level_icon_container.style.setProperty("--audio-level", Number(Number(audiolevel).toFixed(2)));
         }
         if (mic_level_icon) {
           mic_level_icon.style.setProperty("--mic-div-background", audiolevel > 0 ? "#991b1b" : "#ffffff");
