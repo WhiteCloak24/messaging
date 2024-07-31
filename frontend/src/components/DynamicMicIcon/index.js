@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 
+let maxVol = 0;
 const DynamicMicIcon = ({ audioLevel = 0 }) => {
   const canvasRef = useRef(null);
 
@@ -21,7 +22,14 @@ const DynamicMicIcon = ({ audioLevel = 0 }) => {
     context.lineWidth = 10;
     const lineShift = canvasWidth / 10;
     const totalHeight = 2 * lineShift + canvasHeight / 4;
-    const height = volume * totalHeight;
+    let newVol = maxVol;
+
+    if (volume > maxVol) {
+      newVol = volume;
+    } else {
+      newVol = volume - 0.05;
+    }
+    const height = newVol * totalHeight;
 
     context.beginPath();
     context.moveTo(centerX - lineShift, centerY);
