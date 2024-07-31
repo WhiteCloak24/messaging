@@ -8,7 +8,7 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorder = useRef(null);
   const audioChunks = useRef([]);
-  const audioLevelInterval = useRef(null);
+  const audioLevelAnimationFrameId = useRef(null);
   const [audioBlob, setAudioBlob] = useState(null);
   const [audioLevel, setAudioLevel] = useState(0);
 
@@ -27,10 +27,22 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
         _.stop();
       });
     }
-    if (audioLevelInterval.current) {
-      clearInterval(audioLevelInterval.current);
+    if (audioLevelAnimationFrameId.current) {
+      cancelAnimationFrame(audioLevelAnimationFrameId.current);
     }
-    setAudioLevel(0);
+    // setAudioLevel(0);
+    const mic_level_icon_container = document.getElementById("mic-level-icon-container");
+    const mic_level_icon = document.getElementById("mic-level-icon");
+    const mic_icon = document.getElementById("mic-icon");
+    if (mic_level_icon_container) {
+      mic_level_icon_container.style.setProperty("--audio-level", 0);
+    }
+    if (mic_level_icon) {
+      mic_level_icon.style.setProperty("--mic-div-background", "#ffffff");
+    }
+    if (mic_icon) {
+      mic_icon.style.setProperty("--svg-background", "#991b1b");
+    }
   }, []);
 
   function handleRecordingButton() {
@@ -85,15 +97,28 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
         const normalizedLevel = average / 128; // 256 is the max value in dataArray
         return normalizedLevel;
       };
-      audioLevelInterval.current = setInterval(() => {
+      function handleGetAudioLevel() {
         let level = getAudioLevel();
         if (level < audiolevel) {
-          audiolevel =  audiolevel - 0.01
-        }else{
-          audiolevel = level
+          audiolevel = Math.max(0, audiolevel - 0.01);
+        } else {
+          audiolevel = Math.min(1, level);
         }
-        setAudioLevel(audiolevel);
-      }, 1); // Update every second
+        const mic_level_icon_container = document.getElementById("mic-level-icon-container");
+        const mic_level_icon = document.getElementById("mic-level-icon");
+        const mic_icon = document.getElementById("mic-icon");
+        if (mic_level_icon_container) {
+          mic_level_icon_container.style.setProperty("--audio-level", audiolevel);
+        }
+        if (mic_level_icon) {
+          mic_level_icon.style.setProperty("--mic-div-background", audiolevel > 0 ? "#991b1b" : "#ffffff");
+        }
+        if (mic_icon) {
+          mic_icon.style.setProperty("--svg-background", audiolevel > 0 ? "#ffffff" : "#991b1b");
+        }
+        audioLevelAnimationFrameId.current = requestAnimationFrame(handleGetAudioLevel);
+      }
+      handleGetAudioLevel();
     }
   }, []);
 
@@ -101,7 +126,6 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
     if (isRecording) {
       stopRecording();
     }
-    console.log("asdjbk");
     onClose();
   }
   return (
@@ -122,19 +146,22 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
       </div>
       <div className="h-80 w-80 border flex items-center justify-center relative">
         <div
-          style={{
-            "--audio-level": audioLevel,
-          }}
+          // style={{
+          //   "--audio-level": 0,
+          // }}
+          id="mic-level-icon-container"
           className="rounded-full mic-level-icon-container">
           <div
-            style={{
-              "--mic-div-background": audioLevel > 0 ? "#991b1b" : "#ffffff",
-            }}
+            // style={{
+            //   "--mic-div-background": audioLevel > 0 ? "#991b1b" : "#ffffff",
+            // }}
+            id="mic-level-icon"
             className="w-[190px] h-[190px] border rounded-full p-10 mic-level-icon top-1/2 left-1/2 absolute transform -translate-x-1/2 -translate-y-1/2">
             <RiMic2Fill
-              style={{
-                "--svg-background": audioLevel > 0 ? "#ffffff" : "#991b1b",
-              }}
+              id="mic-icon"
+              // style={{
+              //   "--svg-background": audioLevel > 0 ? "#ffffff" : "#991b1b",
+              // }}
               className="w-full h-full"
             />
           </div>

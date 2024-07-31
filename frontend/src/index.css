@@ -53,7 +53,7 @@ input {
   width: calc(var(--min-size) + var(--increase));
   height: calc(var(--min-size) + var(--increase));
   background: rgba(0, 128, 0, 0.2);
-  transition: width 0.01s ease, height 0.01s ease; 
+  transition: width 0.01s ease, height 0.01s ease;
 }
 .mic-level-icon {
   --mic-div-background: #fff; /* Default value */
