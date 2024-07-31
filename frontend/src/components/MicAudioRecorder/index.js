@@ -10,7 +10,6 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
   const audioChunks = useRef([]);
   const audioLevelAnimationFrameId = useRef(null);
   const [audioBlob, setAudioBlob] = useState(null);
-  const [audioLevel, setAudioLevel] = useState(0);
 
   const startRecording = useCallback(async () => {
     const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -116,9 +115,9 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
         if (mic_icon) {
           mic_icon.style.setProperty("--svg-background", audiolevel > 0 ? "#ffffff" : "#991b1b");
         }
-        audioLevelAnimationFrameId.current = requestAnimationFrame(handleGetAudioLevel);
+        requestAnimationFrame(handleGetAudioLevel);
       }
-      handleGetAudioLevel();
+      audioLevelAnimationFrameId.current = requestAnimationFrame(handleGetAudioLevel);
     }
   }, []);
 
