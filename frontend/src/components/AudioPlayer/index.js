@@ -20,7 +20,6 @@ const AudioPlayer = React.memo(
     barWidth = 5,
     loadingItem: LoadingItem = () => null,
     downloadOption = true,
-    withIcon = true,
     filename = "",
   }) => {
     let rafId;
