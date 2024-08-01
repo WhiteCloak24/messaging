@@ -26,7 +26,7 @@ const AudioPlayer = React.memo(
     const canvasRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
-    const [processedAudioFile, setProcessedAudioFile] = useState(false);
+    const [processedAudioFile, setProcessedAudioFile] = useState(null);
     const [audioLevels, setAudioLevels] = useState([]);
     const [audioBuffer, setAudioBuffer] = useState(null);
     const [currentTime, setCurrentTime] = useState(0);
@@ -36,8 +36,8 @@ const AudioPlayer = React.memo(
     const audioContext = new window.AudioContext();
 
     const { data: processedAudioData } = useQuery({
-      queryFn: ({ queryKey }) => getProcessedAudioData(queryKey[0]),
-      queryKey: [`nightsoft_audio_player_${srcUrl}`],
+      queryFn: ({ queryKey }) => getProcessedAudioData(queryKey[1]),
+      queryKey: [`nightsoft_audio_player`, srcUrl],
       refetchOnWindowFocus: false,
       retry: false,
       gcTime: Infinity,
@@ -90,7 +90,6 @@ const AudioPlayer = React.memo(
         })();
       }
     }, [processedAudioData?.blob]);
-
     // For audio buffer and metadata
     useEffect(() => {
       if (processedAudioData?.arrayBuffer) {
