@@ -244,7 +244,7 @@ const AudioPlayer = React.memo(
       <>
         <div className="w-full flex items-center  gap-4 ">
           <span
-            className="bg-green-100 xxl:min-w-[40px] xl:min-w-[40px] lg:min-w-[40px] md:min-w-[35px] sm:min-w-[35px] xs:min-w-[35px] xxl:h-[40px] xl:h-[40px] lg:h-[40px] md:h-[35px] sm:h-[35px] xs:h-[35px] rounded-full text-green flex items-center justify-center cursor-pointer"
+            className="bg-gray-900 xxl:min-w-[40px] xl:min-w-[40px] lg:min-w-[40px] md:min-w-[35px] sm:min-w-[35px] xs:min-w-[35px] xxl:h-[40px] xl:h-[40px] lg:h-[40px] md:h-[35px] sm:h-[35px] xs:h-[35px] rounded-full text-green flex items-center justify-center cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
