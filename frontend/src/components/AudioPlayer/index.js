@@ -1,48 +1,47 @@
-import { Download, MusicNote, Pause, Play } from 'assets/images';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { downloadFile, secondsToHHMMSS } from 'shared/resources';
-import { useQuery } from '@tanstack/react-query';
-import EllipsisTextWithTooltip from 'components/EllipsisTextWithTooltip';
+import { Download, MusicNote, Pause, Play } from "assets/images";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { downloadFile, secondsToHHMMSS } from "shared/resources";
+import { useQuery } from "@tanstack/react-query";
+import EllipsisTextWithTooltip from "components/EllipsisTextWithTooltip";
 
-const fetchFn = async (url) => {
+const getProcessedAudioData = async (url) => {
   const data = await fetch(url);
   const blob = await data?.blob();
-  return blob;
+  const arrayBuffer = await data?.arrayBuffer();
+  return { blob, arrayBuffer };
 };
-const CustomAudioPlayer = React.memo(
+
+const AudioPlayer = React.memo(
   ({
-    srcfile = null,
-    srcUrl = '',
+    srcUrl = "",
     width = 300,
     height = 35,
     gap = 2,
-    barColor = '#6D8F50',
+    barColor = "#991b1b",
     barWidth = 5,
     minimal = false,
     loadingItem: LoadingItem = () => null,
     downloadOption = true,
     withIcon = true,
-    filename = '',
+    filename = "",
   }) => {
     let rafId;
     const canvasRef = useRef(null);
     const minimalCanvasRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
-    const [file, setFile] = useState(false);
+    const [processedAudioFile, setProcessedAudioFile] = useState(false);
     const [audioLevels, setAudioLevels] = useState([]);
     const [audioBuffer, setAudioBuffer] = useState(null);
     const [currentTime, setCurrentTime] = useState(0);
     const [totalDuration, setTotalDuration] = useState(0);
-    const [isBrokenFile, setIsBrokenFile] = useState(false);
     const [isLoadingMetaData, setIsLoadingMetaData] = useState(true);
     const [sound, setSound] = useState(null);
     const audioContext = new window.AudioContext();
-    const fileVal = useMemo(() => srcfile, [srcfile]);
 
-    const { data: fileData, isLoading } = useQuery({
-      queryFn: ({ queryKey }) => fetchFn(queryKey[0]),
-      queryKey: [srcUrl],
+    const { data: processedAudioData, isLoading } = useQuery({
+      queryFn: ({ queryKey }) => getProcessedAudioData(queryKey[0]),
+      queryKey: [`nightsoft_audio_player_${srcUrl}`],
       refetchOnWindowFocus: false,
       retry: false,
       gcTime: Infinity,
@@ -71,71 +70,55 @@ const CustomAudioPlayer = React.memo(
 
     useEffect(() => {
       if (canvasRef.current && audioBuffer) {
-        canvasRef.current.addEventListener('mousedown', enableSetDragging);
-        canvasRef.current.addEventListener('mouseup', disableSetDragging);
-        canvasRef.current.addEventListener('mousemove', getClickPosition);
-        canvasRef.current.addEventListener('click', getClickPosition);
+        canvasRef.current.addEventListener("mousedown", enableSetDragging);
+        canvasRef.current.addEventListener("mouseup", disableSetDragging);
+        canvasRef.current.addEventListener("mousemove", getClickPosition);
+        canvasRef.current.addEventListener("click", getClickPosition);
       }
       return () => {
-        canvasRef?.current?.removeEventListener('mousedown', enableSetDragging);
-        canvasRef?.current?.removeEventListener('mouseup', disableSetDragging);
-        canvasRef?.current?.removeEventListener('mousemove', getClickPosition);
-        canvasRef?.current?.removeEventListener('click', getClickPosition);
+        canvasRef?.current?.removeEventListener("mousedown", enableSetDragging);
+        canvasRef?.current?.removeEventListener("mouseup", disableSetDragging);
+        canvasRef?.current?.removeEventListener("mousemove", getClickPosition);
+        canvasRef?.current?.removeEventListener("click", getClickPosition);
       };
     }, [canvasRef?.current, audioBuffer, isDragging]);
 
+    // For audio file
     useEffect(() => {
-      if (fileData?.size) {
+      if (processedAudioData.blob?.size) {
         (async () => {
           try {
-            const file = new File([fileData], `greetingRecording.mp3`, {
-              type: fileData.type,
+            const file = new File([processedAudioData.blob], `random_ns_audio.${processedAudioData.blob.type.split("/")[1]}`, {
+              type: processedAudioData.blob.type,
               lastModified: Date.now(),
-              size: fileData.size,
+              size: processedAudioData.blob.size,
             });
-            setFile(file);
-            setIsBrokenFile(false);
+            setProcessedAudioFile(file);
           } catch (err) {
             console.error(err);
-            setIsBrokenFile(true);
             setIsLoadingMetaData(false);
           }
         })();
-      } else {
-        setIsBrokenFile(true);
       }
-    }, [fileData]);
+    }, [processedAudioData.blob]);
 
     useEffect(() => {
-      if (srcfile) {
-        setFile(srcfile);
-        return;
+      if (processedAudioData.arrayBuffer) {
+        const arrayBuffer = processedAudioData.arrayBuffer;
+        audioContext
+          .decodeAudioData(arrayBuffer)
+          .then((decodeAudioData) => {
+            setTotalDuration(Math.ceil(decodeAudioData.duration));
+            setAudioBuffer(decodeAudioData);
+            sound.src = URL.createObjectURL(processedAudioFile);
+            setIsLoadingMetaData(false);
+          })
+          .catch((err) => {
+            console.error(err);
+            setIsLoadingMetaData(false);
+          });
       }
-    }, [fileVal]);
-
-    useEffect(() => {
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-          const arrayBuffer = event.target.result;
-          audioContext
-            .decodeAudioData(arrayBuffer)
-            .then((decodeAudioData) => {
-              setTotalDuration(Math.ceil(decodeAudioData.duration));
-              setAudioBuffer(decodeAudioData);
-              sound.src = URL.createObjectURL(file);
-              setIsLoadingMetaData(false);
-              setIsBrokenFile(false);
-            })
-            .catch((err) => {
-              console.error(err);
-              setIsBrokenFile(true);
-              setIsLoadingMetaData(false);
-            });
-        };
-        reader.readAsArrayBuffer(file);
-      }
-    }, [file]);
+    }, [processedAudioData.arrayBuffer]);
 
     useEffect(() => {
       if (!LoadingAudio && audioBuffer) {
@@ -147,7 +130,7 @@ const CustomAudioPlayer = React.memo(
       event.stopPropagation();
       event.preventDefault();
       if (minimal) return;
-      if (!isDragging && event.type !== 'click') return;
+      if (!isDragging && event.type !== "click") return;
       const rect = canvasRef.current.getBoundingClientRect();
       const x = event.clientX - rect.left;
       // const y = event.clientY - rect.top;
@@ -170,9 +153,7 @@ const CustomAudioPlayer = React.memo(
     }
     function tick(decodeAudioData) {
       if (minimal) return;
-      const number_of_bars = Math.floor(
-        canvasRef?.current?.width / (barWidth + gap),
-      );
+      const number_of_bars = Math.floor(canvasRef?.current?.width / (barWidth + gap));
       const { duration, sampleRate } = decodeAudioData;
       const perBarDataDuration = duration / number_of_bars;
 
@@ -181,10 +162,7 @@ const CustomAudioPlayer = React.memo(
 
       for (let i = 0; i < duration; i = i + perBarDataDuration) {
         const startSample = Math.floor(i * sampleRate);
-        const endSample = Math.min(
-          Math.floor((i + perBarDataDuration) * sampleRate),
-          channelData.length,
-        );
+        const endSample = Math.min(Math.floor((i + perBarDataDuration) * sampleRate), channelData.length);
         let sumSquared = 0;
         for (let j = startSample; j < endSample; j++) {
           sumSquared += channelData[j] ** 2;
@@ -199,15 +177,10 @@ const CustomAudioPlayer = React.memo(
     function fillAudioLevel({ fillX = 0 }) {
       if (minimal) return;
       const dataParam = audioLevels;
-      const context = canvasRef?.current?.getContext('2d');
+      const context = canvasRef?.current?.getContext("2d");
       if (!context) return;
       context.lineWidth = 1;
-      context.clearRect(
-        0,
-        0,
-        canvasRef?.current?.width,
-        canvasRef?.current?.height,
-      );
+      context.clearRect(0, 0, canvasRef?.current?.width, canvasRef?.current?.height);
       let x = 0;
       const drawableHeight = canvasRef?.current?.height;
       const max = Math.max(...dataParam);
@@ -216,7 +189,7 @@ const CustomAudioPlayer = React.memo(
         const ystart = (drawableHeight - valueHeight) / 2;
         context.moveTo(0, 0);
         if (fillX < x) {
-          context.fillStyle = '#CACED3';
+          context.fillStyle = "#CACED3";
         } else {
           context.fillStyle = barColor;
         }
@@ -227,15 +200,10 @@ const CustomAudioPlayer = React.memo(
 
     function drawAudioLevel(dataParam = []) {
       if (minimal) return;
-      const context = canvasRef?.current?.getContext('2d');
+      const context = canvasRef?.current?.getContext("2d");
       if (!context) return;
       context.lineWidth = 1;
-      context.clearRect(
-        0,
-        0,
-        canvasRef?.current?.width,
-        canvasRef?.current?.height,
-      );
+      context.clearRect(0, 0, canvasRef?.current?.width, canvasRef?.current?.height);
       let x = 0;
       const drawableHeight = canvasRef?.current?.height;
       const max = Math.max(...dataParam);
@@ -243,7 +211,7 @@ const CustomAudioPlayer = React.memo(
         const valueHeight = Math.max((value * drawableHeight) / max, 2);
         const ystart = (drawableHeight - valueHeight) / 2;
         context.moveTo(0, 0);
-        context.fillStyle = '#CACED3';
+        context.fillStyle = "#CACED3";
         context.fillRect(x, ystart, barWidth, valueHeight);
         x = x + barWidth + gap;
       });
@@ -252,7 +220,7 @@ const CustomAudioPlayer = React.memo(
     function playFn() {
       try {
         if (!isPlaying) {
-          const audioElements = document.querySelectorAll('audio') || [];
+          const audioElements = document.querySelectorAll("audio") || [];
           audioElements?.forEach(function (audio) {
             audio?.pause();
           });
@@ -292,23 +260,18 @@ const CustomAudioPlayer = React.memo(
     }
 
     function drawMinimalTimer(currentTime, totalDuration) {
-      const context = minimalCanvasRef?.current?.getContext('2d');
+      const context = minimalCanvasRef?.current?.getContext("2d");
       if (!context) return;
-      context.clearRect(
-        0,
-        0,
-        minimalCanvasRef?.current?.width,
-        minimalCanvasRef?.current?.height,
-      );
+      context.clearRect(0, 0, minimalCanvasRef?.current?.width, minimalCanvasRef?.current?.height);
       context.lineWidth = 1;
       context.beginPath();
-      context.strokeStyle = 'grey';
+      context.strokeStyle = "grey";
       context.arc(
         minimalCanvasRef?.current?.width / 2,
         minimalCanvasRef?.current?.width / 2,
         minimalCanvasRef?.current?.width / 2 - 2,
         0,
-        2 * Math.PI,
+        2 * Math.PI
       );
       context.stroke();
       context.lineWidth = 2;
@@ -318,14 +281,12 @@ const CustomAudioPlayer = React.memo(
         minimalCanvasRef?.current?.width / 2,
         minimalCanvasRef?.current?.width / 2 - 2,
         4.71239,
-        2 * Math.PI * (currentTime / totalDuration) + 4.71239,
+        2 * Math.PI * (currentTime / totalDuration) + 4.71239
       );
-      context.strokeStyle = 'green';
+      context.strokeStyle = "green";
       context.stroke();
     }
     if (LoadingAudio) return <LoadingItem />;
-    if (isBrokenFile)
-      return <div className="text-danger">Unable to load audio file</div>;
     return (
       <>
         {minimal ? (
@@ -335,16 +296,9 @@ const CustomAudioPlayer = React.memo(
               e.stopPropagation();
               e.preventDefault();
               playFn();
-            }}
-          >
+            }}>
             <canvas width={50} height={50} ref={minimalCanvasRef}></canvas>
-            <div className="absolute ">
-              {isPlaying ? (
-                <Pause className="text-green w-6 h-6" />
-              ) : (
-                <Play className="text-green w-6 h-6" />
-              )}
-            </div>
+            <div className="absolute ">{isPlaying ? <Pause className="text-green w-6 h-6" /> : <Play className="text-green w-6 h-6" />}</div>
           </span>
         ) : (
           <div className="w-full flex items-center  gap-4 ">
@@ -359,8 +313,7 @@ const CustomAudioPlayer = React.memo(
                 e.stopPropagation();
                 e.preventDefault();
                 playFn();
-              }}
-            >
+              }}>
               {isPlaying ? <Pause className="w-[22px] h-[22px]" /> : <Play />}
             </span>
             {filename && (
@@ -368,12 +321,7 @@ const CustomAudioPlayer = React.memo(
                 <EllipsisTextWithTooltip charLength={15} string={filename} />
               </div>
             )}
-            <canvas
-              className="cursor-pointer"
-              width={width}
-              height={height}
-              ref={canvasRef}
-            ></canvas>
+            <canvas className="cursor-pointer" width={width} height={height} ref={canvasRef}></canvas>
             <div className="flex items-center gap-4 justify-end">
               {downloadOption && (
                 <span
@@ -381,9 +329,8 @@ const CustomAudioPlayer = React.memo(
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    downloadFile(file);
-                  }}
-                >
+                    downloadFile(processedAudioFile);
+                  }}>
                   <Download />
                 </span>
               )}
@@ -395,8 +342,8 @@ const CustomAudioPlayer = React.memo(
         )}
       </>
     );
-  },
+  }
 );
 
-CustomAudioPlayer.displayName = 'CustomAudioPlayer';
-export default CustomAudioPlayer;
+AudioPlayer.displayName = "AudioPlayer";
+export default AudioPlayer;
