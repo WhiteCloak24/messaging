@@ -4,6 +4,7 @@ import { generateRandomId } from "../../resources/functions";
 import ReactDOM from "react-dom/client";
 import useClickOutside from "../../hooks/useClickOutside";
 
+// Right now we can only open one modal at a time -> Needs feature update
 const initialState = { show: false, modalData: { Component: <></>, closeOnClickOutside: false, onClose: () => null } };
 
 const ModalContainer = () => {
@@ -26,6 +27,7 @@ const ModalContainer = () => {
       updateOpenModalDom();
     }
   }, [showModal.show, showModal.modalData?.Component]);
+
   useEffect(() => {
     if (showModal.show) {
       modalContainerRef.current?.focus();
