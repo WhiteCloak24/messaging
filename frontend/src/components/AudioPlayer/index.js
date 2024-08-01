@@ -1,8 +1,7 @@
-import { Download, MusicNote, Pause, Play } from "assets/images";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { downloadFile, secondsToHHMMSS } from "shared/resources";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import EllipsisTextWithTooltip from "components/EllipsisTextWithTooltip";
+import { FaPause, FaPlay } from "react-icons/fa";
+import { MdFileDownload } from "react-icons/md";
 
 const getProcessedAudioData = async (url) => {
   const data = await fetch(url);
@@ -37,7 +36,7 @@ const AudioPlayer = React.memo(
     const audioInstance = useRef(new Audio());
     const audioContext = new window.AudioContext();
 
-    const { data: processedAudioData, isLoading } = useQuery({
+    const { data: processedAudioData } = useQuery({
       queryFn: ({ queryKey }) => getProcessedAudioData(queryKey[0]),
       queryKey: [`nightsoft_audio_player_${srcUrl}`],
       refetchOnWindowFocus: false,
@@ -47,10 +46,17 @@ const AudioPlayer = React.memo(
       enabled: Boolean(srcUrl),
     });
 
-    const LoadingAudio = isLoadingMetaData || isLoading;
     useEffect(() => {
-      document.body.appendChild(audioInstance.current);
-    }, []);
+      if (audioInstance.current) {
+        audioInstance.current.classList.add("ns-audio-controller");
+        document.body.appendChild(audioInstance.current);
+      }
+      return () => {
+        if (audioInstance.current) {
+          document.body.removeChild(audioInstance.current);
+        }
+      };
+    }, [audioInstance.current]);
 
     useEffect(() => {
       if (canvasRef.current && audioBuffer) {
@@ -106,10 +112,10 @@ const AudioPlayer = React.memo(
     }, [processedAudioData.arrayBuffer]);
 
     useEffect(() => {
-      if (!LoadingAudio && audioBuffer) {
-        tick(audioBuffer);
+      if (!isLoadingMetaData && audioBuffer) {
+        updateAudioLevels(audioBuffer);
       }
-    }, [LoadingAudio, audioBuffer]);
+    }, [isLoadingMetaData, audioBuffer]);
 
     function getClickPosition(event) {
       event.stopPropagation();
@@ -133,14 +139,13 @@ const AudioPlayer = React.memo(
       e.preventDefault();
       setIsDragging(false);
     }
-    function tick(decodeAudioData) {
+    const updateAudioLevels = useCallback((decodeAudioData) => {
       const number_of_bars = Math.floor(canvasRef?.current?.width / (barWidth + gap));
       const { duration, sampleRate } = decodeAudioData;
       const perBarDataDuration = duration / number_of_bars;
 
       const audioLevels = [];
       const channelData = decodeAudioData?.getChannelData(0);
-
       for (let i = 0; i < duration; i = i + perBarDataDuration) {
         const startSample = Math.floor(i * sampleRate);
         const endSample = Math.min(Math.floor((i + perBarDataDuration) * sampleRate), channelData.length);
@@ -153,7 +158,7 @@ const AudioPlayer = React.memo(
       }
       setAudioLevels(audioLevels);
       drawAudioLevel(audioLevels);
-    }
+    }, []);
 
     function fillAudioLevel({ fillX = 0 }) {
       const dataParam = audioLevels;
@@ -196,67 +201,59 @@ const AudioPlayer = React.memo(
       });
     }
 
-    function playFn() {
+    const togglePlayPauseFn = useCallback(() => {
       try {
         if (!isPlaying) {
-          const audioElements = document.querySelectorAll("audio") || [];
+          const audioElements = document.querySelectorAll(".ns-audio-controller") || [];
           audioElements?.forEach(function (audio) {
             audio?.pause();
           });
           setIsPlaying(true);
-          sound.onended = () => {
+          audioInstance.current.onended = () => {
             cancelAnimationFrame(rafId);
             setIsPlaying(false);
             setCurrentTime(0);
             fillAudioLevel({ fillX: 0 });
           };
-          sound.onpause = () => {
+          audioInstance.current.onpause = () => {
             setIsPlaying(false);
+            cancelAnimationFrame(rafId);
           };
-          sound.play();
-          rafId = window.requestAnimationFrame(() => Timer(sound));
+          audioInstance.current.play();
+          rafId = requestAnimationFrame(updateTimer);
         } else {
-          sound.pause();
+          audioInstance.current.pause();
           setIsPlaying(false);
           cancelAnimationFrame(rafId);
         }
       } catch (error) {
         console.log(error);
       }
-    }
+    }, [isPlaying]);
 
-    function Timer(playAudioContext) {
-      rafId = window.requestAnimationFrame(() => Timer(playAudioContext));
-      const currentTime = playAudioContext.currentTime || 0;
+    const updateTimer = useCallback(() => {
+      const currentTime = audioInstance.current.currentTime || 0;
       setCurrentTime(Math.floor(currentTime));
       const totalDuration = audioBuffer?.duration || 0;
       const x = (currentTime * canvasRef?.current?.width) / totalDuration;
       fillAudioLevel({ fillX: x });
-    }
+      requestAnimationFrame(updateTimer);
+    }, []);
 
-    if (LoadingAudio) return <LoadingItem />;
+    if (isLoadingMetaData) return <>Loading...</>;
     return (
       <>
         <div className="w-full flex items-center  gap-4 ">
-          {withIcon && (
-            <span className="bg-green-100 min-w-[40px] h-10 rounded-full text-green flex items-center justify-center">
-              <MusicNote />
-            </span>
-          )}
           <span
             className="bg-green-100 xxl:min-w-[40px] xl:min-w-[40px] lg:min-w-[40px] md:min-w-[35px] sm:min-w-[35px] xs:min-w-[35px] xxl:h-[40px] xl:h-[40px] lg:h-[40px] md:h-[35px] sm:h-[35px] xs:h-[35px] rounded-full text-green flex items-center justify-center cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
-              playFn();
+              togglePlayPauseFn();
             }}>
-            {isPlaying ? <Pause className="w-[22px] h-[22px]" /> : <Play />}
+            {isPlaying ? <FaPause /> : <FaPlay />}
           </span>
-          {filename && (
-            <div className=" text-sm font-medium whitespace-nowrap	min-w-[105px]">
-              <EllipsisTextWithTooltip charLength={15} string={filename} />
-            </div>
-          )}
+
           <canvas className="cursor-pointer" width={width} height={height} ref={canvasRef}></canvas>
           <div className="flex items-center gap-4 justify-end">
             {downloadOption && (
@@ -265,13 +262,14 @@ const AudioPlayer = React.memo(
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
-                  downloadFile(processedAudioFile);
+                  // downloadFile(processedAudioFile);
                 }}>
-                <Download />
+                <MdFileDownload />
               </span>
             )}
             <span className="font-medium text-sm text-grey-600 min-w-[60px] flex justify-center items-center">
-              {secondsToHHMMSS(totalDuration - currentTime)}
+              {/* {secondsToHHMMSS(totalDuration - currentTime)} */}
+              {totalDuration - currentTime}
             </span>
           </div>
         </div>
