@@ -9,22 +9,21 @@ import TooltipHandler from "./components/Tooltip";
 import ImagePreviewer from "./components/ImagePreviewer";
 import ModalContainer from "./components/Modal/ModalContainer";
 
-function App() {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-        retry: false,
-      },
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
     },
-  });
-
+  },
+});
+function App() {
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register(`${process.env.PUBLIC_URL}/sw.js`)
         .then((sw) => {
-          console.log("Service Worker registereds",sw);
+          console.log("Service Worker registereds", sw);
         })
         .catch((err) => {
           console.log(err);

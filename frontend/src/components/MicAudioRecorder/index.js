@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { RiMic2Fill } from "react-icons/ri";
+import AudioPlayer from "../AudioPlayer";
 
 let audiolevel = 0;
-
+const audio = "https://dn720302.ca.archive.org/0/items/nsync-bye-bye-bye-audio/%40NSYNC%20-%20Bye%20Bye%20Bye%20%28Audio%29.mp3";
 const MicAudioRecorder = ({ onClose = () => null }) => {
   const [isRecording, setIsRecording] = useState(false);
   const mediaRecorder = useRef(null);
   const audioChunks = useRef([]);
   const audioLevelAnimationFrameId = useRef(null);
   const [audioBlob, setAudioBlob] = useState(null);
-
   const startRecording = useCallback(async () => {
     const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
     window.ns_audio_recorder_stream = micStream;
@@ -103,7 +103,7 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
         // } else {
         //   audiolevel = Math.min(1, level);
         // }
-        audiolevel = 0
+        audiolevel = 0;
         const mic_level_icon_container = document.getElementById("mic-level-icon-container");
         const mic_level_icon = document.getElementById("mic-level-icon");
         const mic_icon = document.getElementById("mic-icon");
@@ -136,6 +136,9 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
       <div className="flex flex-col gap-5 justify-between">
         <div>
           Click on <b> Start Recording </b>to record your audio
+        </div>
+        <div>
+          <AudioPlayer srcUrl={audio} />
         </div>
         <div
           style={{ transition: "background-color 0.2s ease" }}

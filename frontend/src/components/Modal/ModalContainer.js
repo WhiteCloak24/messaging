@@ -3,6 +3,8 @@ import { ModalEvent } from "../../resources/constants";
 import { generateRandomId } from "../../resources/functions";
 import ReactDOM from "react-dom/client";
 import useClickOutside from "../../hooks/useClickOutside";
+import { queryClient } from "../../App";
+import { QueryClientProvider } from "@tanstack/react-query";
 
 // Right now we can only open one modal at a time -> Needs feature update
 const initialState = { show: false, modalData: { Component: <></>, closeOnClickOutside: false, onClose: () => null } };
@@ -48,7 +50,7 @@ const ModalContainer = () => {
     if (modalNode) {
       const containerNode = modalNode.getElementsByClassName("ns-modal-container")?.[0] || null;
       if (containerNode) {
-        const root = ReactDOM.createRoot(containerNode.firstChild);
+        const root = ReactDOM.createRoot(containerNode.firstElementChild);
         root.unmount();
       }
     }
@@ -62,7 +64,7 @@ const ModalContainer = () => {
       if (containerNode) {
         const ModalChild = showModal.modalData?.Component || <></>;
         const root = ReactDOM.createRoot(modalNode.getElementsByClassName("ns-modal-container")?.[0]);
-        return root.render(ModalChild);
+        return root.render(<QueryClientProvider client={queryClient}> {ModalChild}</QueryClientProvider>);
       }
     }
   };

@@ -74,7 +74,7 @@ const AudioPlayer = React.memo(
 
     // For audio file
     useEffect(() => {
-      if (processedAudioData.blob?.size) {
+      if (processedAudioData?.blob?.size) {
         (async () => {
           try {
             const file = new File([processedAudioData.blob], `random_ns_audio.${processedAudioData.blob.type.split("/")[1]}`, {
@@ -89,11 +89,11 @@ const AudioPlayer = React.memo(
           }
         })();
       }
-    }, [processedAudioData.blob]);
+    }, [processedAudioData?.blob]);
 
     // For audio buffer and metadata
     useEffect(() => {
-      if (processedAudioData.arrayBuffer) {
+      if (processedAudioData?.arrayBuffer) {
         const arrayBuffer = processedAudioData.arrayBuffer;
         audioContext
           .decodeAudioData(arrayBuffer)
@@ -108,7 +108,7 @@ const AudioPlayer = React.memo(
             setIsLoadingMetaData(false);
           });
       }
-    }, [processedAudioData.arrayBuffer]);
+    }, [processedAudioData?.arrayBuffer]);
 
     useEffect(() => {
       if (!isLoadingMetaData && audioBuffer) {
@@ -124,7 +124,7 @@ const AudioPlayer = React.memo(
       const x = event.clientX - rect.left;
       // const y = event.clientY - rect.top;
       const currentTime = totalDuration * (x / canvasRef?.current?.width);
-      sound.currentTime = currentTime;
+      audioInstance.current.currentTime = currentTime;
       fillAudioLevel({ fillX: x });
     }
 
