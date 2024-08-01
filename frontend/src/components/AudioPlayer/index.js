@@ -19,7 +19,6 @@ const AudioPlayer = React.memo(
     gap = 2,
     barColor = "#991b1b",
     barWidth = 5,
-    minimal = false,
     loadingItem: LoadingItem = () => null,
     downloadOption = true,
     withIcon = true,
@@ -27,7 +26,6 @@ const AudioPlayer = React.memo(
   }) => {
     let rafId;
     const canvasRef = useRef(null);
-    const minimalCanvasRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
     const [processedAudioFile, setProcessedAudioFile] = useState(false);
@@ -36,7 +34,7 @@ const AudioPlayer = React.memo(
     const [currentTime, setCurrentTime] = useState(0);
     const [totalDuration, setTotalDuration] = useState(0);
     const [isLoadingMetaData, setIsLoadingMetaData] = useState(true);
-    const [sound, setSound] = useState(null);
+    const audioInstance = useRef(new Audio());
     const audioContext = new window.AudioContext();
 
     const { data: processedAudioData, isLoading } = useQuery({
@@ -51,22 +49,8 @@ const AudioPlayer = React.memo(
 
     const LoadingAudio = isLoadingMetaData || isLoading;
     useEffect(() => {
-      const newSound = new Audio();
-      setSound(newSound);
-      document.body.appendChild(newSound);
+      document.body.appendChild(audioInstance.current);
     }, []);
-
-    useEffect(() => {
-      return () => {
-        try {
-          if (sound) {
-            sound?.pause();
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      };
-    }, [sound]);
 
     useEffect(() => {
       if (canvasRef.current && audioBuffer) {
@@ -102,6 +86,7 @@ const AudioPlayer = React.memo(
       }
     }, [processedAudioData.blob]);
 
+    // For audio buffer and metadata
     useEffect(() => {
       if (processedAudioData.arrayBuffer) {
         const arrayBuffer = processedAudioData.arrayBuffer;
@@ -110,7 +95,7 @@ const AudioPlayer = React.memo(
           .then((decodeAudioData) => {
             setTotalDuration(Math.ceil(decodeAudioData.duration));
             setAudioBuffer(decodeAudioData);
-            sound.src = URL.createObjectURL(processedAudioFile);
+            audioInstance.current.src = URL.createObjectURL(processedAudioFile);
             setIsLoadingMetaData(false);
           })
           .catch((err) => {
@@ -129,7 +114,6 @@ const AudioPlayer = React.memo(
     function getClickPosition(event) {
       event.stopPropagation();
       event.preventDefault();
-      if (minimal) return;
       if (!isDragging && event.type !== "click") return;
       const rect = canvasRef.current.getBoundingClientRect();
       const x = event.clientX - rect.left;
@@ -142,17 +126,14 @@ const AudioPlayer = React.memo(
     function enableSetDragging(e) {
       e.stopPropagation();
       e.preventDefault();
-      if (minimal) return;
       setIsDragging(true);
     }
     function disableSetDragging(e) {
       e.stopPropagation();
       e.preventDefault();
-      if (minimal) return;
       setIsDragging(false);
     }
     function tick(decodeAudioData) {
-      if (minimal) return;
       const number_of_bars = Math.floor(canvasRef?.current?.width / (barWidth + gap));
       const { duration, sampleRate } = decodeAudioData;
       const perBarDataDuration = duration / number_of_bars;
@@ -175,7 +156,6 @@ const AudioPlayer = React.memo(
     }
 
     function fillAudioLevel({ fillX = 0 }) {
-      if (minimal) return;
       const dataParam = audioLevels;
       const context = canvasRef?.current?.getContext("2d");
       if (!context) return;
@@ -199,7 +179,6 @@ const AudioPlayer = React.memo(
     }
 
     function drawAudioLevel(dataParam = []) {
-      if (minimal) return;
       const context = canvasRef?.current?.getContext("2d");
       if (!context) return;
       context.lineWidth = 1;
@@ -252,94 +231,50 @@ const AudioPlayer = React.memo(
       setCurrentTime(Math.floor(currentTime));
       const totalDuration = audioBuffer?.duration || 0;
       const x = (currentTime * canvasRef?.current?.width) / totalDuration;
-      if (minimal) {
-        drawMinimalTimer(currentTime, totalDuration);
-      } else {
-        fillAudioLevel({ fillX: x });
-      }
+      fillAudioLevel({ fillX: x });
     }
 
-    function drawMinimalTimer(currentTime, totalDuration) {
-      const context = minimalCanvasRef?.current?.getContext("2d");
-      if (!context) return;
-      context.clearRect(0, 0, minimalCanvasRef?.current?.width, minimalCanvasRef?.current?.height);
-      context.lineWidth = 1;
-      context.beginPath();
-      context.strokeStyle = "grey";
-      context.arc(
-        minimalCanvasRef?.current?.width / 2,
-        minimalCanvasRef?.current?.width / 2,
-        minimalCanvasRef?.current?.width / 2 - 2,
-        0,
-        2 * Math.PI
-      );
-      context.stroke();
-      context.lineWidth = 2;
-      context.beginPath();
-      context.arc(
-        minimalCanvasRef?.current?.width / 2,
-        minimalCanvasRef?.current?.width / 2,
-        minimalCanvasRef?.current?.width / 2 - 2,
-        4.71239,
-        2 * Math.PI * (currentTime / totalDuration) + 4.71239
-      );
-      context.strokeStyle = "green";
-      context.stroke();
-    }
     if (LoadingAudio) return <LoadingItem />;
     return (
       <>
-        {minimal ? (
+        <div className="w-full flex items-center  gap-4 ">
+          {withIcon && (
+            <span className="bg-green-100 min-w-[40px] h-10 rounded-full text-green flex items-center justify-center">
+              <MusicNote />
+            </span>
+          )}
           <span
-            className="cursor-pointer relative flex items-center justify-center"
+            className="bg-green-100 xxl:min-w-[40px] xl:min-w-[40px] lg:min-w-[40px] md:min-w-[35px] sm:min-w-[35px] xs:min-w-[35px] xxl:h-[40px] xl:h-[40px] lg:h-[40px] md:h-[35px] sm:h-[35px] xs:h-[35px] rounded-full text-green flex items-center justify-center cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
               playFn();
             }}>
-            <canvas width={50} height={50} ref={minimalCanvasRef}></canvas>
-            <div className="absolute ">{isPlaying ? <Pause className="text-green w-6 h-6" /> : <Play className="text-green w-6 h-6" />}</div>
+            {isPlaying ? <Pause className="w-[22px] h-[22px]" /> : <Play />}
           </span>
-        ) : (
-          <div className="w-full flex items-center  gap-4 ">
-            {withIcon && (
-              <span className="bg-green-100 min-w-[40px] h-10 rounded-full text-green flex items-center justify-center">
-                <MusicNote />
-              </span>
-            )}
-            <span
-              className="bg-green-100 xxl:min-w-[40px] xl:min-w-[40px] lg:min-w-[40px] md:min-w-[35px] sm:min-w-[35px] xs:min-w-[35px] xxl:h-[40px] xl:h-[40px] lg:h-[40px] md:h-[35px] sm:h-[35px] xs:h-[35px] rounded-full text-green flex items-center justify-center cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                playFn();
-              }}>
-              {isPlaying ? <Pause className="w-[22px] h-[22px]" /> : <Play />}
-            </span>
-            {filename && (
-              <div className=" text-sm font-medium whitespace-nowrap	min-w-[105px]">
-                <EllipsisTextWithTooltip charLength={15} string={filename} />
-              </div>
-            )}
-            <canvas className="cursor-pointer" width={width} height={height} ref={canvasRef}></canvas>
-            <div className="flex items-center gap-4 justify-end">
-              {downloadOption && (
-                <span
-                  className="cursor-pointer text-green"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    downloadFile(processedAudioFile);
-                  }}>
-                  <Download />
-                </span>
-              )}
-              <span className="font-medium text-sm text-grey-600 min-w-[60px] flex justify-center items-center">
-                {secondsToHHMMSS(totalDuration - currentTime)}
-              </span>
+          {filename && (
+            <div className=" text-sm font-medium whitespace-nowrap	min-w-[105px]">
+              <EllipsisTextWithTooltip charLength={15} string={filename} />
             </div>
+          )}
+          <canvas className="cursor-pointer" width={width} height={height} ref={canvasRef}></canvas>
+          <div className="flex items-center gap-4 justify-end">
+            {downloadOption && (
+              <span
+                className="cursor-pointer text-green"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  downloadFile(processedAudioFile);
+                }}>
+                <Download />
+              </span>
+            )}
+            <span className="font-medium text-sm text-grey-600 min-w-[60px] flex justify-center items-center">
+              {secondsToHHMMSS(totalDuration - currentTime)}
+            </span>
           </div>
-        )}
+        </div>
       </>
     );
   }
