@@ -6,7 +6,8 @@ import { MdFileDownload } from "react-icons/md";
 const getProcessedAudioData = async (url) => {
   const data = await fetch(url);
   const blob = await data?.blob();
-  const arrayBuffer = await data?.arrayBuffer();
+  const arrayBuffer = await blob.arrayBuffer();
+console.log(arrayBuffer);
   return { blob, arrayBuffer };
 };
 
@@ -44,7 +45,6 @@ const AudioPlayer = React.memo(
       refetchOnMount: false,
       enabled: Boolean(srcUrl),
     });
-
     useEffect(() => {
       if (audioInstance.current) {
         audioInstance.current.classList.add("ns-audio-controller");
@@ -92,8 +92,9 @@ const AudioPlayer = React.memo(
     }, [processedAudioData?.blob]);
     // For audio buffer and metadata
     useEffect(() => {
-      if (processedAudioData?.arrayBuffer) {
+      if (processedAudioData?.arrayBuffer && processedAudioFile) {
         const arrayBuffer = processedAudioData.arrayBuffer;
+        console.log(arrayBuffer);
         audioContext
           .decodeAudioData(arrayBuffer)
           .then((decodeAudioData) => {
@@ -107,7 +108,7 @@ const AudioPlayer = React.memo(
             setIsLoadingMetaData(false);
           });
       }
-    }, [processedAudioData?.arrayBuffer]);
+    }, [processedAudioData?.arrayBuffer, processedAudioFile]);
 
     useEffect(() => {
       if (!isLoadingMetaData && audioBuffer) {
@@ -231,6 +232,7 @@ const AudioPlayer = React.memo(
 
     const updateTimer = useCallback(() => {
       const currentTime = audioInstance.current.currentTime || 0;
+      console.log(currentTime);
       setCurrentTime(Math.floor(currentTime));
       const totalDuration = audioBuffer?.duration || 0;
       const x = (currentTime * canvasRef?.current?.width) / totalDuration;
@@ -241,9 +243,11 @@ const AudioPlayer = React.memo(
     if (isLoadingMetaData) return <>Loading...</>;
     return (
       <>
-        <div className="w-full flex items-center  gap-4 ">
+        <div className="w-full flex items-center gap-4 ">
           <span
-            className="bg-gray-900 xxl:min-w-[40px] xl:min-w-[40px] lg:min-w-[40px] md:min-w-[35px] sm:min-w-[35px] xs:min-w-[35px] xxl:h-[40px] xl:h-[40px] lg:h-[40px] md:h-[35px] sm:h-[35px] xs:h-[35px] rounded-full text-green flex items-center justify-center cursor-pointer"
+            className={`${
+              isPlaying ? "bg-red-800 text-white" : "text-red-800 bg-white"
+            } xxl:min-w-[40px] xl:min-w-[40px] lg:min-w-[40px] md:min-w-[35px] sm:min-w-[35px] xs:min-w-[35px] xxl:h-[40px] xl:h-[40px] lg:h-[40px] md:h-[35px] sm:h-[35px] xs:h-[35px] rounded-full text-green flex items-center justify-center cursor-pointer`}
             onClick={(e) => {
               e.stopPropagation();
               e.preventDefault();
