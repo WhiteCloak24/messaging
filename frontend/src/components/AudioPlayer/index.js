@@ -126,26 +126,29 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
     e.preventDefault();
     setIsDragging(false);
   }
-  const updateAudioLevels = useCallback((decodeAudioData) => {
-    const number_of_bars = Math.floor(canvasRef?.current?.width / (barWidth + gap));
-    const { duration, sampleRate } = decodeAudioData;
-    const perBarDataDuration = duration / number_of_bars;
+  const updateAudioLevels = useCallback(
+    (decodeAudioData) => {
+      const number_of_bars = Math.floor(canvasRef?.current?.width / (barWidth + gap));
+      const { duration, sampleRate } = decodeAudioData;
+      const perBarDataDuration = duration / number_of_bars;
 
-    const audioLevels = [];
-    const channelData = decodeAudioData?.getChannelData(0);
-    for (let i = 0; i < duration; i = i + perBarDataDuration) {
-      const startSample = Math.floor(i * sampleRate);
-      const endSample = Math.min(Math.floor((i + perBarDataDuration) * sampleRate), channelData.length);
-      let sumSquared = 0;
-      for (let j = startSample; j < endSample; j++) {
-        sumSquared += channelData[j] ** 2;
+      const audioLevels = [];
+      const channelData = decodeAudioData?.getChannelData(0);
+      for (let i = 0; i < duration; i = i + perBarDataDuration) {
+        const startSample = Math.floor(i * sampleRate);
+        const endSample = Math.min(Math.floor((i + perBarDataDuration) * sampleRate), channelData.length);
+        let sumSquared = 0;
+        for (let j = startSample; j < endSample; j++) {
+          sumSquared += channelData[j] ** 2;
+        }
+        const rms = Math.sqrt(sumSquared / (endSample - startSample));
+        audioLevels.push(rms);
       }
-      const rms = Math.sqrt(sumSquared / (endSample - startSample));
-      audioLevels.push(rms);
-    }
-    setAudioLevels(audioLevels);
-    drawAudioLevel(audioLevels);
-  }, []);
+      setAudioLevels(audioLevels);
+      drawAudioLevel(audioLevels);
+    },
+    [canvasRef?.current]
+  );
 
   function fillAudioLevel({ fillX = 0 }) {
     const dataParam = audioLevels;
@@ -216,7 +219,7 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
     } catch (error) {
       console.log(error);
     }
-  }, [isPlaying]);
+  }, [isPlaying, audioLevels]);
 
   const updateTimer = useCallback(() => {
     const currentTime = audioInstance.current.currentTime || 0;
@@ -225,7 +228,7 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
     const x = (currentTime * canvasRef?.current?.width) / totalDuration;
     fillAudioLevel({ fillX: x });
     animationFrameId.current = requestAnimationFrame(updateTimer);
-  }, []);
+  }, [audioLevels]);
 
   if (isLoadingMetaData) return <>Loading...</>;
   return (
