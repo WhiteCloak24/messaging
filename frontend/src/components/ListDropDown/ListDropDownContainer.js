@@ -43,6 +43,7 @@ const ListDropDownContainer = () => {
       // for top
       dropdownElement.current.style.top = `${top}px`;
       dropdownElement.current.style.left = `${left + width / 2}px`;
+      //   dropdownElement.current.style.left = `${left + width / 2}px`;
       console.log(left, width);
       dropdownElement.current.style.transform = `translate(-50%,-100%)`;
       dropdownElement.current.style["z-index"] = ZINDEX.Dropdown;
@@ -58,7 +59,7 @@ const ListDropDownContainer = () => {
         <div
           ref={dropdownElement}
           style={{ minWidth: dropdownInfo ? window.getComputedStyle(dropdownInfo?.element?.target).width : "auto" }}
-          className={`ns-list-dropdown ${dropdownInfo.className || ''}`}>
+          className={`ns-list-dropdown ${dropdownInfo.className || ""}`}>
           {arr.map((dropdownItem) => {
             return <div className="ns-list-dropdown-item">{dropdownItem.label}</div>;
           })}
