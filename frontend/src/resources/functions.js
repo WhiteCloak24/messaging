@@ -26,6 +26,10 @@ export function formatDate({ timestamp = "", format = "DD/MM/YY" }) {
   if (!timestamp) return "Invalid Date";
   return moment(timestamp).format(format);
 }
+export const formatSeconds = (seconds = 0) => {
+  if (!seconds) return '00:00';
+  return moment.utc(seconds * 1000).format('mm:ss');
+};
 export function getTimeFromNow({ timestamp = "", format = "DD/MM/YY" }) {
   if (!timestamp) return "Invalid Date";
   return moment(timestamp).fromNow();
