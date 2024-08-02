@@ -42,14 +42,13 @@ const ListDropDownContainer = () => {
       // tooltipElement.current.style["margin-top"] = "10px";
       // for top
       dropdownElement.current.style.top = `${top}px`;
-      dropdownElement.current.style.left = `${left + width / 2}px`;
+      dropdownElement.current.style.left = `${left + width / 2 + 8.5}px`;
       //   dropdownElement.current.style.left = `${left + width / 2}px`;
-      console.log(left, width);
       dropdownElement.current.style.transform = `translate(-50%,-100%)`;
       dropdownElement.current.style["z-index"] = ZINDEX.Dropdown;
       // tooltipElement.current.style["margin-bottom"] = "10px";
     }
-  }, [dropdownInfo, show]);
+  }, [dropdownInfo, show, dropdownElement.current]);
 
   const arr = [{ label: "1x" }, { label: "1.5x" }, { label: "2x" }];
 

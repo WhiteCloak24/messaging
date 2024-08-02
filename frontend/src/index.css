@@ -92,5 +92,8 @@ input {
   @apply bg-black text-white;
 }
 .audio-playback > .ns-list-dropdown-item:hover {
-  @apply bg-gray-800 text-white;
+  @apply bg-gray-800 text-white scale-110;
+}
+.audio-playback > .ns-list-dropdown-item{
+  @apply text-center text-xs transition-all
 }
