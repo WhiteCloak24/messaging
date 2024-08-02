@@ -1,3 +1,7 @@
+export const ZINDEX = {
+  Dropdown: 50,
+};
+
 export const AuthorizationStates = {
   LOGGED_OUT: "LOGGED_OUT",
   LOGGING_IN: "LOGGING_IN",
@@ -15,6 +19,10 @@ export const AlertEVENTS = {
 export const TooltipEvent = {
   ENTER: "TOOLTIP_ENTER",
   LEAVE: "TOOLTIP_LEAVE",
+};
+export const DropdownEvent = {
+  OPEN: "DROPDOWN_OPEN",
+  CLOSE: "DROPDOWN_CLOSE",
 };
 export const ModalEvent = {
   OPEN: "MODAL_OPEN",

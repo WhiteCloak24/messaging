@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FaPause, FaPlay } from "react-icons/fa";
 import { MdFileDownload } from "react-icons/md";
 import { formatSeconds } from "../../resources/functions";
+import ListDropDown from "../ListDropDown";
 
 const getProcessedAudioData = async (url) => {
   const data = await fetch(url);
@@ -258,18 +259,12 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
             <span className="text-xs text-grey-600 min-w-[60px] max-w-[60px] flex items-start justify-end">{formatSeconds(totalDuration)}</span>
           </div>
         </div>
-        <div className="flex items-center gap-2 justify-end border">
-          {downloadOption && (
-            <span
-              className="cursor-pointer text-green w-10 h-10 border flex items-center justify-center"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                // downloadFile(processedAudioFile);
-              }}>
-              <MdFileDownload className="w-8 h-8" />
+        <div style={{ height: `${height}px` }} className="h-full flex items-center gap-2 justify-end">
+          <ListDropDown className="audio-playback">
+            <span className="cursor-pointer bg-black flex items-center justify-center text-xs text-white rounded-xl px-4 py-1 transition-all hover:bg-gray-800">
+              1x
             </span>
-          )}
+          </ListDropDown>
         </div>
       </div>
     </>

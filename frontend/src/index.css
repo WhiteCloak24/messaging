@@ -74,3 +74,23 @@ input {
     opacity: 1;
   }
 }
+
+/* NightSoft Dropdown Css - Tailwind */
+.ns-list-dropdown {
+  @apply absolute bg-white border cursor-default min-w-28 rounded-sm;
+}
+.ns-list-dropdown > *:not(:last-child) {
+  @apply border-b;
+}
+.ns-list-dropdown-item {
+  @apply cursor-pointer text-sm px-2 py-1;
+}
+.ns-list-dropdown-item:hover {
+  @apply bg-customBlue text-black;
+}
+.audio-playback {
+  @apply bg-black text-white;
+}
+.audio-playback > .ns-list-dropdown-item:hover {
+  @apply bg-gray-800 text-white;
+}
