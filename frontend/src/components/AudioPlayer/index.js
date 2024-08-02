@@ -23,7 +23,7 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
   const [currentTime, setCurrentTime] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const [isLoadingMetaData, setIsLoadingMetaData] = useState(true);
-  const audioInstance = useRef(new Audio());
+  const audioInstance = useRef();
   const audioContext = new window.AudioContext();
 
   const { data: processedAudioData } = useQuery({
@@ -32,20 +32,16 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
     refetchOnWindowFocus: false,
     retry: false,
     gcTime: Infinity,
+    staleTime: Infinity,
     refetchOnMount: false,
     enabled: Boolean(srcUrl),
   });
+
   useEffect(() => {
-    if (audioInstance.current) {
-      audioInstance.current.classList.add("ns-audio-controller");
-      document.body.appendChild(audioInstance.current);
+    if (audioInstance.current && processedAudioFile && !isLoadingMetaData) {
+      audioInstance.current.src = URL.createObjectURL(processedAudioFile);
     }
-    return () => {
-      if (audioInstance.current) {
-        document.body.removeChild(audioInstance.current);
-      }
-    };
-  }, [audioInstance.current]);
+  }, [audioInstance.current, processedAudioFile, isLoadingMetaData]);
 
   useEffect(() => {
     if (canvasRef.current && audioBuffer) {
@@ -83,13 +79,16 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
   // For audio buffer and metadata
   useEffect(() => {
     if (processedAudioData?.arrayBuffer && processedAudioFile) {
-      const arrayBuffer = processedAudioData.arrayBuffer;
+      const clone = new ArrayBuffer(processedAudioData.arrayBuffer.byteLength);
+      const view = new Uint8Array(processedAudioData.arrayBuffer);
+      const cloneView = new Uint8Array(clone);
+      cloneView.set(view);
+      const arrayBuffer = clone;
       audioContext
         .decodeAudioData(arrayBuffer)
         .then((decodeAudioData) => {
           setTotalDuration(Math.ceil(decodeAudioData.duration));
           setAudioBuffer(decodeAudioData);
-          audioInstance.current.src = URL.createObjectURL(processedAudioFile);
           setIsLoadingMetaData(false);
         })
         .catch((err) => {
@@ -231,6 +230,7 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
   if (isLoadingMetaData) return <>Loading...</>;
   return (
     <>
+      <audio ref={audioInstance} hidden className="ns-audio-controller"></audio>
       <div className="w-full flex items-center gap-2 border rounded-md p-2">
         <span
           className={`text-red-800 bg-white border border-red-800 opacity-50 h-10 w-10 rounded-full flex items-center justify-center cursor-not-allowed`}>
