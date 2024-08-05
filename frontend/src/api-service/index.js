@@ -15,6 +15,12 @@ export const signup = (value) => {
     data: value,
   });
 };
+export const userDetails = ({ id = "" }) => {
+  return apiClient({
+    method: routes.USER_DETAILS.METHOD,
+    url: `${routes.USER_DETAILS.PATH}/${id}`,
+  });
+};
 export const userListing = (value) => {
   return apiClient({
     method: routes.USER_LISTING.METHOD,

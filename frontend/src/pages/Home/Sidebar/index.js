@@ -3,11 +3,19 @@ import Avatar from "../../../components/Avatar";
 import UserListing from "./UserListing";
 import Chats from "./Chats";
 import { IoArrowBack } from "react-icons/io5";
+import useListingWrapper from "../../../hooks/Apis/useListingWrapper";
+import { userDetails } from "../../../api-service";
 
 const Sidebar = ({ activeChat, setActiveChat }) => {
   const [showChats, setShowChats] = useState(true);
+  const { data: userData } = useListingWrapper({ queryFn: userDetails });
+console.log(userData);
+
   return (
     <div className="w-full md:w-1/6 min-w-80 bg-white h-screen border-customBlue flex flex-col">
+      <div className="p-4">
+        <Avatar firstName="Yash" />
+      </div>
       <div className="flex justify-between items-center p-4">
         <div className="font-bold text-lg">Chats</div>
         <div>

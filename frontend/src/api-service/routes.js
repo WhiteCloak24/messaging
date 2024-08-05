@@ -7,6 +7,10 @@ export const routes = {
     PATH: "auth/signup",
     METHOD: "POST",
   },
+  USER_DETAILS: {
+    PATH: "user/details",
+    METHOD: "GET",
+  },
   USER_LISTING: {
     PATH: "user/listing",
     METHOD: "GET",
