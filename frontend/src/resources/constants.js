@@ -1,3 +1,5 @@
+export const audio = "https://dn720302.ca.archive.org/0/items/nsync-bye-bye-bye-audio/%40NSYNC%20-%20Bye%20Bye%20Bye%20%28Audio%29.mp3";
+
 export const ZINDEX = {
   Dropdown: 50,
 };
