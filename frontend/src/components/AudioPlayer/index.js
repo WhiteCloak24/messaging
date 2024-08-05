@@ -104,6 +104,10 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
     }
   }, [isLoadingMetaData, audioBuffer]);
 
+  useEffect(() => {
+    if (audioInstance.current && !isLoadingMetaData) audioInstance.current.playbackRate = playbackSpeed;
+  }, [playbackSpeed]);
+
   function getClickPosition(event) {
     event.stopPropagation();
     event.preventDefault();
