@@ -51,7 +51,9 @@ const ModalContainer = () => {
       const containerNode = modalNode.getElementsByClassName("ns-modal-container")?.[0] || null;
       if (containerNode) {
         const root = ReactDOM.createRoot(containerNode.firstElementChild);
-        root.unmount();
+        setTimeout(() => {
+          root.unmount();
+        });
       }
     }
     setShowModal({ show: false, modalData: e.detail });
