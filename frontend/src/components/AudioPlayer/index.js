@@ -11,7 +11,7 @@ const getProcessedAudioData = async (url) => {
   return { blob, arrayBuffer };
 };
 
-const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2, barColor = "#991b1b", barWidth = 3, downloadOption = false }) => {
+const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2, barColor = "#991b1b", barWidth = 2 }) => {
   const canvasRef = useRef(null);
   const animationFrameId = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);

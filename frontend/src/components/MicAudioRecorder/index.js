@@ -115,7 +115,7 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
         if (mic_icon) {
           mic_icon.style.setProperty("--svg-background", audiolevel > 0 ? "#ffffff" : "#991b1b");
         }
-        requestAnimationFrame(handleGetAudioLevel);
+        audioLevelAnimationFrameId.current = requestAnimationFrame(handleGetAudioLevel);
       }
       audioLevelAnimationFrameId.current = requestAnimationFrame(handleGetAudioLevel);
     }
