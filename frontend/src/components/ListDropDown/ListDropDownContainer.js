@@ -50,8 +50,6 @@ const ListDropDownContainer = () => {
     }
   }, [dropdownInfo, show, dropdownElement.current]);
 
-  const arr = [{ label: "1x" }, { label: "1.5x" }, { label: "2x" }];
-
   return (
     <>
       {show && (
@@ -59,9 +57,19 @@ const ListDropDownContainer = () => {
           ref={dropdownElement}
           style={{ minWidth: dropdownInfo ? window.getComputedStyle(dropdownInfo?.element?.target).width : "auto" }}
           className={`ns-list-dropdown ${dropdownInfo.className || ""}`}>
-          {arr.map((dropdownItem) => {
-            return <div className="ns-list-dropdown-item">{dropdownItem.label}</div>;
-          })}
+          {dropdownInfo?.dropDownList &&
+            dropdownInfo?.dropDownList instanceof Array &&
+            dropdownInfo?.dropDownList.map((dropdownItem) => {
+              return (
+                <div
+                  className="ns-list-dropdown-item"
+                  onMouseDown={(e) => {
+                    dropdownItem?.onChange(dropdownItem?.value);
+                  }}>
+                  {dropdownItem.label}
+                </div>
+              );
+            })}
         </div>
       )}
     </>

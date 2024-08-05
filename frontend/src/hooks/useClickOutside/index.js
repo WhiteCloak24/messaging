@@ -15,11 +15,11 @@ const useClickOutside = ({ useDocument = true, backGround = () => null, ref = []
           }
         }
         if (callFunction) {
-          onClickOutsideCb();
+          onClickOutsideCb(event);
         }
       }
     }
-    
+
     backGround()
       ? backGround().addEventListener("mousedown", handleClickOutside)
       : useDocument

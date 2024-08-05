@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FaPause, FaPlay } from "react-icons/fa";
-import { MdFileDownload } from "react-icons/md";
 import { formatSeconds } from "../../resources/functions";
 import ListDropDown from "../ListDropDown";
 
@@ -23,6 +22,7 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
   const [currentTime, setCurrentTime] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const [isLoadingMetaData, setIsLoadingMetaData] = useState(true);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const audioInstance = useRef();
   const audioContext = new window.AudioContext();
 
@@ -230,6 +230,14 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
     animationFrameId.current = requestAnimationFrame(updateTimer);
   }, [audioLevels]);
 
+  const playbackDropDownList = useMemo(() => {
+    return [
+      { label: "1x", value: 1, onChange: (val) => setPlaybackSpeed(val) },
+      { label: "1.5x", value: 1.5, onChange: (val) => setPlaybackSpeed(val) },
+      { label: "2x", value: 2, onChange: (val) => setPlaybackSpeed(val) },
+    ];
+  }, []);
+
   if (isLoadingMetaData) return <>Loading...</>;
   return (
     <>
@@ -263,9 +271,9 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
           </div>
         </div>
         <div style={{ height: `${height}px` }} className="h-full flex items-center gap-2 justify-end">
-          <ListDropDown className="audio-playback">
+          <ListDropDown className="audio-playback" dropDownList={playbackDropDownList}>
             <span className="cursor-pointer bg-black flex items-center justify-center text-xs text-white rounded-xl px-4 py-1 transition-all hover:bg-gray-800">
-              1x
+              {playbackSpeed}x
             </span>
           </ListDropDown>
         </div>
