@@ -242,46 +242,57 @@ const AudioPlayer = React.memo(({ srcUrl = "", width = 300, height = 35, gap = 2
     ];
   }, []);
 
-  if (isLoadingMetaData) return <>Loading...</>;
   return (
     <>
       <audio ref={audioInstance} hidden className="ns-audio-controller"></audio>
-      <div className="w-full flex items-center gap-2 border rounded-md p-2">
-        <span
-          className={`text-red-800 bg-white border border-red-800 opacity-50 h-10 w-10 rounded-full flex items-center justify-center cursor-not-allowed`}>
-          {isPlaying ? <FaPause /> : <FaPlay className="ml-1" />}
-        </span>
-        <div style={{ width: `${width}px`, height: `${height}px` }} className="flex items-center justify-center">
-          s
-        </div>
-      </div>
-      <div className="w-full flex items-start gap-2 border rounded-md p-2">
-        <span
-          className={`${
-            isPlaying ? "bg-red-800 text-white" : "text-red-800 bg-white border border-red-800"
-          } h-10 w-10 rounded-full flex items-center justify-center cursor-pointer transition-all`}
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            togglePlayPauseFn();
-          }}>
-          {isPlaying ? <FaPause /> : <FaPlay className="ml-1" />}
-        </span>
-        <div style={{ width: `${width}px` }} className="flex flex-col">
-          <canvas className="cursor-pointer" width={width} height={height} ref={canvasRef}></canvas>
-          <div className="w-full flex justify-between items-start">
-            <span className="text-xs text-grey-600 min-w-[60px] max-w-[60px] flex items-start justify-start">{formatSeconds(currentTime)}</span>
-            <span className="text-xs text-grey-600 min-w-[60px] max-w-[60px] flex items-start justify-end">{formatSeconds(totalDuration)}</span>
+      {isLoadingMetaData ? (
+        <div className="w-full flex items-center gap-2 border rounded-md p-2">
+          <span
+            className={`text-red-800 bg-white border border-red-800 opacity-50 h-10 w-10 rounded-full flex items-center justify-center cursor-not-allowed`}>
+            <FaPlay className="ml-1" />
+          </span>
+          <div style={{ width: `${width}px` }} className="flex flex-col items-center">
+            <div className="text-sm">Loading Audio File...</div>
+            <div className="w-full flex justify-between items-start">
+              <span className="text-xs text-grey-600 min-w-[60px] max-w-[60px] flex items-start justify-start">...</span>
+              <span className="text-xs text-grey-600 min-w-[60px] max-w-[60px] flex items-start justify-end">...</span>
+            </div>
+          </div>
+          <div style={{ height: `${height}px` }} className="h-full flex items-center gap-2 justify-end">
+            <span className="cursor-not-allowed opacity-50 bg-black flex items-center justify-center text-xs text-white rounded-xl px-4 py-1 transition-all hover:bg-gray-800">
+              1x
+            </span>
           </div>
         </div>
-        <div style={{ height: `${height}px` }} className="h-full flex items-center gap-2 justify-end">
-          <ListDropDown className="audio-playback" dropDownList={playbackDropDownList}>
-            <span className="cursor-pointer bg-black flex items-center justify-center text-xs text-white rounded-xl px-4 py-1 transition-all hover:bg-gray-800">
-              {playbackSpeed}x
-            </span>
-          </ListDropDown>
+      ) : (
+        <div className="w-full flex items-start gap-2 border rounded-md p-2">
+          <span
+            className={`${
+              isPlaying ? "bg-red-800 text-white" : "text-red-800 bg-white border border-red-800"
+            } h-10 w-10 rounded-full flex items-center justify-center cursor-pointer transition-all`}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              togglePlayPauseFn();
+            }}>
+            {isPlaying ? <FaPause /> : <FaPlay className="ml-1" />}
+          </span>
+          <div style={{ width: `${width}px` }} className="flex flex-col">
+            <canvas className="cursor-pointer" width={width} height={height} ref={canvasRef}></canvas>
+            <div className="w-full flex justify-between items-start">
+              <span className="text-xs text-grey-600 min-w-[60px] max-w-[60px] flex items-start justify-start">{formatSeconds(currentTime)}</span>
+              <span className="text-xs text-grey-600 min-w-[60px] max-w-[60px] flex items-start justify-end">{formatSeconds(totalDuration)}</span>
+            </div>
+          </div>
+          <div style={{ height: `${height}px` }} className="h-full flex items-center gap-2 justify-end">
+            <ListDropDown className="audio-playback" dropDownList={playbackDropDownList}>
+              <span className="cursor-pointer bg-black flex items-center justify-center text-xs text-white rounded-xl px-4 py-1 transition-all hover:bg-gray-800">
+                {playbackSpeed}x
+              </span>
+            </ListDropDown>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 });
