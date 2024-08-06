@@ -39,7 +39,7 @@ export const router = createBrowserRouter([
             path: "*",
             element: (
               <Profile>
-                <div>Coming Soon...</div>
+                <div className="bg-white w-full m-4 rounded-xl">Coming Soon...</div>
               </Profile>
             ),
           },

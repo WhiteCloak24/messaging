@@ -3,7 +3,7 @@ import ProfileSidebar from "./ProfileSidebar";
 
 const Profile = ({children}) => {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-full">
       <ProfileSidebar />
       {children}
     </div>

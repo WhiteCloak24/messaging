@@ -40,7 +40,7 @@ const ProfileSidebar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   return (
-    <div className="w-3/12 min-w-80 bg-white h-screen border-customBlue flex flex-col">
+    <div className="w-3/12 min-w-80 bg-white border-customBlue flex flex-col m-4 rounded-xl">
       <div className="p-4 cursor-pointer max-w-fit" onClick={() => navigate("/home")}>
         <IoArrowBack />
       </div>

@@ -21,7 +21,7 @@ input {
   @apply h-full bg-slate-50 bg-opacity-25;
 }
 .authorized-layout {
-  @apply h-screen w-screen bg-customBlue;
+  @apply h-screen w-screen bg-customBlue overflow-hidden;
 }
 .alert-container {
   @apply w-60 fixed bottom-2 left-2 pointer-events-none;
