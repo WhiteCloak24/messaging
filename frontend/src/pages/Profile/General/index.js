@@ -18,9 +18,9 @@ const General = () => {
         <div className="flex gap-4">
           <div className="w-36 h-36 cursor-pointer bg-white group relative select-none">
             <img
-              className="w-full h-full rounded-full object-contain"
+              className="w-full h-full rounded-full object-contain border bg-gray-500"
               src={watch("profile_pic") ? URL.createObjectURL(watch("profile_pic")) : ""}
-              alt="profile_pic"
+              alt=" "
             />
           </div>
           <div className="flex flex-col justify-center">
@@ -53,18 +53,24 @@ const General = () => {
           <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue">Delete</div>
         </div>
       </div>
-      <div className="w-full flex flex-col justify-between gap-3">
-        <div className="font-medium">Full name</div>
-        <div className="w-full flex items-center justify-between gap-4">
-          <div className="w-full">
-            <div className="text-gray-500">First name</div>
-            <input className="rounded-md h-12 w-full px-4" type="text" placeholder="Please enter first name" />
-          </div>
-          <div className="w-full">
-            <div className="text-gray-500">Last name</div>
-            <input className="rounded-md h-12 w-full px-4" type="text" placeholder="Please enter last name" />
+      <div className="w-full h-full  overflow-auto">
+        <div className="w-full flex flex-col justify-between gap-3">
+          <div className="font-medium">Full name</div>
+          <div className="w-full flex items-center justify-between gap-4">
+            <div className="w-full">
+              <div className="text-gray-500">First name</div>
+              <input className="rounded-md h-12 w-full px-4" type="text" placeholder="Please enter first name" />
+            </div>
+            <div className="w-full">
+              <div className="text-gray-500">Last name</div>
+              <input className="rounded-md h-12 w-full px-4" type="text" placeholder="Please enter last name" />
+            </div>
           </div>
         </div>
+      </div>
+      <div className="mt-auto flex items-center justify-center gap-4 pt-4 border-t">
+        <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue">Update</div>
+        <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue">Cancel</div>
       </div>
     </div>
   );
