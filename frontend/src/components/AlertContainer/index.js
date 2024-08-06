@@ -3,10 +3,16 @@ import { AlertEVENTS } from "../../resources/constants";
 import Queue from "../../data-structures/Queue";
 import { generateRandomId } from "../../resources/functions";
 import { IoClose } from "react-icons/io5";
+import { MdError } from "react-icons/md";
+import { MdCheck } from "react-icons/md";
 
 const alertClassLookup = {
   error: "alert-error",
   success: "alert-success",
+};
+const alertIconLookup = {
+  error: <MdError />,
+  success: <MdCheck />,
 };
 const AlertContainer = () => {
   const [alerts, setAlerts] = useState([]);
@@ -21,7 +27,6 @@ const AlertContainer = () => {
     setAlerts((prevAlerts) => {
       return prevAlerts.filter((alert) => alert?.id !== id);
     });
-    // processQueue(); // Process the next alert in the queue
   };
   const processQueue = () => {
     if (!alertQueueRef.current.isEmpty()) {
@@ -60,10 +65,11 @@ const AlertContainer = () => {
             key={alert?.id}
             style={{ order: index + 1 }}
             id={alert?.id}
-            className={`${alertClassLookup[alert?.type]} flex flex-col justify-between pointer-events-auto animate-alertAnimationIn`}>
+            className={`${alertClassLookup[alert?.type]} flex flex-col justify-center pointer-events-auto animate-alertAnimationIn relative`}>
             <div className="h-full flex items-center px-2 justify-between w-full gap-4">
-              <div className="p-2 w-full break-all alert-message">{alert?.message}ssssssssssssssssssssssssssssssssssssssssssssssss</div>
-              <div className="cursor-pointer min-w-fit max-w-fit alert-close" onClick={() => removeAlert(alert?.id)}>
+              <div className="min-w-fit max-w-fit h-full flex items-center justify-center alert-close">{alertIconLookup[alert?.type]}</div>
+              <div className="p-2 w-full h-full break-all alert-message">{alert?.message}</div>
+              <div className="cursor-pointer min-w-fit max-w-fit h-full flex items-center justify-center alert-close" onClick={() => removeAlert(alert?.id)}>
                 <IoClose className="w-5 h-5" />
               </div>
             </div>
@@ -97,7 +103,7 @@ const Loader = ({ time = 5000 }) => {
   }, [loaderRef.current, loaderContainerRef.current]);
 
   return (
-    <div ref={loaderContainerRef} className="h-1 mb-1 mx-1 w-full overflow-hidden">
+    <div ref={loaderContainerRef} className="h-1 mb-1 w-full overflow-hidden  absolute bottom-0">
       <div ref={loaderRef} className="alert-loader w-0 h-full"></div>
     </div>
   );
