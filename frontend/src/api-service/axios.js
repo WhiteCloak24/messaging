@@ -26,13 +26,13 @@ apiClient.interceptors.response.use(
   },
   (error) => {
     if (error?.response?.data?.message) {
-      dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: error?.response?.data?.message  } });
+      dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: error?.response?.data?.message, type: "error" } });
     }
     if (!navigator.onLine) {
-      dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: "You are offline" } });
+      dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: "You are offline", type: "error" } });
     }
     if (navigator.onLine) {
-      dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: "Connection Refused" } });
+      dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: "Connection Refused", type: "error" } });
     }
     throw new Error(error?.response?.data?.message);
   }

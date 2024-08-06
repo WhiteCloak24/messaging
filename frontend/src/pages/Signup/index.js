@@ -31,7 +31,7 @@ const Signup = () => {
     mutationFn: signup,
     onSuccess: (data) => {
       if (data?.data?.success) {
-        dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: data?.data?.message || "" } });
+        dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: data?.data?.message || "", type: "success" } });
       }
     },
   });

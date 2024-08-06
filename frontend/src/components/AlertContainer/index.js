@@ -1,8 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AlertEVENTS } from "../../resources/constants";
 import Queue from "../../data-structures/Queue";
 import { generateRandomId } from "../../resources/functions";
+import { IoClose } from "react-icons/io5";
 
+const alertClassLookup = {
+  error: "alert-error",
+  success: "alert-success",
+};
 const AlertContainer = () => {
   const [alerts, setAlerts] = useState([]);
   const alertQueueRef = useRef(new Queue());
@@ -21,28 +26,29 @@ const AlertContainer = () => {
   const processQueue = () => {
     if (!alertQueueRef.current.isEmpty()) {
       setAlerts((prev) => {
-        const jasdh = alertQueueRef.current.dequeue();
-        const newAlerts = [...prev, jasdh];
+        const lastAlert = alertQueueRef.current.dequeue();
+        const newAlerts = [...prev, lastAlert];
         setTimeout(() => {
-          removeAlert(jasdh?.id);
+          removeAlert(lastAlert?.id);
         }, 5000); // Show each alert for 3 seconds
         return newAlerts;
       });
     }
   };
 
-  const showAlert = (message) => {
+  const showAlert = ({ message, type }) => {
     const newid = generateRandomId();
     if (newid) {
-      alertQueueRef.current.enqueue({ id: newid, message });
+      alertQueueRef.current.enqueue({ id: newid, message, type });
       processQueue();
     }
   };
 
   const handleAlert = (e) => {
     const errorData = e.detail;
-    showAlert(errorData?.message);
+    showAlert({ message: errorData?.message, type: errorData?.type || "error" });
   };
+  console.log(alerts);
 
   return (
     <div className="alert-container ">
@@ -52,14 +58,13 @@ const AlertContainer = () => {
             key={alert?.id}
             style={{ order: index + 1 }}
             id={alert?.id}
-            className="alert-error flex flex-col pointer-events-auto animate-alertAnimation">
-            <div className="h-1/5 min-h-7 border-b border-black flex items-center px-2 justify-between">
-              <div>Error</div>
-              <div className="cursor-pointer" onClick={() => removeAlert(alert?.id)}>
-                Close
+            className={`${alertClassLookup['success']} flex flex-col justify-between pointer-events-auto animate-alertAnimation`}>
+            <div className="h-full flex items-center px-2 justify-between w-full gap-4">
+              <div className="p-2 w-full break-all alert-message">{alert?.message}ssssssssssssssssssssssssssssssssssssssssssssssss</div>
+              <div className="cursor-pointer min-w-fit max-w-fit alert-close" onClick={() => removeAlert(alert?.id)}>
+                <IoClose className="w-5 h-5" />
               </div>
             </div>
-            <div className="h-full p-2">{alert?.message}</div>
             <Loader />
           </div>
         ))}
@@ -91,7 +96,7 @@ const Loader = ({ time = 5000 }) => {
 
   return (
     <div ref={loaderContainerRef} className="h-1 mb-1 mx-1">
-      <div ref={loaderRef} className="bg-red-500 w-0 h-full"></div>
+      <div ref={loaderRef} className="alert-loader w-0 h-full"></div>
     </div>
   );
 };

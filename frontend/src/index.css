@@ -27,7 +27,28 @@ input {
   @apply w-60 fixed bottom-2 left-2 pointer-events-none;
 }
 .alert-error {
-  @apply bg-red-400 rounded-md text-black h-28;
+  @apply bg-red-300 rounded-md text-black min-h-16 max-h-fit;
+}
+.alert-error .alert-message {
+  @apply text-red-800 text-sm font-medium;
+}
+.alert-error .alert-close {
+  @apply text-red-800 opacity-70 font-medium;
+}
+.alert-error .alert-loader {
+  @apply bg-red-500;
+}
+.alert-success {
+  @apply bg-green-300 rounded-md text-black min-h-16 max-h-fit;
+}
+.alert-success .alert-message {
+  @apply text-green-800 text-sm font-medium;
+}
+.alert-success .alert-close {
+  @apply text-green-800 opacity-70 font-medium;
+}
+.alert-success .alert-loader {
+  @apply bg-green-500;
 }
 .search-chat-input {
   @apply w-full py-2 px-6 rounded-3xl mb-4 placeholder:text-sm;
@@ -93,8 +114,8 @@ input {
 .audio-playback {
   @apply bg-black text-white;
 }
-.audio-playback > .ns-list-dropdown-item{
-  @apply text-center text-xs transition-all
+.audio-playback > .ns-list-dropdown-item {
+  @apply text-center text-xs transition-all;
 }
 .audio-playback > .ns-list-dropdown-item:hover {
   @apply bg-gray-800 text-white scale-110;
