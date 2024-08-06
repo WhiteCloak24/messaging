@@ -27,8 +27,8 @@ export function formatDate({ timestamp = "", format = "DD/MM/YY" }) {
   return moment(timestamp).format(format);
 }
 export const formatSeconds = (seconds = 0) => {
-  if (!seconds) return '00:00';
-  return moment.utc(seconds * 1000).format('mm:ss');
+  if (!seconds) return "00:00";
+  return moment.utc(seconds * 1000).format("mm:ss");
 };
 export function getTimeFromNow({ timestamp = "", format = "DD/MM/YY" }) {
   if (!timestamp) return "Invalid Date";
@@ -75,3 +75,64 @@ export function convertFileToArrayBuffer(file) {
     return null;
   }
 }
+
+async function fetchWithProgress(url, onProgress) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const contentLength = response.headers.get("Content-Length");
+  if (!contentLength) {
+    throw new Error("Content-Length response header is missing");
+  }
+
+  const total = parseInt(contentLength, 10);
+  let loaded = 0;
+
+  const reader = response.body.getReader();
+
+  const stream = new ReadableStream({
+    start(controller) {
+      function push() {
+        reader
+          .read()
+          .then(({ done, value }) => {
+            if (done) {
+              controller.close();
+              return;
+            }
+
+            loaded += value.byteLength;
+            onProgress(loaded, total);
+            controller.enqueue(value);
+            push();
+          })
+          .catch((error) => {
+            console.error("Stream read error:", error);
+            controller.error(error);
+          });
+      }
+
+      push();
+    },
+  });
+
+  const responseWithProgress = new Response(stream);
+  return responseWithProgress.blob(); // or responseWithProgress.text(), or responseWithProgress.json(), etc.
+}
+
+// Usage example:
+const url =
+  "https://media-dev.nextere.com/v1/signed-url/335952c9-7d8b-4700-a6c1-12c32241402d/greeting?filename=ae71dec7-485e-4fa0-923d-beecdbefe9c0.mp3";
+// fetchWithProgress(url, (loaded, total) => {
+//   console.log(`Progress: ${((loaded / total) * 100).toFixed(2)}%`);
+// })
+//   .then((blob) => {
+//     console.log("Download complete!", blob);
+//     // Do something with the downloaded blob
+//   })
+//   .catch((error) => {
+//     console.error("Fetch error:", error);
+//   });
