@@ -28,7 +28,6 @@ const General = () => {
             <div className="text-gray-500 text-sm">PNG, JPEG under 5MB</div>
           </div>
         </div>
-
         <div className="flex gap-4">
           <label htmlFor="profile_pic" className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue">
             Upload new picture
@@ -52,6 +51,19 @@ const General = () => {
             />
           </label>
           <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue">Delete</div>
+        </div>
+      </div>
+      <div className="w-full flex flex-col justify-between gap-3">
+        <div className="font-medium">Full name</div>
+        <div className="w-full flex items-center justify-between gap-4">
+          <div className="w-full">
+            <div className="text-gray-500">First name</div>
+            <input className="rounded-md h-12 w-full px-4" type="text" placeholder="Please enter first name" />
+          </div>
+          <div className="w-full">
+            <div className="text-gray-500">Last name</div>
+            <input className="rounded-md h-12 w-full px-4" type="text" placeholder="Please enter last name" />
+          </div>
         </div>
       </div>
     </div>
