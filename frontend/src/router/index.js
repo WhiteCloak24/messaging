@@ -5,7 +5,7 @@ import UnauthorizedLayout from "../layout/UnauthorizedLayout";
 import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Home from "../pages/Home";
-import Settings from "../pages/Settings";
+import Profile from "../pages/Profile";
 
 export const router = createBrowserRouter([
   {
@@ -23,12 +23,12 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: "/settings",
+        path: "/profile",
         element: <AuthorizedLayout />,
         children: [
           {
             index: true,
-            element: <Settings />,
+            element: <Profile />,
           },
         ],
       },
