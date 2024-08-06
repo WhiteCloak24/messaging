@@ -1,6 +1,5 @@
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
-import { FaTrash } from "react-icons/fa";
 import { useMutation } from "@tanstack/react-query";
 import { userUpdate } from "../../../api-service";
 import { dispatchCustomEventFn } from "../../../resources/functions";
@@ -9,6 +8,8 @@ import { AlertEVENTS } from "../../../resources/constants";
 const General = () => {
   const { control, handleSubmit, watch } = useForm({
     defaultValues: {
+      first_name: "",
+      last_name: "",
       profile_pic: null,
     },
   });
@@ -71,8 +72,18 @@ const General = () => {
           <div className="font-medium">Full name</div>
           <div className="w-full flex items-center justify-between gap-4">
             <div className="w-full">
-              <div className="text-gray-500">First name</div>
-              <input className="rounded-md h-12 w-full px-4" type="text" placeholder="Please enter first name" />
+              <Controller
+                name="first_name"
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <>
+                      <div className="text-gray-500">First name</div>
+                      <input {...field} className="rounded-md h-12 w-full px-4" type="text" placeholder="Please enter first name" />
+                    </>
+                  );
+                }}
+              />
             </div>
             <div className="w-full">
               <div className="text-gray-500">Last name</div>
@@ -82,7 +93,7 @@ const General = () => {
         </div>
       </div>
       <div className="mt-auto flex items-center justify-center gap-4 pt-4 border-t">
-        <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue" onClick={() => mutate()}>
+        <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue" onClick={() => mutate({ first_name: watch("first_name") })}>
           Update
         </div>
         <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue">Cancel</div>
