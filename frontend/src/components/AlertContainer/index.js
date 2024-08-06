@@ -29,8 +29,11 @@ const AlertContainer = () => {
         const lastAlert = alertQueueRef.current.dequeue();
         const newAlerts = [...prev, lastAlert];
         setTimeout(() => {
-          removeAlert(lastAlert?.id);
-        }, 5000); // Show each alert for 3 seconds
+          document.getElementById(lastAlert?.id).classList.add("animate-alertAnimationOut");
+          setTimeout(() => {
+            removeAlert(lastAlert?.id);
+          }, 500);
+        }, 4500); // Show each alert for 3 seconds
         return newAlerts;
       });
     }
@@ -94,7 +97,7 @@ const Loader = ({ time = 5000 }) => {
   }, [loaderRef.current, loaderContainerRef.current]);
 
   return (
-    <div ref={loaderContainerRef} className="h-1 mb-1 mx-1">
+    <div ref={loaderContainerRef} className="h-1 mb-1 mx-1 w-full overflow-hidden">
       <div ref={loaderRef} className="alert-loader w-0 h-full"></div>
     </div>
   );
