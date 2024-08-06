@@ -45,7 +45,7 @@ export const getUserData = async ({ user_id = "" }) => {
 };
 export const updateUserData = async ({ first_name = "", last_name = "", profile_pic = "", user_id = "" }) => {
   const query = "UPDATE users SET first_name = ?, last_name = ?, profile_pic = ? WHERE user_id = ?";
-  const params = [first_name, last_name, profile_pic, friend_id, user_id];
+  const params = [first_name, last_name, profile_pic, user_id];
   try {
     await client.execute(query, params, { prepare: true });
     return true;
