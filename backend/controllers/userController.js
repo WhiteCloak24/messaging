@@ -15,6 +15,6 @@ export const userUpdateController = expressAsyncHandler(async (req, res) => {
   const isSuccess = await updateUserData({ user_id: req.user.user_id, first_name, last_name, profile_pic });
   const { password = "", ...response } = userData;
   if (isSuccess) {
-    res.status(200).json({ success: true, data: response, message: "User data updated successfully" });
+    res.status(200).json({ success: true, message: "User data updated successfully" });
   }
 });
