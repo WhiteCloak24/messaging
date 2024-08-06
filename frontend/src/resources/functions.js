@@ -136,3 +136,13 @@ const url =
 //   .catch((error) => {
 //     console.error("Fetch error:", error);
 //   });
+
+export const isActivePath = ({ order = "1", pathname = "", path = "" }) => {
+  if (order === "1") {
+    const activePath = pathname?.split("/")?.pop();
+    if(activePath === path){
+      return true
+    }
+  }
+  return false;
+};

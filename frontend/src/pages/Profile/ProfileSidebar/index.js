@@ -1,34 +1,61 @@
 import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { isActivePath } from "../../../resources/functions";
 
 const ProfileSidebarOption = [
   {
+    id: 1,
     label: "General Settings",
-    value: "general_settings",
+    value: "general-settings",
   },
   {
+    id: 2,
     label: "Chat Settings",
-    value: "chat_settings",
+    value: "chat-settings",
   },
   {
+    id: 3,
     label: "Email Address",
-    value: "email_address",
+    value: "email-address",
   },
   {
+    id: 4,
     label: "Change Password",
-    value: "change_password",
+    value: "change-password",
   },
   {
+    id: 5,
     label: "Manage Sessions",
-    value: "manage_sessions",
+    value: "manage-sessions",
   },
   {
+    id: 6,
     label: "Invite a friend",
-    value: "invite_friend",
+    value: "invite-friend",
   },
 ];
 
 const ProfileSidebar = () => {
-  return <div className="w-3/12 min-w-80 bg-white h-screen border-customBlue flex flex-col"></div>;
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  return (
+    <div className="w-3/12 min-w-80 bg-white h-screen border-customBlue flex flex-col">
+      {ProfileSidebarOption.map((_) => {
+        return (
+          <div
+            key={_.id}
+            className={`py-5 px-4 hover:bg-grey ${
+              isActivePath({ order: "1", pathname, path: _.value }) ? "bg-grey" : ""
+            } justify-between flex gap-2 cursor-pointer`}
+            onClick={() => {
+              navigate(`/profile/${_.value}`);
+            }}>
+            {_.label}
+          </div>
+        );
+      })}
+    </div>
+  );
 };
 
 export default ProfileSidebar;

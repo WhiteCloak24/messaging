@@ -17,7 +17,7 @@ const Sidebar = ({ activeChat, setActiveChat }) => {
       <div
         className="p-4 flex gap-2 cursor-pointer hover:opacity-70 max-w-fit"
         onClick={() => {
-          navigate("/profile");
+          navigate("/profile/general-settings");
         }}>
         <Avatar firstName={userData?.user_name} imgSrc={userData?.profile_pic} />
         <div>{userData?.user_name}</div>

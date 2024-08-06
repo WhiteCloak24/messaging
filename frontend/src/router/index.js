@@ -6,6 +6,7 @@ import Login from "../pages/Login";
 import Signup from "../pages/Signup";
 import Home from "../pages/Home";
 import Profile from "../pages/Profile";
+import General from "../pages/Profile/General";
 
 export const router = createBrowserRouter([
   {
@@ -27,8 +28,20 @@ export const router = createBrowserRouter([
         element: <AuthorizedLayout />,
         children: [
           {
-            index: true,
-            element: <Profile />,
+            path: "general-settings",
+            element: (
+              <Profile>
+                <General />
+              </Profile>
+            ),
+          },
+          {
+            path: "*",
+            element: (
+              <Profile>
+                <div>Coming Soon...</div>
+              </Profile>
+            ),
           },
         ],
       },
