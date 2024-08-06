@@ -28,6 +28,13 @@ export const userListing = (value) => {
     data: value,
   });
 };
+export const userUpdate = (value) => {
+  return apiClient({
+    method: routes.USER_UPDATE.METHOD,
+    url: routes.USER_UPDATE.PATH,
+    data: value,
+  });
+};
 export const chatListing = (value) => {
   return apiClient({
     method: routes.CHAT_LISTING.METHOD,

@@ -43,3 +43,13 @@ export const getUserData = async ({ user_id = "" }) => {
   const resp = await client.execute(query, [user_id]);
   return resp.rows?.[0] || null;
 };
+export const updateUserData = async ({ first_name = "", last_name = "", profile_pic = "", user_id = "" }) => {
+  const query = "UPDATE users SET first_name = ?, last_name = ?, profile_pic = ? WHERE user_id = ?";
+  const params = [first_name, last_name, profile_pic, friend_id, user_id];
+  try {
+    await client.execute(query, params, { prepare: true });
+    return true;
+  } catch (e) {
+    return false;
+  }
+};

@@ -15,6 +15,10 @@ export const routes = {
     PATH: "user/listing",
     METHOD: "GET",
   },
+  USER_UPDATE: {
+    PATH: "user/update",
+    METHOD: "POST",
+  },
   CHAT_LISTING: {
     PATH: "chat/listing",
     METHOD: "GET",

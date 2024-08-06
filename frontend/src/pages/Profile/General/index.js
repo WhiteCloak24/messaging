@@ -1,6 +1,8 @@
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
+import { useMutation } from "@tanstack/react-query";
+import { userUpdate } from "../../../api-service";
 
 const General = () => {
   const { control, handleSubmit, watch } = useForm({
@@ -9,6 +11,7 @@ const General = () => {
     },
   });
 
+  const { mutate } = useMutation({ mutationKey: ["userUpdate"], mutationFn: userUpdate });
   return (
     <div className="bg-white w-full m-4 rounded-xl flex flex-col gap-5 p-5">
       <div className="mt-5 pb-4 border-b flex w-full">
@@ -69,7 +72,9 @@ const General = () => {
         </div>
       </div>
       <div className="mt-auto flex items-center justify-center gap-4 pt-4 border-t">
-        <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue">Update</div>
+        <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue" onClick={() => mutate()}>
+          Update
+        </div>
         <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue">Cancel</div>
       </div>
     </div>
