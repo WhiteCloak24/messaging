@@ -12,7 +12,7 @@ module.exports = {
         responsive: "clamp(1rem, 2vw + 1vh, 3rem)", // Adjust the values as needed
       },
       keyframes: {
-        alert_transition: {
+        alert_transition_in: {
           "0%": {
             transform: "translateX(-100%)",
           },
@@ -20,9 +20,18 @@ module.exports = {
             transform: "translateX(0)",
           },
         },
+        alert_transition_out: {
+          "0%": {
+            transform: "translateX(0)",
+          },
+          "100%": {
+            transform: "translateX(-100%)",
+          },
+        },
       },
       animation: {
-        alertAnimation: "alert_transition 0.5s ease-out forwards",
+        alertAnimationIn: "alert_transition_in 0.5s ease-in-out forwards",
+        alertAnimationOut: "alert_transition_out 0.5s ease-in-out forwards",
       },
       screens: {
         mobile: "640px",
