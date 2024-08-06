@@ -48,7 +48,6 @@ const AlertContainer = () => {
     const errorData = e.detail;
     showAlert({ message: errorData?.message, type: errorData?.type || "error" });
   };
-  console.log(alerts);
 
   return (
     <div className="alert-container ">
@@ -58,7 +57,7 @@ const AlertContainer = () => {
             key={alert?.id}
             style={{ order: index + 1 }}
             id={alert?.id}
-            className={`${alertClassLookup['success']} flex flex-col justify-between pointer-events-auto animate-alertAnimation`}>
+            className={`${alertClassLookup[alert?.type]} flex flex-col justify-between pointer-events-auto animate-alertAnimation`}>
             <div className="h-full flex items-center px-2 justify-between w-full gap-4">
               <div className="p-2 w-full break-all alert-message">{alert?.message}ssssssssssssssssssssssssssssssssssssssssssssssss</div>
               <div className="cursor-pointer min-w-fit max-w-fit alert-close" onClick={() => removeAlert(alert?.id)}>
