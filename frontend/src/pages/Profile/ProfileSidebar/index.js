@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { isActivePath } from "../../../resources/functions";
+import { IoArrowBack } from "react-icons/io5";
 
 const ProfileSidebarOption = [
   {
@@ -40,6 +41,9 @@ const ProfileSidebar = () => {
   const navigate = useNavigate();
   return (
     <div className="w-3/12 min-w-80 bg-white h-screen border-customBlue flex flex-col">
+      <div className="p-4 cursor-pointer max-w-fit" onClick={() => navigate("/home")}>
+        <IoArrowBack />
+      </div>
       {ProfileSidebarOption.map((_) => {
         return (
           <div
