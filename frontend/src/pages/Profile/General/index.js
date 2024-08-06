@@ -3,6 +3,8 @@ import { Controller, useForm } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
 import { useMutation } from "@tanstack/react-query";
 import { userUpdate } from "../../../api-service";
+import { dispatchCustomEventFn } from "../../../resources/functions";
+import { AlertEVENTS } from "../../../resources/constants";
 
 const General = () => {
   const { control, handleSubmit, watch } = useForm({
@@ -11,7 +13,15 @@ const General = () => {
     },
   });
 
-  const { mutate } = useMutation({ mutationKey: ["userUpdate"], mutationFn: userUpdate });
+  const { mutate } = useMutation({
+    mutationKey: ["userUpdate"],
+    mutationFn: userUpdate,
+    onSuccess: (data) => {
+      if (data?.data?.success) {
+        dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: data?.data?.message || "", type: "success" } });
+      }
+    },
+  });
   return (
     <div className="bg-white w-full m-4 rounded-xl flex flex-col gap-5 p-5">
       <div className="mt-5 pb-4 border-b flex w-full">
