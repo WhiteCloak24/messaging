@@ -27,13 +27,10 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error?.response?.data?.message) {
       dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: error?.response?.data?.message, type: "error" } });
-    }
-    if (!navigator.onLine) {
+    } else if (!navigator.onLine) {
       dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: "You are offline", type: "error" } });
-    }
-    if (navigator.onLine) {
+    } else if (navigator.onLine) {
       dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: "Connection Refused", type: "error" } });
-    }
-    throw new Error(error?.response?.data?.message);
+    } else throw new Error(error?.response?.data?.message);
   }
 );

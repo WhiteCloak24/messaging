@@ -38,7 +38,7 @@ const AlertContainer = () => {
           setTimeout(() => {
             removeAlert(lastAlert?.id);
           }, 500);
-        }, 4500); // Show each alert for 3 seconds
+        }, 4500); // Show each alert for n seconds
         return newAlerts;
       });
     }
@@ -68,7 +68,7 @@ const AlertContainer = () => {
             className={`${alertClassLookup[alert?.type]} flex flex-col justify-center pointer-events-auto animate-alertAnimationIn relative`}>
             <div className="h-full flex items-center px-2 justify-between w-full gap-4">
               <div className="min-w-fit max-w-fit h-full flex items-center justify-center alert-close">{alertIconLookup[alert?.type]}</div>
-              <div className="p-2 w-full h-full break-all alert-message">{alert?.message}</div>
+              <div className="p-2 w-full h-full break-words alert-message">{alert?.message}</div>
               <div className="cursor-pointer min-w-fit max-w-fit h-full flex items-center justify-center alert-close" onClick={() => removeAlert(alert?.id)}>
                 <IoClose className="w-5 h-5" />
               </div>
