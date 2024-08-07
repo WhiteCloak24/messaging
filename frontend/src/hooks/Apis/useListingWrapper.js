@@ -12,7 +12,7 @@ const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
     mutationKey: ["getResourceUrl"],
     mutationFn: getResourceUrl,
     onSuccess: ({ data }) => {
-      // need to optimize url so s3 url doesn't get hit always
+      // need to optimize url so s3 url doesn't get hit alwayss
       // setResources({ [data?.data?.name || 'unknown']: data?.data?.url });
     },
   });
