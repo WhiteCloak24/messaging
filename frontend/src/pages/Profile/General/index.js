@@ -6,6 +6,13 @@ import { dispatchCustomEventFn } from "../../../resources/functions";
 import { AlertEVENTS, RefetchQuery } from "../../../resources/constants";
 import useListingWrapper from "../../../hooks/Apis/useListingWrapper";
 
+const getFileUrl = (file) => {
+  try {
+    return URL.createObjectURL(file);
+  } catch (e) {
+    return "";
+  }
+};
 const isSameFormValues = (value1, value2) => {
   if (!value1 || !value2) {
     return true;
@@ -76,11 +83,7 @@ const General = () => {
       <div className="w-full flex items-center justify-between gap-4">
         <div className="flex gap-4">
           <div className="w-36 h-36 cursor-pointer bg-white group relative select-none">
-            <img
-              className="w-full h-full rounded-full object-contain border bg-gray-500"
-              src={watch("profile_pic") ? URL.createObjectURL(watch("profile_pic")) : ""}
-              alt=" "
-            />
+            <img className="w-full h-full rounded-full object-contain border bg-gray-500" src={getFileUrl(watch("profile_pic"))} alt=" " />
           </div>
           <div className="flex flex-col justify-center">
             <div className="font-medium text-base">Profile Picture</div>
