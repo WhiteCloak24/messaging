@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { userUpdate } from "../../../api-service";
+import { userDetails, userUpdate } from "../../../api-service";
 import { dispatchCustomEventFn } from "../../../resources/functions";
-import { AlertEVENTS } from "../../../resources/constants";
+import { AlertEVENTS, RefetchQuery } from "../../../resources/constants";
+import useListingWrapper from "../../../hooks/Apis/useListingWrapper";
 
 const General = () => {
-  const { control, handleSubmit, watch } = useForm({
+  const { data: userData } = useListingWrapper({ queryFn: userDetails });
+
+  const { control, handleSubmit, watch, reset } = useForm({
     defaultValues: {
       first_name: "",
       last_name: "",
@@ -14,15 +17,36 @@ const General = () => {
     },
   });
 
-  const { mutate } = useMutation({
+  useEffect(() => {
+    if (userData && Object.keys(userData).length) {
+      const { first_name = "", last_name = "", profile_pic = "" } = userData || {};
+      reset({
+        first_name,
+        last_name,
+        profile_pic,
+      });
+    }
+  }, [userData]);
+
+  const { mutate: userUpdateMutate, isPending: userUpdateLoading } = useMutation({
     mutationKey: ["userUpdate"],
     mutationFn: userUpdate,
     onSuccess: (data) => {
       if (data?.data?.success) {
         dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: data?.data?.message || "", type: "success" } });
+        dispatchCustomEventFn({
+          eventName: RefetchQuery,
+          eventData: {
+            queryKey: ["userDetails"],
+          },
+        });
       }
     },
   });
+
+  function onSubmit(data) {
+    userUpdateMutate(data);
+  }
   return (
     <div className="bg-white w-full m-4 rounded-xl flex flex-col gap-5 p-5">
       <div className="mt-5 pb-4 border-b flex w-full">
@@ -86,16 +110,26 @@ const General = () => {
               />
             </div>
             <div className="w-full">
-              <div className="text-gray-500">Last name</div>
-              <input className="rounded-md h-12 w-full px-4" type="text" placeholder="Please enter last name" />
+              <Controller
+                name="last_name"
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <>
+                      <div className="text-gray-500">Last name</div>
+                      <input {...field} className="rounded-md h-12 w-full px-4" type="text" placeholder="Please enter last name" />
+                    </>
+                  );
+                }}
+              />
             </div>
           </div>
         </div>
       </div>
       <div className="mt-auto flex items-center justify-center gap-4 pt-4 border-t">
-        <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue" onClick={() => mutate({ first_name: watch("first_name") })}>
-          Update
-        </div>
+        <button className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue" onClick={handleSubmit(onSubmit)} disabled={userUpdateLoading}>
+          {userUpdateLoading ? "Please wait" : "Update"}
+        </button>
         <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue">Cancel</div>
       </div>
     </div>
