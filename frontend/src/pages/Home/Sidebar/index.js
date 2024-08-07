@@ -13,7 +13,7 @@ const Sidebar = ({ activeChat, setActiveChat }) => {
   const { data: userData } = useListingWrapper({ queryFn: userDetails });
 
   return (
-    <div className="w-full md:w-3/12 min-w-80 bg-white h-screen border-customBlue flex flex-col">
+    <div className="w-3/12 min-w-80 bg-white border-customBlue flex flex-col m-4 rounded-xl">
       <div
         className="p-4 flex gap-2 cursor-pointer hover:opacity-70 max-w-fit"
         onClick={() => {

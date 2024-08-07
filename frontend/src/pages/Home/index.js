@@ -18,7 +18,7 @@ const Home = () => {
       {isDesktop && (
         <>
           {!activeChat ? (
-            <div className="w-full h-full flex flex-col items-center justify-center gap-10">
+            <div className="w-full m-4 flex flex-col items-center justify-center gap-10">
               <div>
                 <HomeIconCanvas size={200} />
               </div>
@@ -28,7 +28,7 @@ const Home = () => {
               </div>
             </div>
           ) : (
-            <div className="flex flex-col flex-1 border-customBlue border-x">
+            <div className="w-full flex flex-col border-customBlue border-x m-4 rounded-xl overflow-hidden">
               <ChatHeader status="Active" activeChat={activeChat} />
               <ChatMessages activeChat={activeChat} />
               <ChatInput activeChat={activeChat} />
