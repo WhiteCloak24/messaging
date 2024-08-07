@@ -9,6 +9,7 @@ import TooltipHandler from "./components/Tooltip";
 import ImagePreviewer from "./components/ImagePreviewer";
 import ModalContainer from "./components/Modal/ModalContainer";
 import ListDropDownContainer from "./components/ListDropDown/ListDropDownContainer";
+import { MediaResourcesProvider } from "./hooks/useMediaResources";
 
 export const queryClient = new QueryClient({
   defaultOptions: {

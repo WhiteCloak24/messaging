@@ -8,8 +8,8 @@ const MediaResourceContext = createContext({
 export const MediaResourcesProvider = ({ children }) => {
   const [state, setState] = useState({});
 
-  const setResources = useCallback(({ newKey: newVal }) => {
-    setState((prev) => ({ ...prev, newKey: newVal }));
+  const setResources = useCallback((data) => {
+    setState((prev) => ({ ...prev, ...data }));
   }, []);
 
   const values = useMemo(() => ({ resources: state, setResources }), [JSON.stringify(state)]);
