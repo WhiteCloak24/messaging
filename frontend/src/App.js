@@ -33,18 +33,20 @@ function App() {
   }, []);
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <AuthorizationProvider>
-          <SocketProvider>
-            <RouterProvider router={router} />
-          </SocketProvider>
-        </AuthorizationProvider>
-      </QueryClientProvider>
-      <AlertContainer />
-      <TooltipHandler />
-      <ImagePreviewer />
-      <ModalContainer />
-      <ListDropDownContainer />
+      <MediaResourcesProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthorizationProvider>
+            <SocketProvider>
+              <RouterProvider router={router} />
+            </SocketProvider>
+          </AuthorizationProvider>
+        </QueryClientProvider>
+        <AlertContainer />
+        <TooltipHandler />
+        <ImagePreviewer />
+        <ModalContainer />
+        <ListDropDownContainer />
+      </MediaResourcesProvider>
     </>
   );
 }
