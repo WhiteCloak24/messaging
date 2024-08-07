@@ -90,7 +90,7 @@ export class S3Service {
         return false;
       });
   }
-  async getSignedUrl({ filename }) {
+  async getResourceSignedUrl({ filename }) {
     return new Promise(async (resolve) => {
       try {
         const command = new GetObjectCommand({ Bucket: process.env.AWS_BUCKET_NAME, Key: filename });
