@@ -7,6 +7,10 @@ export const routes = {
     PATH: "auth/signup",
     METHOD: "POST",
   },
+  GET_RESOURCE_URL: {
+    PATH: "media/get-url",
+    METHOD: "GET",
+  },
   USER_DETAILS: {
     PATH: "user/details",
     METHOD: "GET",

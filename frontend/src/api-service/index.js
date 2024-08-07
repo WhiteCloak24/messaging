@@ -15,6 +15,12 @@ export const signup = (value) => {
     data: value,
   });
 };
+export const getResourceUrl = ({ name = "", type = "" }) => {
+  return apiClient({
+    method: routes.GET_RESOURCE_URL.METHOD,
+    url: `${routes.GET_RESOURCE_URL.PATH}?type=${type}&name=${name}`,
+  });
+};
 export const userDetails = ({ id = "" }) => {
   return apiClient({
     method: routes.USER_DETAILS.METHOD,
