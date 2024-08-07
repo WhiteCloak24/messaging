@@ -30,6 +30,7 @@ export const userListing = (value) => {
 };
 export const userUpdate = (value) => {
   return apiClient({
+    headers: { "Content-Type": "multipart/form-data" },
     method: routes.USER_UPDATE.METHOD,
     url: routes.USER_UPDATE.PATH,
     data: value,

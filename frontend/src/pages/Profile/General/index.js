@@ -62,7 +62,11 @@ const General = () => {
   });
 
   function onSubmit(data) {
-    userUpdateMutate(data);
+    const payload = new FormData();
+    payload.append("first_name", data.first_name);
+    payload.append("last_name", data.last_name);
+    payload.append("profile_pic", data.profile_pic);
+    userUpdateMutate(payload);
   }
   return (
     <div className="bg-white w-full m-4 rounded-xl flex flex-col gap-5 p-5">

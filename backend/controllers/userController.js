@@ -1,5 +1,7 @@
 import expressAsyncHandler from "express-async-handler";
+import formidable from "formidable";
 import { getUserData, getUserListing, updateUserData } from "../models/user.js";
+import fs from "fs";
 
 export const userListingController = expressAsyncHandler(async (req, res) => {
   const listing = await getUserListing();
@@ -11,9 +13,28 @@ export const userDetailsController = expressAsyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: response, message: "User data fetched successfully" });
 });
 export const userUpdateController = expressAsyncHandler(async (req, res) => {
-  const { first_name = "", last_name = "", profile_pic = "" } = req.body || {};
-  const isSuccess = await updateUserData({ user_id: req.user.user_id, first_name, last_name, profile_pic, email: req.user.email });
-  if (isSuccess) {
-    res.status(200).json({ success: true, message: "User data updated successfully" });
-  }
+  const form = formidable({});
+
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      throw new Error("Unable to parse file");
+    }
+    let profile_pic = fields?.profile_pic?.[0] || "";
+    let profileFile = files?.profile_pic?.[0] || "";
+    if (profileFile) {
+      // s3 logic
+      // Read the file into a buffer
+      const fileContent = fs.readFileSync(profileFile.filepath);
+
+      profile_pic = "";
+    }
+
+    const first_name = fields.first_name?.[0] || "";
+    const last_name = fields.last_name?.[0] || "";
+
+    const isSuccess = await updateUserData({ user_id: req.user.user_id, first_name, last_name, profile_pic, email: req.user.email });
+    if (isSuccess) {
+      res.status(200).json({ success: true, message: "User data updated successfully" });
+    }
+  });
 });
