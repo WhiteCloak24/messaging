@@ -31,7 +31,7 @@ const isSameFormValues = (value1, value2) => {
   return true;
 };
 const General = () => {
-  const { data: userData } = useListingWrapper({ queryFn: userDetails });
+  const { data: userData } = useListingWrapper({ queryFn: userDetails, resourceKeys: [{ name: "profile_pic", type: "profile" }] });
 
   const { control, handleSubmit, watch, reset } = useForm({
     defaultValues: {
