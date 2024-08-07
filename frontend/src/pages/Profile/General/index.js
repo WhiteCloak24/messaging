@@ -6,6 +6,23 @@ import { dispatchCustomEventFn } from "../../../resources/functions";
 import { AlertEVENTS, RefetchQuery } from "../../../resources/constants";
 import useListingWrapper from "../../../hooks/Apis/useListingWrapper";
 
+const isSameValues = (value1, value2) => {
+  if (!value1 || !value2) {
+    return true;
+  }
+  const keys1 = Object.keys(value1);
+  const keys2 = Object.keys(value2);
+  if (keys2.length != keys1.length) {
+    return false;
+  }
+  for (let index = 0; index < keys1.length; index++) {
+    const element = keys1[index];
+    if (value1[element] !== value2[element]) {
+      return false;
+    }
+  }
+  return true;
+};
 const General = () => {
   const { data: userData } = useListingWrapper({ queryFn: userDetails });
 
@@ -127,10 +144,17 @@ const General = () => {
         </div>
       </div>
       <div className="mt-auto flex items-center justify-center gap-4 pt-4 border-t">
-        <button className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue" onClick={handleSubmit(onSubmit)} disabled={userUpdateLoading}>
-          {userUpdateLoading ? "Please wait" : "Update"}
-        </button>
-        <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue">Cancel</div>
+        {!isSameValues(
+          { first_name: watch("first_name"), last_name: watch("last_name"), profile_pic: watch("profile_pic") },
+          { first_name: userData?.first_name, last_name: userData?.last_name, profile_pic: userData?.profile_pic }
+        ) && (
+          <button
+            className="border rounded-md px-2 py-3 cursor-pointer min-w-32 bg-customBlue"
+            onClick={handleSubmit(onSubmit)}
+            disabled={userUpdateLoading}>
+            {userUpdateLoading ? "Please wait" : "Update"}
+          </button>
+        )}
       </div>
     </div>
   );
