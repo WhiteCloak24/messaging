@@ -6,7 +6,7 @@ import { dispatchCustomEventFn } from "../../../resources/functions";
 import { AlertEVENTS, RefetchQuery } from "../../../resources/constants";
 import useListingWrapper from "../../../hooks/Apis/useListingWrapper";
 
-const isSameValues = (value1, value2) => {
+const isSameFormValues = (value1, value2) => {
   if (!value1 || !value2) {
     return true;
   }
@@ -144,7 +144,7 @@ const General = () => {
         </div>
       </div>
       <div className="mt-auto flex items-center justify-center gap-4 pt-4 border-t">
-        {!isSameValues(
+        {!isSameFormValues(
           { first_name: watch("first_name"), last_name: watch("last_name"), profile_pic: watch("profile_pic") },
           { first_name: userData?.first_name, last_name: userData?.last_name, profile_pic: userData?.profile_pic }
         ) && (
