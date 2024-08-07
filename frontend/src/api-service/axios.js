@@ -32,5 +32,10 @@ apiClient.interceptors.response.use(
     } else if (navigator.onLine) {
       dispatchCustomEventFn({ eventName: AlertEVENTS.ALERT, eventData: { message: "Connection Refused", type: "error" } });
     } else throw new Error(error?.response?.data?.message);
+    if (error.response?.status === 401) {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.reload();
+    }
   }
 );

@@ -35,7 +35,7 @@ export function generateJWT(payload) {
     },
     process.env.JWT_SECRET_KEY,
     {
-      expiresIn: 24 * 60 * 60 * 1000,
+      expiresIn: 10,
     }
   );
   return token;
@@ -45,9 +45,17 @@ export function verifyJWT(req, res, next) {
   if (!token) {
     return res.status(401).json({ status: false, message: "Unauthorized: Missing token" });
   }
-  const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-  req.user = decoded;
-  next();
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    req.user = decoded;
+    next();
+  } catch (_) {
+    res.cookie("Authorization", "", { expires: new Date(0) });
+    // You can clear multiple cookies if needed
+    res.cookie("session_id", "", { expires: new Date(0) });
+    // Redirect to another URL
+    res.status(401).json({ status: false, message: "Your session has expired" });
+  }
 }
 
 export function createSession(length = 32) {
