@@ -3,6 +3,18 @@ import { useEffect } from "react";
 import { getResourceUrl } from "../../api-service";
 import { useMediaResources } from "../useMediaResources";
 
+const getProcessedResource = async (url) => {
+  try {
+    const data = await fetch(url);
+    const blob = await data?.blob();
+    return { blob };
+  } catch (err) {
+    return {
+      blob: {},
+    };
+  }
+};
+
 const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
   const { resources, setResources } = useMediaResources();
   const Request = useQuery({ queryKey: [queryFn.name], queryFn, select: (data) => data?.data?.data || [], gcTime: Infinity, staleTime: Infinity });
@@ -11,9 +23,12 @@ const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
   const { mutate: getResourceUrlMutate } = useMutation({
     mutationKey: ["getResourceUrl"],
     mutationFn: getResourceUrl,
-    onSuccess: ({ data }) => {
+    onSuccess: async ({ data }) => {
+      const { blob } = await getProcessedResource(data?.data?.url);
+      const url = URL.createObjectURL(blob);
+
       // need to optimize url so s3 url doesn't get hit alwayss
-      // setResources({ [data?.data?.name || 'unknown']: data?.data?.url });
+      setResources({ [data?.data?.name || "unknown"]: url });
     },
   });
 
@@ -23,7 +38,7 @@ const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
         const resource = resourceKeys[index];
         if (Object.keys(data).includes(resource?.name)) {
           if (!resources[data?.[resource?.name]]) {
-            // getResourceUrlMutate({ type: resource?.type, name: data?.[resource?.name] });
+            getResourceUrlMutate({ type: resource?.type, name: data?.[resource?.name] });
           }
         }
       }
