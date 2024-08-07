@@ -2,6 +2,7 @@ import expressAsyncHandler from "express-async-handler";
 import formidable from "formidable";
 import { getUserData, getUserListing, updateUserData } from "../models/user.js";
 import fs from "fs";
+import { S3Service } from "../services/aws-service/index.js";
 
 export const userListingController = expressAsyncHandler(async (req, res) => {
   const listing = await getUserListing();
@@ -25,8 +26,15 @@ export const userUpdateController = expressAsyncHandler(async (req, res) => {
       // s3 logic
       // Read the file into a buffer
       const fileContent = fs.readFileSync(profileFile.filepath);
-
-      profile_pic = "";
+      const aws = new S3Service();
+      const response = await aws.putFile({
+        file: fileContent,
+        type: profileFile?.mimetype,
+        filename: `${req.user.user_id}/profile/${profileFile?.newFilename}`,
+      });
+      if (response) {
+        profile_pic = profileFile?.newFilename;
+      }
     }
 
     const first_name = fields.first_name?.[0] || "";

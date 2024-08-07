@@ -64,16 +64,19 @@ export class S3Service {
       });
   }
   async putFile({ file, type, filename }) {
-    const command = new PutObjectCommand({ Bucket: process.env.AWS_BUCKET_NAME, Key: filename, ContentType: type, Body: file });
-    this.s3Client
-      .send(command)
-      .then(() => {
-        return true;
-      })
-      .catch((err) => {
-        console.log(err);
-        return false;
-      });
+    return new Promise((resolve) => {
+      const command = new PutObjectCommand({ Bucket: process.env.AWS_BUCKET_NAME, Key: filename, ContentType: type, Body: file });
+      this.s3Client
+        .send(command)
+        .then(() => {
+          resolve(true);
+          return true;
+        })
+        .catch((err) => {
+          resolve(false);
+          return false;
+        });
+    });
   }
 
   async deleteFile({ filename }) {
