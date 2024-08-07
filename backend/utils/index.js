@@ -35,7 +35,7 @@ export function generateJWT(payload) {
     },
     process.env.JWT_SECRET_KEY,
     {
-      expiresIn: 10,
+      expiresIn: 60 * 60,
     }
   );
   return token;
