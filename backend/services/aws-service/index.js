@@ -1,14 +1,13 @@
 // S3Service.js
-
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import {
   S3Client,
   PutObjectCommand,
   CreateBucketCommand,
   DeleteObjectCommand,
-  paginateListObjectsV2,
-  GetObjectCommand,
   ListBucketsCommand,
   HeadObjectCommand,
+  GetObjectCommand,
 } from "@aws-sdk/client-s3";
 
 export class S3Service {
@@ -90,6 +89,17 @@ export class S3Service {
         console.log(err);
         return false;
       });
+  }
+  async getSignedUrl({ filename }) {
+    return new Promise(async (resolve) => {
+      try {
+        const command = new GetObjectCommand({ Bucket: process.env.AWS_BUCKET_NAME, Key: filename });
+        const url = await getSignedUrl(this.s3Client, command);
+        resolve(url);
+      } catch (_) {
+        resolve("");
+      }
+    });
   }
 
   async createFolderIfNotExist(Key) {
