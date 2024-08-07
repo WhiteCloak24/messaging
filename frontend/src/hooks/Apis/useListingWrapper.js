@@ -12,7 +12,8 @@ const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
     mutationKey: ["getResourceUrl"],
     mutationFn: getResourceUrl,
     onSuccess: ({ data }) => {
-      setResources({ [data?.data?.name || 'unknown']: data?.data?.url });
+      // need to optimize url so s3 url doesn't get hit always
+      // setResources({ [data?.data?.name || 'unknown']: data?.data?.url });
     },
   });
 
@@ -22,7 +23,7 @@ const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
         const resource = resourceKeys[index];
         if (Object.keys(data).includes(resource?.name)) {
           if (!resources[data?.[resource?.name]]) {
-            getResourceUrlMutate({ type: resource?.type, name: data?.[resource?.name] });
+            // getResourceUrlMutate({ type: resource?.type, name: data?.[resource?.name] });
           }
         }
       }
