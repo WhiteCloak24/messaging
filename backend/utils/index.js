@@ -54,7 +54,7 @@ export function verifyJWT(req, res, next) {
     // You can clear multiple cookies if needed
     res.cookie("session_id", "", { expires: new Date(0) });
     // Redirect to another URL
-    res.status(401).json({ status: false, message: "Your session has expired" });
+    res.status(401).json({ status: false, message: "Your session has been expired" });
   }
 }
 
