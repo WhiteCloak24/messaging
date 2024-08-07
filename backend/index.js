@@ -3,7 +3,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import customParser from "socket.io-msgpack-parser"; // will use protobuff later
 import { bodyParserMiddleWare, cookieParserMiddleWare, corsMiddleWare } from "./middlewares/appMiddleware.js";
-import { authRouter, chatRouter, userRouter } from "./routes/index.js";
+import { authRouter, chatRouter, mediaRouter, userRouter } from "./routes/index.js";
 import { connectDatabase } from "./config/database.js";
 import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js";
 import { authenticateConnectionMiddleware } from "./middlewares/socketMiddleware.js";
@@ -50,6 +50,7 @@ async function startApiServer() {
 
   app.use("/user", verifyJWT, userRouter);
   app.use("/chat", verifyJWT, chatRouter);
+  app.use("/media", verifyJWT, mediaRouter);
 
   app.use((req, res, next) => {
     res.status(404).json({ success: false, message: "Could not find resource" });
