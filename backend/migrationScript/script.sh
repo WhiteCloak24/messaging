@@ -31,6 +31,9 @@ for table in $tables; do
     ssh yashjain200024@$GCP_VM_IP "sudo docker cp ~/$SCHEMA_FILE $DOCKER_CONTAINER_NAME:/$SCHEMA_FILE"
     ssh yashjain200024@$GCP_VM_IP "sudo docker cp ~/$DUMP_FILE $DOCKER_CONTAINER_NAME:/$DUMP_FILE"
 
+    echo "Deleting existing table $table on server..."
+    ssh yashjain200024@$GCP_VM_IP "sudo docker exec $DOCKER_CONTAINER_NAME cqlsh -e \"DROP TABLE IF EXISTS $ADMIN_KEYSPACE.$table;\""
+
     echo "Importing schema and data for table $table into Docker Cassandra..."
     ssh yashjain200024@$GCP_VM_IP "sudo docker exec $DOCKER_CONTAINER_NAME cqlsh -e \"SOURCE '$SCHEMA_FILE';\""
     ssh yashjain200024@$GCP_VM_IP "sudo docker exec $DOCKER_CONTAINER_NAME cqlsh -e \"COPY $ADMIN_KEYSPACE.$table FROM '$DUMP_FILE';\""
