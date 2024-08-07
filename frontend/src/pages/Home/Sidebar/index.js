@@ -20,7 +20,10 @@ const Sidebar = ({ activeChat, setActiveChat }) => {
           navigate("/profile/general-settings");
         }}>
         <Avatar firstName={userData?.user_name} imgSrc={userData?.profile_pic} />
-        <div>{userData?.user_name}</div>
+        <div className="flex flex-col">
+          <div>{userData?.user_name}</div>
+          <div className="text-xs text-gray-500">View profile settings</div>
+        </div>
       </div>
       <div className="flex justify-between items-center p-4">
         <div className="font-bold text-lg">Chats</div>
