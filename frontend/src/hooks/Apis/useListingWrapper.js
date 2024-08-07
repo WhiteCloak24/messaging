@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { getResourceUrl } from "../../api-service";
 
-const resourceUrls = {};
+export const resourceUrls = {};
 const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
   const Request = useQuery({ queryKey: [queryFn.name], queryFn, select: (data) => data?.data?.data || [], gcTime: Infinity, staleTime: Infinity });
   const { data = {} } = Request || {};
@@ -10,8 +10,8 @@ const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
   const { mutate: getResourceUrlMutate } = useMutation({
     mutationKey: ["getResourceUrl"],
     mutationFn: getResourceUrl,
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: ({ data }) => {
+      resourceUrls[data?.data?.name] = data?.data?.url;
     },
   });
 
