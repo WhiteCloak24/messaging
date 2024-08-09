@@ -5,7 +5,10 @@ import Avatar from "../../../components/Avatar";
 import { useApplicationSocket } from "../../../hooks/useApplicationSocket";
 
 const UserListing = ({ activeChat, setActiveChat }) => {
-  const { data: userList = [] } = useListingWrapper({ queryFn: userListing, resourceKeys: [{ type: "profile", name: "profile_pic" }] });
+  const { data: userList = [] } = useListingWrapper({
+    queryFn: userListing,
+    resourceKeys: [{ type: "profile", name: "profile_pic", extraQuery: { api: ["user_id"] } }],
+  });
   const { user_id } = useApplicationSocket();
   return (
     <div>

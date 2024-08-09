@@ -15,10 +15,10 @@ export const signup = (value) => {
     data: value,
   });
 };
-export const getResourceUrl = ({ name = "", type = "" }) => {
+export const getResourceUrl = ({ name = "", type = "",user_id }) => {
   return apiClient({
     method: routes.GET_RESOURCE_URL.METHOD,
-    url: `${routes.GET_RESOURCE_URL.PATH}?type=${type}&name=${name}`,
+    url: `${routes.GET_RESOURCE_URL.PATH}?type=${type}&name=${name}&user_id=${user_id}`,
   });
 };
 export const deleteResource = ({ name = "", type = "" }) => {

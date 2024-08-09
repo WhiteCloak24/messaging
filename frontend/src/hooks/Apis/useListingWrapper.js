@@ -36,7 +36,7 @@ const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
         const resource = resourceKeys[index];
         if (Object.keys(data).includes(resource?.name)) {
           if (!resources[data?.[resource?.name]] && data?.[resource?.name]) {
-            getResourceUrlMutate({ type: resource?.type, name: data?.[resource?.name] });
+            getResourceUrlMutate({ type: resource?.type, name: data?.[resource?.name], user_id: localStorage.user_id || "" });
           }
         }
       }
@@ -49,7 +49,14 @@ const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
           const resource = resourceKeys[index];
           if (Object.keys(dataRow).includes(resource?.name)) {
             if (!resources[dataRow?.[resource?.name]] && dataRow?.[resource?.name]) {
-              getResourceUrlMutate({ type: resource?.type, name: dataRow?.[resource?.name] });
+              const payload = { type: resource?.type, name: dataRow?.[resource?.name], user_id: localStorage.user_id || "" };
+              if (resource.extraQuery && resource.extraQuery["api"]) {
+                for (let index = 0; index < resource.extraQuery["api"].length; index++) {
+                  const element = resource.extraQuery["api"][index];
+                  payload[element] = dataRow?.[element];
+                }
+              }
+              getResourceUrlMutate(payload);
             }
           }
         }
