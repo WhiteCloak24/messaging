@@ -147,6 +147,18 @@ export const isActivePath = ({ order = "1", pathname = "", path = "" }) => {
   return false;
 };
 
+export const getProcessedResource = async (url) => {
+  try {
+    const data = await fetch(url);
+    const blob = await data?.blob();
+    return { blob };
+  } catch (err) {
+    return {
+      blob: {},
+    };
+  }
+};
+
 export const getAttachmentType = ({ fileName = "" }) => {
   const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
   const videoExtensions = ["mp4", "avi", "mov", "mkv", "webm"];

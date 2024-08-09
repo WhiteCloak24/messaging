@@ -2,18 +2,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { getResourceUrl } from "../../api-service";
 import { useMediaResources } from "../useMediaResources";
+import { getProcessedResource } from "../../resources/functions";
 
-const getProcessedResource = async (url) => {
-  try {
-    const data = await fetch(url);
-    const blob = await data?.blob();
-    return { blob };
-  } catch (err) {
-    return {
-      blob: {},
-    };
-  }
-};
+
 
 const useListingWrapper = ({ queryFn = () => null, resourceKeys = [{ name: "", type: "", extraQuery: { api: [] } }] }) => {
   const { resources, setResources } = useMediaResources();

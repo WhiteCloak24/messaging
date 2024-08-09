@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useApplicationSocket } from "../../../hooks/useApplicationSocket";
-import { formatTime, getAttachmentType } from "../../../resources/functions";
+import { formatTime, getAttachmentType, getProcessedResource } from "../../../resources/functions";
 import { IoCheckmarkOutline, IoTrashBin } from "react-icons/io5";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
+import { useMediaResources } from "../../../hooks/useMediaResources";
+import { useMutation } from "@tanstack/react-query";
+import { getResourceUrl } from "../../../api-service";
 
 const MessageStatusIconMap = {
   Sent: <IoCheckmarkOutline className="w-full h-full" />,
@@ -19,7 +22,6 @@ const ChatMessages = ({ activeChat = {} }) => {
     <div className="flex-1 p-4 overflow-y-scroll flex flex-col">
       {messageListing.map((msg) => {
         const isSent = user_id === msg?.sender_id;
-        console.log(msg);
 
         return (
           <div
@@ -30,7 +32,7 @@ const ChatMessages = ({ activeChat = {} }) => {
             {msg?.message_text && <div className="flex self-start whitespace-pre-wrap break-all">{msg?.message_text}</div>}
             {msg?.attachment && (
               <div className="flex self-start whitespace-pre-wrap break-all">
-                <AttachmentPreviewer fileName={msg?.attachment} />
+                <AttachmentPreviewer fileName={msg?.attachment} chat_id={msg?.chat_id} />
               </div>
             )}
             <div className={`text-xs ${isSent ? "text-gray-100" : "text-gray-500"} flex self-end min-w-16`}>
@@ -51,13 +53,27 @@ const ChatMessages = ({ activeChat = {} }) => {
 };
 export default ChatMessages;
 
-const AttachmentPreviewer = ({ fileName = "" }) => {
+const AttachmentPreviewer = ({ fileName = "", chat_id = "" }) => {
   const [attachmentType, setAttachmentType] = useState("");
+  const { resources, setResources } = useMediaResources();
+
+  const { mutate: getResourceUrlMutate } = useMutation({
+    mutationKey: ["getResourceUrl"],
+    mutationFn: getResourceUrl,
+    onSuccess: async ({ data }) => {
+      const { blob } = await getProcessedResource(data?.data?.url);
+      const url = URL.createObjectURL(blob);
+      setResources({ [data?.data?.name || "unknown"]: url });
+    },
+  });
 
   useEffect(() => {
-    const type = getAttachmentType({ fileName });
-    setAttachmentType(type)
+    if (fileName) {
+      const type = getAttachmentType({ fileName });
+      setAttachmentType(type);
+      getResourceUrlMutate({ type: "chat", name: fileName, chat_id });
+    }
   }, [fileName]);
 
-  return <>{attachmentType == "image" && <img src={fileName} alt="" />}</>;
+  return <>{attachmentType == "image" && <img src={resources[fileName]} alt="" />}</>;
 };
