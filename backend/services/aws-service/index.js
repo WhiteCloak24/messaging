@@ -8,6 +8,7 @@ import {
   ListBucketsCommand,
   HeadObjectCommand,
   GetObjectCommand,
+  ListObjectsV2Command,
 } from "@aws-sdk/client-s3";
 
 export class S3Service {
@@ -108,15 +109,21 @@ export class S3Service {
       return this.createFolder(Key);
     }
   }
-  async deleteFolder(Key) {
-    const command = new DeleteObjectCommand({ Bucket: process.env.AWS_BUCKET_NAME, Key });
-    this.s3Client
-      .send(command)
-      .then(() => {
-        return true;
-      })
-      .catch(() => {
-        return false;
-      });
+  async deleteFolder({ Key }) {
+    return new Promise(async (resolve) => {
+      try {
+        const listFilesCommand = new ListObjectsV2Command({ Bucket: process.env.AWS_BUCKET_NAME, Prefix: Key });
+        const listResponse = await this.s3Client.send(listFilesCommand);
+        const objectsToDelete = listResponse.Contents.map((object) => ({ Key: object.Key }));
+        for (let index = 0; index < objectsToDelete.length; index++) {
+          const object = objectsToDelete[index];
+          const deleteCommand = new DeleteObjectCommand({ Bucket: process.env.AWS_BUCKET_NAME, Key: object.Key });
+          await this.s3Client.send(deleteCommand);
+        }
+        resolve(true);
+      } catch (e) {
+        resolve(false);
+      }
+    });
   }
 }

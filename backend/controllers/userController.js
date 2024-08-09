@@ -37,7 +37,7 @@ export const userUpdateController = expressAsyncHandler(async (req, res) => {
       }
     }
     if (!profileFile && !profile_pic) {
-       await aws.deleteFile({ filename: `${req.user.user_id}/profile` });
+      await aws.deleteFolder({ Key: `${req.user.user_id}/profile` });
     }
 
     const first_name = fields.first_name?.[0] || "";
