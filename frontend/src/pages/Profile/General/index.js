@@ -70,6 +70,13 @@ const General = () => {
     payload.append("profile_pic", data.profile_pic);
     userUpdateMutate(payload);
   }
+  function onDeleteProfilePic() {
+    const payload = new FormData();
+    payload.append("first_name", watch("first_name"));
+    payload.append("last_name", watch("last_name"));
+    payload.append("profile_pic", "");
+    userUpdateMutate(payload);
+  }
   return (
     <div className="bg-white w-full m-4 rounded-xl flex flex-col gap-5 p-5">
       <div className="mt-5 pb-4 border-b flex w-full">
@@ -107,7 +114,9 @@ const General = () => {
               }}
             />
           </label>
-          <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue">Delete</div>
+          <div className="border rounded-md px-2 py-3 cursor-pointer bg-customBlue" onClick={onDeleteProfilePic}>
+            Delete
+          </div>
         </div>
       </div>
       <div className="w-full h-full  overflow-auto">

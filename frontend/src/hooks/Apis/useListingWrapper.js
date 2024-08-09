@@ -37,7 +37,7 @@ const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
       for (let index = 0; index < resourceKeys.length; index++) {
         const resource = resourceKeys[index];
         if (Object.keys(data).includes(resource?.name)) {
-          if (!resources[data?.[resource?.name]]) {
+          if (!resources[data?.[resource?.name]] && data?.[resource?.name] ) {
             getResourceUrlMutate({ type: resource?.type, name: data?.[resource?.name] });
           }
         }
