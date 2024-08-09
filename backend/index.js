@@ -58,7 +58,7 @@ async function startApiServer() {
 
   io.on("connection", async (socket) => {
     console.log("Client connected", socket.id);
-    const user_id = socket.handshake.auth.user_id ?? "";
+    const user_id = socket.handshake?.auth?.user_id ?? "";
     const cookies = socket.handshake.headers.cookie;
     const parsedCookies = parseCookies({ cookies });
     const session_id = parsedCookies?.session_id || "";

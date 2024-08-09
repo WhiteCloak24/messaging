@@ -28,12 +28,6 @@ export const SocketProvider = ({ children }) => {
     }
   }, [state.socketInstance]);
 
-  useEffect(() => {
-    if (state.isSocketConnected) {
-      attachListeners();
-    }
-  }, [state.isSocketConnected]);
-
   const subscribeSocket = useCallback(({ socket_url = "", user_id = "", session_id = "" }) => {
     const socketInstance = io(socket_url, {
       transports: ["websocket"],
@@ -47,6 +41,7 @@ export const SocketProvider = ({ children }) => {
       reconnectionAttempts: 10,
       // parser: customParser,
     });
+
     setState((prev) => ({
       ...prev,
       socketInstance,
@@ -60,12 +55,21 @@ export const SocketProvider = ({ children }) => {
         socketInstance.disconnect();
         if (err.message === "Authentication error") {
           console.error("Authentication failed:", err.data.content);
+          if (err?.data?.action === "user-logout") {
+            dispatchCustomEventFn({ eventName: AuthorizationEVENTS.LOGGED_OUT, eventData: { reason: err.data.content } });
+          }
         } else {
           console.error("Connection error:", err.message);
         }
       });
       socketInstance.on("connect", () => {
         setState((prev) => ({ ...prev, isSocketConnected: true }));
+        socketInstance.on("jwt-token", (data) => {
+          dispatchCustomEventFn({ eventName: AuthorizationEVENTS.SET_TOKEN, eventData: { jwt_token: data?.jwt_token } });
+        });
+        socketInstance.on("user-logout", (data) => {
+          dispatchCustomEventFn({ eventName: AuthorizationEVENTS.LOGGED_OUT, eventData: data });
+        });
         socketInstance.on("chat-update", (data) => {
           if (data?.type === "new-message") {
             new Notification("New Message", {
@@ -103,19 +107,6 @@ export const SocketProvider = ({ children }) => {
       state.socketInstance.disconnect();
       state.socketInstance.off("connect");
       state.socketInstance.off("disconnect");
-    }
-  }, [state.socketInstance]);
-
-  const attachListeners = useCallback(() => {
-    const { socketInstance } = state;
-    if (socketInstance?.connected) {
-      socketInstance.on("jwt-token", (data) => {
-        dispatchCustomEventFn({ eventName: AuthorizationEVENTS.SET_TOKEN, eventData: { jwt_token: data?.jwt_token } });
-      });
-      socketInstance.on("user-logout", (data) => {
-        console.log("user-logout", data);
-        dispatchCustomEventFn({ eventName: AuthorizationEVENTS.LOGGED_OUT, eventData: data });
-      });
     }
   }, [state.socketInstance]);
 

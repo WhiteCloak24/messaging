@@ -10,8 +10,8 @@ export const authenticateConnectionMiddleware = (io) => {
       next();
     } else {
       const err = new Error("Authentication error");
-      err.data = { content: "Invalid token" }; // Optional details
-      socket.disconnect();
+      err.data = { action: "user-logout", content: "Session not found" }; // Optional details
+      return next(err);
     }
   });
 };
