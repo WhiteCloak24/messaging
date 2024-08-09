@@ -7,10 +7,16 @@ export const routes = {
     PATH: "auth/signup",
     METHOD: "POST",
   },
+
   GET_RESOURCE_URL: {
     PATH: "media/get-url",
     METHOD: "GET",
   },
+  DELETE_RESOURCE: {
+    PATH: "media/delete-resource",
+    METHOD: "DELETE",
+  },
+
   USER_DETAILS: {
     PATH: "user/details",
     METHOD: "GET",
@@ -23,6 +29,7 @@ export const routes = {
     PATH: "user/update",
     METHOD: "POST",
   },
+
   CHAT_LISTING: {
     PATH: "chat/listing",
     METHOD: "GET",

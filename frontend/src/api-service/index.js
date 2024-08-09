@@ -21,6 +21,12 @@ export const getResourceUrl = ({ name = "", type = "" }) => {
     url: `${routes.GET_RESOURCE_URL.PATH}?type=${type}&name=${name}`,
   });
 };
+export const deleteResource = ({ name = "", type = "" }) => {
+  return apiClient({
+    method: routes.DELETE_RESOURCE.METHOD,
+    url: `${routes.DELETE_RESOURCE.PATH}?type=${type}&name=${name}`,
+  });
+};
 export const userDetails = ({ id = "" }) => {
   return apiClient({
     method: routes.USER_DETAILS.METHOD,

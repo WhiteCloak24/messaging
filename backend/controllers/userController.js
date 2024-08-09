@@ -22,11 +22,11 @@ export const userUpdateController = expressAsyncHandler(async (req, res) => {
     }
     let profile_pic = fields?.profile_pic?.[0] || "";
     let profileFile = files?.profile_pic?.[0] || "";
+    const aws = new S3Service();
     if (profileFile) {
       // s3 logic
       // Read the file into a buffer
       const fileContent = fs.readFileSync(profileFile.filepath);
-      const aws = new S3Service();
       const response = await aws.putFile({
         file: fileContent,
         type: profileFile?.mimetype,
@@ -36,11 +36,14 @@ export const userUpdateController = expressAsyncHandler(async (req, res) => {
         profile_pic = profileFile?.newFilename;
       }
     }
+    if (!profileFile && !profile_pic) {
+       await aws.deleteFile({ filename: `${req.user.user_id}/profile` });
+    }
 
     const first_name = fields.first_name?.[0] || "";
     const last_name = fields.last_name?.[0] || "";
 
-    const isSuccess = await updateUserData({ user_id: req.user.user_id, first_name, last_name, profile_pic, email: req.user.email });
+    const isSuccess = await updateUserData({ user_id: req.user.user_id, first_name, last_name, profile_pic, email: req.user.email, res });
     if (isSuccess) {
       res.status(200).json({ success: true, message: "User data updated successfully" });
     }

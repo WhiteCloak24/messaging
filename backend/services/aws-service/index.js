@@ -79,16 +79,17 @@ export class S3Service {
   }
 
   async deleteFile({ filename }) {
-    const command = new DeleteObjectCommand({ Bucket: process.env.AWS_BUCKET_NAME, Key: filename });
-    this.s3Client
-      .send(command)
-      .then(() => {
-        return true;
-      })
-      .catch((err) => {
-        console.log(err);
-        return false;
-      });
+    return new Promise((resolve) => {
+      const command = new DeleteObjectCommand({ Bucket: process.env.AWS_BUCKET_NAME, Key: filename });
+      this.s3Client
+        .send(command)
+        .then(() => {
+          resolve(true);
+        })
+        .catch((err) => {
+          resolve(false);
+        });
+    });
   }
   async getResourceSignedUrl({ filename }) {
     return new Promise(async (resolve) => {
