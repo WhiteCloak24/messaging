@@ -13,7 +13,9 @@ export const updateInFriendsTable = async ({ user_id, first_name, last_name, pro
         params: [`${first_name} ${last_name}`, profile_pic, record?.user_id, record?.friend_id, record?.uuid],
       });
     }
-    await client.batch(queries, { prepare: true });
+    if (queryArray.length > 0) {
+      await client.batch(queryArray, { prepare: true });
+    }
     return true;
   } catch (err) {
     return false;

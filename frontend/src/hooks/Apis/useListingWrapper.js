@@ -26,19 +26,31 @@ const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
     onSuccess: async ({ data }) => {
       const { blob } = await getProcessedResource(data?.data?.url);
       const url = URL.createObjectURL(blob);
-
-      // need to optimize url so s3 url doesn't get hit alwayss
       setResources({ [data?.data?.name || "unknown"]: url });
     },
   });
 
   useEffect(() => {
-    if (data && Object.keys(data).length) {
+    if (data && !(data instanceof Array) && Object.keys(data).length) {
       for (let index = 0; index < resourceKeys.length; index++) {
         const resource = resourceKeys[index];
         if (Object.keys(data).includes(resource?.name)) {
-          if (!resources[data?.[resource?.name]] && data?.[resource?.name] ) {
+          if (!resources[data?.[resource?.name]] && data?.[resource?.name]) {
             getResourceUrlMutate({ type: resource?.type, name: data?.[resource?.name] });
+          }
+        }
+      }
+    }
+    if (data && data instanceof Array && data.length) {
+      for (let index = 0; index < data.length; index++) {
+        const dataRow = data[index];
+
+        for (let index = 0; index < resourceKeys.length; index++) {
+          const resource = resourceKeys[index];
+          if (Object.keys(dataRow).includes(resource?.name)) {
+            if (!resources[dataRow?.[resource?.name]] && dataRow?.[resource?.name]) {
+              getResourceUrlMutate({ type: resource?.type, name: dataRow?.[resource?.name] });
+            }
           }
         }
       }
