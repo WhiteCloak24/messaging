@@ -20,7 +20,7 @@ const Chats = ({ activeChat = {}, setActiveChat = () => null }) => {
               setActiveChat(user);
             }}>
             <div className="flex gap-2">
-              <Avatar firstName={user?.user_name} size="45" />
+              <Avatar firstName={user?.user_name} imgName={user?.user_image} size="45" />
               <div>
                 <p className="font-semibold text-md">{user.user_name}</p>
                 <p className="text-sm text-gray-600">{user.last_message}</p>

@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
 import Avatar from "../../../components/Avatar";
 const ChatHeader = ({ status, activeChat = {} }) => {
-  const { user_name = "" } = useMemo(() => activeChat || {}, [activeChat?.user_id]);
+  const { user_name = "", user_image } = useMemo(() => activeChat || {}, [activeChat?.user_id]);
+
   return (
     <div className="w-full flex items-center p-4 border-b bg-white">
-      <Avatar imgSrc="https://via.placeholder.com/40" />
+      <Avatar firstName={user_name} imgName={user_image} />
       {/* <img
         src="https://via.placeholder.com/40"
         alt="profile"
