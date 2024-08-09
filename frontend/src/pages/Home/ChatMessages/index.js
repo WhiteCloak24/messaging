@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useApplicationSocket } from "../../../hooks/useApplicationSocket";
 import { fetchWithProgress, formatTime, getAttachmentType, getProcessedResource } from "../../../resources/functions";
 import { IoCheckmarkOutline, IoTrashBin } from "react-icons/io5";
@@ -56,14 +56,13 @@ export default ChatMessages;
 const AttachmentPreviewer = ({ fileName = "", chat_id = "" }) => {
   const [attachmentType, setAttachmentType] = useState("");
   const { resources, setResources } = useMediaResources();
-  const [progress, setProgress] = useState(0);
+  const overLayRef = useRef();
   const { mutate: getResourceUrlMutate } = useMutation({
     mutationKey: ["getResourceUrl"],
     mutationFn: getResourceUrl,
     onSuccess: async ({ data }) => {
       fetchWithProgress(data?.data?.url, (loaded, total) => {
-        setProgress(Number(((loaded / total) * 100).toFixed(2)));
-        // console.log(`Progress: ${((loaded / total) * 100).toFixed(2)}%`);
+        overLayRef.current.style.setProperty("--img-progress", `${((loaded / total) * 100).toFixed(2)}%`);
       })
         .then(({ blob }) => {
           const url = URL.createObjectURL(blob);
@@ -88,14 +87,16 @@ const AttachmentPreviewer = ({ fileName = "", chat_id = "" }) => {
   return (
     <>
       {attachmentType == "image" && (
-        <img
-          className="w-32 rounded-md"
-          src={resources[fileName]}
-          alt=""
-          onClick={() => {
-            handleDownload(resources[fileName], "image");
-          }}
-        />
+        <div className="bg-gray-500 h-32 w-32 rounded-md relative border">
+          <img
+            className="h-full w-full rounded-md"
+            src={resources[fileName]}
+            onClick={() => {
+              handleDownload(resources[fileName], "image");
+            }}
+          />
+          <div ref={overLayRef} className="img-progress-overlay absolute bg-red-50 w-full h-1/2 bottom-0 left-0"></div>
+        </div>
       )}
     </>
   );

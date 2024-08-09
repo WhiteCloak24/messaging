@@ -120,3 +120,8 @@ input {
 .audio-playback > .ns-list-dropdown-item:hover {
   @apply bg-gray-800 text-white scale-110;
 }
+
+.img-progress-overlay {
+  --img-progress: 0%; /* Default value */
+  height: var(--img-progress);
+}
