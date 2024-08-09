@@ -5,10 +5,13 @@ import { AuthorizationStates } from "../resources/constants";
 import { Navigate } from "react-router-dom";
 import { useApplicationSocket } from "../hooks/useApplicationSocket";
 import QueryRefetcher from "../components/QueryRefetcher";
+import { userDetails } from "../api-service";
+import useListingWrapper from "../hooks/Apis/useListingWrapper";
 
 const AuthorizedLayout = () => {
   const { authorizationState } = useAuthorization();
   const { isSocketConnected, unsubscribeSocket } = useApplicationSocket();
+  const { data: userData = {} } = useListingWrapper({ queryFn: userDetails, resourceKeys: [{ name: "profile_pic", type: "profile" }] });
 
   useEffect(() => {
     return () => {
@@ -21,7 +24,7 @@ const AuthorizedLayout = () => {
   if (authorizationState === AuthorizationStates.LOGGED_IN) {
     return (
       <div className="authorized-layout">
-        <Outlet />
+        <Outlet context={{ userData }} />
         <QueryRefetcher />
       </div>
     );

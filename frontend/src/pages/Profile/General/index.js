@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { userDetails, userUpdate } from "../../../api-service";
+import { userUpdate } from "../../../api-service";
 import { dispatchCustomEventFn } from "../../../resources/functions";
 import { AlertEVENTS, RefetchQuery } from "../../../resources/constants";
-import useListingWrapper from "../../../hooks/Apis/useListingWrapper";
 import { useMediaResources } from "../../../hooks/useMediaResources";
+import { useOutletContext } from "react-router-dom";
 
 const isSameFormValues = (value1, value2) => {
   if (!value1 || !value2) {
@@ -26,8 +26,7 @@ const isSameFormValues = (value1, value2) => {
 };
 const General = () => {
   const { resources } = useMediaResources();
-  
-  const { data: userData } = useListingWrapper({ queryFn: userDetails, resourceKeys: [{ name: "profile_pic", type: "profile" }] });
+  const { userData = {} } = useOutletContext();
 
   const { control, handleSubmit, watch, reset } = useForm({
     defaultValues: {

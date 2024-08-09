@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 const MediaResourceContext = createContext({
   resources: {},
@@ -9,7 +9,9 @@ export const MediaResourcesProvider = ({ children }) => {
   const [state, setState] = useState({});
 
   const setResources = useCallback((data) => {
-    setState((prev) => ({ ...prev, ...data }));
+    setState((prev) => {
+      return { ...prev, ...data };
+    });
   }, []);
 
   const values = useMemo(() => ({ resources: state, setResources }), [JSON.stringify(state)]);

@@ -3,14 +3,13 @@ import Avatar from "../../../components/Avatar";
 import UserListing from "./UserListing";
 import Chats from "./Chats";
 import { IoArrowBack } from "react-icons/io5";
-import useListingWrapper from "../../../hooks/Apis/useListingWrapper";
-import { userDetails } from "../../../api-service";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 const Sidebar = ({ activeChat, setActiveChat }) => {
   const navigate = useNavigate();
+  const { userData = {} } = useOutletContext();
+
   const [showChats, setShowChats] = useState(true);
-  const { data: userData } = useListingWrapper({ queryFn: userDetails });
 
   return (
     <div className="w-3/12 min-w-80 bg-white border-customBlue flex flex-col m-4 rounded-xl">
