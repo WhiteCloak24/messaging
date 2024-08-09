@@ -75,5 +75,5 @@ const AttachmentPreviewer = ({ fileName = "", chat_id = "" }) => {
     }
   }, [fileName]);
 
-  return <>{attachmentType == "image" && <img src={resources[fileName]} alt="" />}</>;
+  return <>{attachmentType == "image" && <img className="w-52 rounded-md" src={resources[fileName]} alt="" />}</>;
 };
