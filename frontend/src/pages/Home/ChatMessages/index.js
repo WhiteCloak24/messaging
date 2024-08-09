@@ -27,7 +27,7 @@ const ChatMessages = ({ activeChat = {} }) => {
             }`}>
             <div className="flex self-start whitespace-pre-wrap break-all">{msg?.message_text || msg.attachment}</div>
             <div className={`text-xs ${isSent ? "text-gray-100" : "text-gray-500"} flex self-end min-w-16`}>
-              {formatTime({ timestamp: msg?.sent_time })}&nbsp; <span className="w-4 h-4 text-green-200">{MessageStatusIconMap["Delivered"]}</span>
+              {formatTime({ timestamp: msg?.sent_time })}&nbsp; <span className="w-4 h-4 text-green-200"></span>
             </div>
             <div className="absolute right-[-20px] text-black">
               <span

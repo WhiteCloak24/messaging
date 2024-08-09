@@ -3,6 +3,7 @@ import formidable from "formidable";
 import { getUserData, getUserListing, updateUserData } from "../models/user.js";
 import fs from "fs";
 import { S3Service } from "../services/aws-service/index.js";
+import { updateInFriendsTable } from "../models/user_friends.js";
 
 export const userListingController = expressAsyncHandler(async (req, res) => {
   const listing = await getUserListing();
@@ -43,8 +44,9 @@ export const userUpdateController = expressAsyncHandler(async (req, res) => {
     const first_name = fields.first_name?.[0] || "";
     const last_name = fields.last_name?.[0] || "";
 
-    const isSuccess = await updateUserData({ user_id: req.user.user_id, first_name, last_name, profile_pic, email: req.user.email, res });
-    if (isSuccess) {
+    const isSuccess1 = await updateUserData({ user_id: req.user.user_id, first_name, last_name, profile_pic, email: req.user.email, res });
+    const isSuccess2 = await updateInFriendsTable({ user_id: req.user.user_id, first_name, last_name, profile_pic, email: req.user.email, res });
+    if (isSuccess1 && isSuccess2) {
       res.status(200).json({ success: true, message: "User data updated successfully" });
     }
   });
