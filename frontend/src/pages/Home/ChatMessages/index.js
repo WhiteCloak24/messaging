@@ -71,9 +71,11 @@ const AttachmentPreviewer = ({ fileName = "", chat_id = "" }) => {
     if (fileName) {
       const type = getAttachmentType({ fileName });
       setAttachmentType(type);
-      getResourceUrlMutate({ type: "chat", name: fileName, chat_id });
+      if (!resources[fileName]) {
+        getResourceUrlMutate({ type: "chat", name: fileName, chat_id });
+      }
     }
-  }, [fileName]);
+  }, [fileName, resources]);
 
-  return <>{attachmentType == "image" && <img className="w-52 rounded-md" src={resources[fileName]} alt="" />}</>;
+  return <>{attachmentType == "image" && <img className="w-32 rounded-md" src={resources[fileName]} alt="" />}</>;
 };
