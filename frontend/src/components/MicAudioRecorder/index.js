@@ -96,13 +96,12 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
         return normalizedLevel;
       };
       function handleGetAudioLevel() {
-        // let level = getAudioLevel();
-        // if (level < audiolevel) {
-        //   audiolevel = Math.max(0, audiolevel - 0.01);
-        // } else {
-        //   audiolevel = Math.min(1, level);
-        // }
-        audiolevel = Math.random();
+        let level = getAudioLevel();
+        if (level < audiolevel) {
+          audiolevel = Math.max(0, audiolevel - 0.01);
+        } else {
+          audiolevel = Math.min(1, level);
+        }
         const mic_level_icon_container = document.getElementById("mic-level-icon-container");
         const mic_level_icon = document.getElementById("mic-level-icon");
         const mic_icon = document.getElementById("mic-icon");
