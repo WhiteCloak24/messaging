@@ -140,9 +140,26 @@ const url =
 export const isActivePath = ({ order = "1", pathname = "", path = "" }) => {
   if (order === "1") {
     const activePath = pathname?.split("/")?.pop();
-    if(activePath === path){
-      return true
+    if (activePath === path) {
+      return true;
     }
   }
   return false;
+};
+
+export const getAttachmentType = ({ fileName = "" }) => {
+  const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
+  const videoExtensions = ["mp4", "avi", "mov", "mkv", "webm"];
+
+  // Extract the file extension from the fileName
+  const extension = fileName.split(".").pop().toLowerCase();
+
+  // Determine the type based on the file extension
+  if (imageExtensions.includes(extension)) {
+    return "image";
+  } else if (videoExtensions.includes(extension)) {
+    return "video";
+  } else {
+    return "unknown"; // Return 'unknown' if the type is not identified
+  }
 };
