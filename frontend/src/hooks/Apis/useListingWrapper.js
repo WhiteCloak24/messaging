@@ -15,7 +15,7 @@ const getProcessedResource = async (url) => {
   }
 };
 
-const useListingWrapper = ({ queryFn = () => null, resourceKeys = [] }) => {
+const useListingWrapper = ({ queryFn = () => null, resourceKeys = [{ name: "", type: "", extraQuery: { api: [] } }] }) => {
   const { resources, setResources } = useMediaResources();
   const Request = useQuery({ queryKey: [queryFn.name], queryFn, select: (data) => data?.data?.data || [], gcTime: Infinity, staleTime: Infinity });
   const { data = {} } = Request || {};
