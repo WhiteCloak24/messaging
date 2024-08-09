@@ -77,5 +77,38 @@ const AttachmentPreviewer = ({ fileName = "", chat_id = "" }) => {
     }
   }, [fileName, resources]);
 
-  return <>{attachmentType == "image" && <img className="w-32 rounded-md" src={resources[fileName]} alt="" />}</>;
+  return (
+    <>
+      {attachmentType == "image" && (
+        <img
+          className="w-32 rounded-md"
+          src={resources[fileName]}
+          alt=""
+          onClick={() => {
+            handleDownload(resources[fileName], "image");
+          }}
+        />
+      )}
+    </>
+  );
+};
+
+const handleDownload = (fileUrl, fileName) => {
+  // Create an anchor element
+  const link = document.createElement("a");
+
+  // Set the href attribute to the file URL
+  link.href = fileUrl;
+
+  // Set the download attribute with a file name
+  link.download = fileName;
+
+  // Append the anchor element to the body
+  document.body.appendChild(link);
+
+  // Trigger the download by programmatically clicking the anchor
+  link.click();
+
+  // Remove the anchor element from the body
+  document.body.removeChild(link);
 };
