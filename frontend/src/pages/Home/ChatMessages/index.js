@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useApplicationSocket } from "../../../hooks/useApplicationSocket";
-import { formatTime, getAttachmentType, getProcessedResource } from "../../../resources/functions";
+import { fetchWithProgress, formatTime, getAttachmentType, getProcessedResource } from "../../../resources/functions";
 import { IoCheckmarkOutline, IoTrashBin } from "react-icons/io5";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { useMediaResources } from "../../../hooks/useMediaResources";
@@ -56,14 +56,22 @@ export default ChatMessages;
 const AttachmentPreviewer = ({ fileName = "", chat_id = "" }) => {
   const [attachmentType, setAttachmentType] = useState("");
   const { resources, setResources } = useMediaResources();
-
+  const [progress, setProgress] = useState(0);
   const { mutate: getResourceUrlMutate } = useMutation({
     mutationKey: ["getResourceUrl"],
     mutationFn: getResourceUrl,
     onSuccess: async ({ data }) => {
-      const { blob } = await getProcessedResource(data?.data?.url);
-      const url = URL.createObjectURL(blob);
-      setResources({ [data?.data?.name || "unknown"]: url });
+      fetchWithProgress(data?.data?.url, (loaded, total) => {
+        setProgress(Number(((loaded / total) * 100).toFixed(2)));
+        // console.log(`Progress: ${((loaded / total) * 100).toFixed(2)}%`);
+      })
+        .then(({ blob }) => {
+          const url = URL.createObjectURL(blob);
+          setResources({ [data?.data?.name || "unknown"]: url });
+        })
+        .catch((error) => {
+          console.error("Fetch error:", error);
+        });
     },
   });
 

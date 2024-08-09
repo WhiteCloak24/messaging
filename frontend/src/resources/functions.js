@@ -76,7 +76,7 @@ export function convertFileToArrayBuffer(file) {
   }
 }
 
-async function fetchWithProgress(url, onProgress) {
+export async function fetchWithProgress(url, onProgress) {
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -120,7 +120,10 @@ async function fetchWithProgress(url, onProgress) {
   });
 
   const responseWithProgress = new Response(stream);
-  return responseWithProgress.blob(); // or responseWithProgress.text(), or responseWithProgress.json(), etc.
+  return {
+    size: total,
+    blob: await responseWithProgress.blob(), // or responseWithProgress.text(), or responseWithProgress.json(), etc.
+  };
 }
 
 // Usage example:
