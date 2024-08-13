@@ -62,7 +62,10 @@ const AttachmentPreviewer = ({ fileName = "", chat_id = "" }) => {
     mutationFn: getResourceUrl,
     onSuccess: async ({ data }) => {
       fetchWithProgress(data?.data?.url, (loaded, total) => {
-        overLayRef.current.style.setProperty("--img-progress", `${((loaded / total) * 100).toFixed(2)}%`);
+        if ((loaded / total) * 100 === 100) {
+          overLayRef.current.classList.add("hidden");
+        }
+        overLayRef.current.innerText = `${((loaded / total) * 100).toFixed(2)}%`;
       })
         .then(({ blob }) => {
           const url = URL.createObjectURL(blob);
@@ -78,11 +81,12 @@ const AttachmentPreviewer = ({ fileName = "", chat_id = "" }) => {
     if (fileName) {
       const type = getAttachmentType({ fileName });
       setAttachmentType(type);
-      if (!resources[fileName]) {
+      if (!resources[fileName] && overLayRef.current) {
+        overLayRef.current.classList.remove("hidden");
         getResourceUrlMutate({ type: "chat", name: fileName, chat_id });
       }
     }
-  }, [fileName, resources]);
+  }, [fileName, resources, overLayRef.current, attachmentType]);
 
   return (
     <>
@@ -95,7 +99,9 @@ const AttachmentPreviewer = ({ fileName = "", chat_id = "" }) => {
               handleDownload(resources[fileName], "image");
             }}
           />
-          <div ref={overLayRef} className="img-progress-overlay absolute bg-red-50 w-full h-1/2 bottom-0 left-0"></div>
+          <div
+            ref={overLayRef}
+            className="img-progress-overlay absolute w-full h-1/2 bottom-0 left-0 flex items-center justify-center text-black hidden"></div>
         </div>
       )}
     </>

@@ -122,6 +122,8 @@ input {
 }
 
 .img-progress-overlay {
-  --img-progress: 0%; /* Default value */
-  height: var(--img-progress);
+  /* --img-progress: 0%; Default value */
+  /* height: var(--img-progress); */
+  background-color: #ffffff66;
+  height: 100%;
 }
