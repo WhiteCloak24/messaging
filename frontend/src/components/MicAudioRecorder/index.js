@@ -83,18 +83,7 @@ const MicAudioRecorder = ({ onClose = () => null }) => {
       const bufferLength = analyser.frequencyBinCount;
       const dataArray = new Uint8Array(bufferLength);
 
-      const getAudioLevel = () => {
-        analyser.getByteFrequencyData(dataArray);
-        // Calculate average volume
-        let sum = 0;
-        for (let i = 0; i < dataArray.length; i++) {
-          sum += dataArray[i];
-        }
-        const average = sum / dataArray.length;
-        // Normalize to range 0 to 1
-        const normalizedLevel = average / 128; // 256 is the max value in dataArray
-        return normalizedLevel;
-      };
+     
       function handleGetAudioLevel() {
         let audiolevel = Math.random()
         const mic_level_icon_container = document.getElementById("mic-level-icon-container");
@@ -177,3 +166,16 @@ export default MicAudioRecorder;
         // } else {
         //   audiolevel = Math.min(1, level);
         // }
+
+        // const getAudioLevel = () => {
+        //   analyser.getByteFrequencyData(dataArray);
+        //   // Calculate average volume
+        //   let sum = 0;
+        //   for (let i = 0; i < dataArray.length; i++) {
+        //     sum += dataArray[i];
+        //   }
+        //   const average = sum / dataArray.length;
+        //   // Normalize to range 0 to 1
+        //   const normalizedLevel = average / 128; // 256 is the max value in dataArray
+        //   return normalizedLevel;
+        // };
